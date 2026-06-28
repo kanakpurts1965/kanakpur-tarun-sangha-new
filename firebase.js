@@ -25,3 +25,18 @@ alert("Step 4");
 window.db = db;
 
 console.log("Firebase OK");
+
+import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+try {
+  const docRef = await addDoc(collection(db, "comments"), {
+    name: "Test User",
+    comment: "Firebase Test",
+    time: new Date()
+  });
+
+  alert("✅ Firestore Write Success: " + docRef.id);
+
+} catch (e) {
+  alert("❌ Firestore Error: " + e.message);
+}
