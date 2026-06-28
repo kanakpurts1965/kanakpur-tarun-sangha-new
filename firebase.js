@@ -20,5 +20,5 @@ const db = getFirestore(app);
 
 console.log("✅ Firebase Connected");
 console.log("✅ Firestore Connected");
-
+window.db = db;
 export { db };
