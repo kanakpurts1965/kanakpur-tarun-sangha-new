@@ -60,3 +60,52 @@ if (form) {
     });
 
 }
+/* ==========================================
+   REAL TIME COMMENTS
+========================================== */
+
+const q = query(
+    commentsRef,
+    orderBy("createdAt", "desc")
+);
+
+onSnapshot(q, (snapshot) => {
+
+    commentsBox.innerHTML = "";
+
+    if (snapshot.empty) {
+
+        commentsBox.innerHTML = `
+        <div class="loading-comments">
+            📝 এখনও কোনো মন্তব্য নেই।
+        </div>
+        `;
+
+        return;
+
+    }
+
+    snapshot.forEach((doc) => {
+
+        const data = doc.data();
+
+        let dateText = "এইমাত্র";
+
+        if (data.createdAt) {
+
+            const date = data.createdAt.toDate();
+
+            dateText = date.toLocaleString("bn-BD", {
+
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+
+            });
+
+        }
+
+        commentsBox.innerHTML += `
+
