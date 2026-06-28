@@ -187,20 +187,57 @@ onSnapshot(replyQuery, (replySnapshot) => {
 
         div.className = "reply-card";
 
-        div.innerHTML = `
+        let replyDate = "";
 
-            <div class="reply-name">
+if (reply.createdAt) {
 
-                👤 ${reply.name}
+    replyDate = reply.createdAt
+        .toDate()
+        .toLocaleString("bn-BD", {
 
-            </div>
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
 
-            <div class="reply-text">
+        });
 
-                ${reply.text}
+}
 
-            </div>
+div.innerHTML = `
 
+<div class="reply-header">
+
+    <div class="reply-avatar">
+
+        👤
+
+    </div>
+
+    <div>
+
+        <div class="reply-name">
+
+            ${reply.name}
+
+        </div>
+
+        <div class="reply-date">
+
+            🕒 ${replyDate}
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="reply-text">
+
+    ${reply.text}
+
+</div>
         `;
 
         replyBox.appendChild(div);
