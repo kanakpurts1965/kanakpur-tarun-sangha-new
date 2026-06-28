@@ -108,4 +108,62 @@ onSnapshot(q, (snapshot) => {
         }
 
         commentsBox.innerHTML += `
+        
+        const commentCard = document.createElement("div");
+        commentCard.className = "comment-card";
 
+        commentCard.innerHTML = `
+
+        <div class="comment-header">
+
+            <div class="comment-avatar">
+
+                👤
+
+            </div>
+
+            <div class="comment-info">
+
+                <div class="comment-name">
+
+                    ${data.name}
+
+                </div>
+
+                <div class="comment-date">
+
+                    🕒 ${dateText}
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="comment-body">
+
+            ${data.comment}
+
+        </div>
+
+        <div class="comment-actions">
+
+            <button class="like-btn" data-id="${doc.id}">
+                👍 <span>${data.likes || 0}</span>
+            </button>
+
+            <button class="reply-btn" data-id="${doc.id}">
+                💬 Reply
+            </button>
+
+        </div>
+
+        <div id="reply-list-${doc.id}" class="reply-list"></div>
+
+        `;
+
+        commentsBox.appendChild(commentCard);
+
+    });
+
+});
