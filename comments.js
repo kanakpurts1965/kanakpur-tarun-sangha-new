@@ -195,3 +195,46 @@ document.addEventListener("click", async (e) => {
     }
  
 });
+// ==========================================
+// REPLY BOX OPEN
+// ==========================================
+
+document.addEventListener("click", (e) => {
+
+    const replyBtn = e.target.closest(".reply-btn");
+
+    if (!replyBtn) return;
+
+    const commentId = replyBtn.dataset.id;
+
+    const replyArea = document.getElementById(`reply-list-${commentId}`);
+
+    if (!replyArea) return;
+
+    // আগে থেকে Reply Box থাকলে আবার তৈরি করবে না
+    if (replyArea.querySelector(".reply-box")) return;
+
+    replyArea.innerHTML = `
+
+        <div class="reply-box">
+
+            <input
+                type="text"
+                id="reply-name-${commentId}"
+                placeholder="আপনার নাম">
+
+            <textarea
+                id="reply-text-${commentId}"
+                placeholder="আপনার উত্তর লিখুন..."></textarea>
+
+            <button
+                class="reply-submit"
+                data-id="${commentId}">
+                📩 Reply পাঠান
+            </button>
+
+        </div>
+
+    `;
+
+});
