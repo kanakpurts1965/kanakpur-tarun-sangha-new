@@ -247,6 +247,7 @@ document.addEventListener("click", async (e) => {
     const btn = e.target.closest(".reply-submit");
 
     if (!btn) return;
+  console.log("Reply Button Clicked");
 
     const commentId = btn.dataset.id;
 
