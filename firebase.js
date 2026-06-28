@@ -1,7 +1,12 @@
 alert("Step 1");
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 alert("Step 2");
 
@@ -22,21 +27,30 @@ const db = getFirestore(app);
 
 alert("Step 4");
 
-window.db = db;
-
-console.log("Firebase OK");
-
-import { collection, addDoc } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-
 try {
+
   const docRef = await addDoc(collection(db, "comments"), {
+
     name: "Test User",
-    comment: "Firebase Test",
+
+    contact: "6296062310",
+
+    comment: "Firebase Test Successful",
+
+    page: "Home",
+
     time: new Date()
+
   });
 
-  alert("✅ Firestore Write Success: " + docRef.id);
+  alert("✅ Firestore Write Success");
+
+  console.log("Document ID:", docRef.id);
 
 } catch (e) {
-  alert("❌ Firestore Error: " + e.message);
+
+  alert("❌ Firestore Error");
+
+  console.error(e);
+
 }
