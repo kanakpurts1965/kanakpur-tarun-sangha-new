@@ -630,45 +630,64 @@ section{
 ========================================== */
 
 @media(max-width:768px){
-
-.hero{
-    grid-template-columns:1fr;
-}
-
-.live-info{
-    grid-template-columns:1fr;
-}
-
-.stats-grid{
-    grid-template-columns:repeat(2,1fr);
-}
+/* ==========================
+   MOBILE OFFICE
+========================== */
 
 .office-grid{
-    grid-template-columns:1fr;
+    display:flex;
+    flex-wrap:nowrap;
+    justify-content:space-between;
+    gap:8px;
 }
 
-.hero-text h1{
-    font-size:34px;
+.office-card{
+    width:32%;
+    padding:10px;
 }
 
-.club-title h1{
+.office-card img{
+    width:75px;
+    height:75px;
+}
+
+.office-card h3{
+    font-size:13px;
+}
+
+.designation{
+    font-size:11px;
+    padding:5px 8px;
+}
+
+
+/* ==========================
+   MOBILE STATISTICS
+========================== */
+
+.stats-grid{
+    display:flex;
+    flex-wrap:nowrap;
+    justify-content:space-between;
+    gap:8px;
+}
+
+.stats-card{
+    width:24%;
+    padding:10px;
+}
+
+.stats-icon{
+    font-size:22px;
+}
+
+.stats-card h3{
     font-size:18px;
 }
 
-.section-title{
-    font-size:28px;
+.stats-card p{
+    font-size:11px;
 }
-
-.footer-links{
-    flex-direction:column;
-    gap:12px;
-}
-
-.notice-label{
-    padding:10px;
-    font-size:14px;
-}
-
 }
 /* ==========================
    BACK TO TOP
