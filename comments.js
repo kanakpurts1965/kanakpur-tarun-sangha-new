@@ -62,3 +62,58 @@ if (commentForm) {
   });
 
 }
+/* ==========================================
+   LOAD COMMENTS
+========================================== */
+
+const commentsBox = document.getElementById("comments");
+
+if (commentsBox) {
+
+    const q = query(
+        collection(db, "comments"),
+        orderBy("createdAt", "desc")
+    );
+
+    onSnapshot(q, (snapshot) => {
+
+        commentsBox.innerHTML = "";
+
+        if (snapshot.empty) {
+
+            commentsBox.innerHTML =
+                "<div class='loading-comments'>এখনও কোনো মন্তব্য নেই।</div>";
+
+            return;
+
+        }
+
+        snapshot.forEach((doc) => {
+
+            const data = doc.data();
+
+            commentsBox.innerHTML += `
+
+            <div class="comment-card">
+
+                <div class="comment-name">
+                    👤 ${data.name}
+                </div>
+
+                <div class="comment-date">
+                    📅 ${data.page ?? "Home"}
+                </div>
+
+                <div class="comment-text">
+                    ${data.comment}
+                </div>
+
+            </div>
+
+            `;
+
+        });
+
+    });
+
+}
