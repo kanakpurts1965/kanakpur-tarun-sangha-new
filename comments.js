@@ -75,7 +75,7 @@ if (commentsBox) {
         orderBy("createdAt", "desc")
     );
 
-    onSnapshot(q, (snapshot) => {
+    onSnapshot(collection(db, "comments"), (snapshot) => {
 
         commentsBox.innerHTML = "";
 
