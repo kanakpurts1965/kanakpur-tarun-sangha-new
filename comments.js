@@ -238,3 +238,62 @@ document.addEventListener("click", (e) => {
     `;
 
 });
+// ==========================================
+// REPLY SUBMIT
+// ==========================================
+
+document.addEventListener("click", async (e) => {
+
+    const btn = e.target.closest(".reply-submit");
+
+    if (!btn) return;
+
+    const commentId = btn.dataset.id;
+
+    const name = document
+        .getElementById(`reply-name-${commentId}`)
+        .value
+        .trim();
+
+    const text = document
+        .getElementById(`reply-text-${commentId}`)
+        .value
+        .trim();
+
+    if (!name || !text) {
+
+        alert("নাম ও Reply লিখুন।");
+
+        return;
+
+    }
+
+    try {
+
+        await updateDoc(doc(db, "comments", commentId), {
+
+            replies: arrayUnion({
+
+                name: name,
+
+                text: text,
+
+                time: new Date().toISOString()
+
+            })
+
+        });
+
+        alert("✅ Reply সফলভাবে পাঠানো হয়েছে");
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+        alert("❌ Reply পাঠানো যায়নি");
+
+    }
+
+});
