@@ -293,7 +293,7 @@ document.addEventListener("click", async (e) => {
 
         console.error(err);
 
-        alert("❌ Reply পাঠানো যায়নি");
+       alert(err.message);
 
     }
 
