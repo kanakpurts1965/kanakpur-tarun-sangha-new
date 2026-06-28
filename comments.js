@@ -70,3 +70,98 @@ if (form) {
   });
 
 }
+// ==========================================
+// REAL-TIME COMMENT LOAD
+// ==========================================
+
+const q = query(
+    commentsRef,
+    orderBy("createdAt", "desc")
+);
+
+onSnapshot(q, (snapshot) => {
+
+    commentsBox.innerHTML = "";
+
+    if (snapshot.empty) {
+
+        commentsBox.innerHTML = `
+            <div class="loading-comments">
+                📝 এখনও কোনো মন্তব্য নেই।
+            </div>
+        `;
+
+        return;
+    }
+
+    snapshot.forEach((item) => {
+
+        const data = item.data();
+
+        let dateText = "এইমাত্র";
+
+        if (data.createdAt) {
+
+            dateText = data.createdAt
+                .toDate()
+                .toLocaleString("bn-BD", {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                });
+
+        }
+
+        const card = document.createElement("div");
+
+        card.className = "comment-card";
+
+        card.innerHTML = `
+            <div class="comment-header">
+
+                <div class="comment-avatar">
+                    👤
+                </div>
+
+                <div class="comment-info">
+
+                    <div class="comment-name">
+                        ${data.name}
+                    </div>
+
+                    <div class="comment-date">
+                        🕒 ${dateText}
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="comment-body">
+                ${data.comment}
+            </div>
+
+            <div class="comment-actions">
+
+                <button class="like-btn"
+                        data-id="${item.id}">
+                    👍 ${data.likes || 0}
+                </button>
+
+                <button class="reply-btn"
+                        data-id="${item.id}">
+                    💬 Reply
+                </button>
+
+            </div>
+
+            <div id="reply-list-${item.id}"></div>
+        `;
+
+        commentsBox.appendChild(card);
+
+    });
+
+});
