@@ -7,7 +7,7 @@ import {
   orderBy,
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-rom "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
 
 const commentForm = document.getElementById("commentForm");
 
