@@ -430,4 +430,4 @@ loadComments();
    FINISHED
 ========================================== */
 
-console.log("Kanakpur Tarun Sangha Website v3.0 Loaded Successfully");
+console.log("Kanakpur Tarun Sangha Website v3.0 Loaded Successfully"); 
