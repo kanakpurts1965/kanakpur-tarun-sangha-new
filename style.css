@@ -496,6 +496,8 @@ section{
     font-weight:bold;
     cursor:pointer;
     transition:.3s;
+   min-width:180px;
+justify-content:center;
 }
 
 #commentForm button:hover{
