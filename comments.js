@@ -14,7 +14,6 @@ import {
   doc,
   updateDoc,
    increment,
-  arrayUnion
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
@@ -270,19 +269,19 @@ document.addEventListener("click", async (e) => {
 
     try {
 
-        await updateDoc(doc(db, "comments", commentId), {
+     await addDoc(repliesRef, {
 
-            replies: arrayUnion({
+    commentId: commentId,
 
-                name: name,
+    name: name,
 
-                text: text,
+    text: text,
 
-                time: new Date().toISOString()
+    likes: 0,
 
-            })
+    createdAt: serverTimestamp()
 
-        });
+});
 
         alert("✅ Reply সফলভাবে পাঠানো হয়েছে");
 
