@@ -8,11 +8,12 @@ import {
   addDoc,
   serverTimestamp,
   query,
+  where,
   orderBy,
   onSnapshot,
   doc,
   updateDoc,
-  increment,
+   increment,
   arrayUnion
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
