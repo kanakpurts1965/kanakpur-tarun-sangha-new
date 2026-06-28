@@ -25,9 +25,7 @@ import {
 const form = document.getElementById("commentForm");
 const commentsBox = document.getElementById("comments");
 const msg = document.getElementById("msg");
-
-const commentsRef = collection(db, "comments");
-
+const repliesRef = collection(db, "replies");
 
 // ==========================================
 // COMMENT SUBMIT
