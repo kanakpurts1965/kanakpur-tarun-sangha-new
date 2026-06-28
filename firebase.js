@@ -1,7 +1,9 @@
-alert("Firebase JS Loaded");
+alert("Step 1");
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+alert("Step 2");
 
 const firebaseConfig = {
   apiKey: "AIzaSyCSxn1dAA708KyKOfrLP_nTrBnazrFjPT8",
@@ -12,13 +14,14 @@ const firebaseConfig = {
   appId: "1:1062615905207:web:53e520f0696aeb0daa6e32"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore
+alert("Step 3");
+
 const db = getFirestore(app);
 
-console.log("✅ Firebase Connected");
-console.log("✅ Firestore Connected");
+alert("Step 4");
+
 window.db = db;
-export { db };
+
+console.log("Firebase OK");
