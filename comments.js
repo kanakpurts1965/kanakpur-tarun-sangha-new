@@ -111,12 +111,11 @@ onSnapshot(q, (snapshot) => {
 
         }
 
-        commentsBox.innerHTML += `
-        
         const commentCard = document.createElement("div");
-        commentCard.className = "comment-card";
 
-        commentCard.innerHTML = `
+commentCard.className = "comment-card";
+
+commentCard.innerHTML = `
 
         <div class="comment-header">
 
