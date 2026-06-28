@@ -3,15 +3,18 @@
 // ==========================================
 
 import { db } from "./firebase.js";
-
 import {
   collection,
   addDoc,
   serverTimestamp,
   query,
   orderBy,
-  onSnapshot
+  onSnapshot,
+  doc,
+  updateDoc,
+  increment
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
 
 
 // ==========================================
