@@ -737,3 +737,58 @@ justify-content:center;
     background:#a50000;
     transform:scale(1.1);
 }
+/* ==========================
+   RECENT COMMENTS BOX
+========================== */
+
+.recent-comments{
+
+    background:#ffffff;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.10);
+
+}
+
+#comments{
+
+    max-height:420px;
+
+    overflow-y:auto;
+
+    padding-right:10px;
+
+}
+
+/* Scrollbar */
+
+#comments::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+#comments::-webkit-scrollbar-track{
+
+    background:#eeeeee;
+
+    border-radius:10px;
+
+}
+
+#comments::-webkit-scrollbar-thumb{
+
+    background:#8B0000;
+
+    border-radius:10px;
+
+}
+
+#comments::-webkit-scrollbar-thumb:hover{
+
+    background:#a50000;
+
+}
