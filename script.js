@@ -285,8 +285,6 @@ behavior:"smooth"
    GOOGLE APPS SCRIPT URL
 ========================================== */
 
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby92Qi49qhcf7vVxlx_-s1I2TEWdB4ZlI5n3BgwjkVRJ4E18k4YHaZc-lXzPuYQPQ2Z/exec";
-
 
 /* ==========================================
    COMMENT SUBMIT
