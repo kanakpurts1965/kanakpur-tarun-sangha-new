@@ -163,7 +163,51 @@ onSnapshot(q, (snapshot) => {
 
             <div id="reply-list-${item.id}"></div>
         `;
+// ==========================================
+// LOAD REPLIES
+// ==========================================
 
+const replyBox = card.querySelector(`#reply-list-${item.id}`);
+
+const replyQuery = query(
+    repliesRef,
+    where("commentId", "==", item.id),
+    orderBy("createdAt", "asc")
+);
+
+onSnapshot(replyQuery, (replySnapshot) => {
+
+    replyBox.innerHTML = "";
+
+    replySnapshot.forEach((replyDoc) => {
+
+        const reply = replyDoc.data();
+
+        const div = document.createElement("div");
+
+        div.className = "reply-card";
+
+        div.innerHTML = `
+
+            <div class="reply-name">
+
+                👤 ${reply.name}
+
+            </div>
+
+            <div class="reply-text">
+
+                ${reply.text}
+
+            </div>
+
+        `;
+
+        replyBox.appendChild(div);
+
+    });
+
+});
         commentsBox.appendChild(card);
 
     });
