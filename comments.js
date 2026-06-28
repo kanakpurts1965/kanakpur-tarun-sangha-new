@@ -6,7 +6,11 @@ import {
     serverTimestamp,
     query,
     orderBy,
-    onSnapshot
+    onSnapshot,
+     doc,
+    updateDoc,
+    increment,
+    arrayUnion
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const form = document.getElementById("commentForm");
@@ -165,5 +169,45 @@ onSnapshot(q, (snapshot) => {
         commentsBox.appendChild(commentCard);
 
     });
+
+});
+/* ==========================================
+   LIKE BUTTON
+========================================== */
+
+document.addEventListener("click", async (e) => {
+
+    if (!e.target.closest(".like-btn")) return;
+
+    const btn = e.target.closest(".like-btn");
+
+    const id = btn.dataset.id;
+
+    try {
+
+        await updateDoc(doc(db, "comments", id), {
+
+            likes: increment(1)
+
+        });
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+    }
+
+});
+/* ==========================================
+   REPLY BUTTON
+========================================== */
+
+document.addEventListener("click",(e)=>{
+
+    if(!e.target.closest(".reply-btn")) return;
+
+    alert("🚀 Reply System Part 5 এ শুরু হবে");
 
 });
