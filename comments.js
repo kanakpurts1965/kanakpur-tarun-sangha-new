@@ -165,3 +165,30 @@ onSnapshot(q, (snapshot) => {
     });
 
 });
+// ==========================================
+// LIKE BUTTON
+// ==========================================
+
+document.addEventListener("click", async (e) => {
+
+    const likeBtn = e.target.closest(".like-btn");
+
+    if (!likeBtn) return;
+
+    const commentId = likeBtn.dataset.id;
+
+    try {
+
+        await updateDoc(doc(db, "comments", commentId), {
+
+            likes: increment(1)
+
+        });
+
+    } catch (err) {
+
+        console.error("Like Error:", err);
+
+    }
+
+});
