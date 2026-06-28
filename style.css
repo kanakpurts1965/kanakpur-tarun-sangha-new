@@ -670,3 +670,29 @@ section{
 }
 
 }
+/* ==========================
+   BACK TO TOP
+========================== */
+
+#topBtn{
+    position:fixed;
+    bottom:25px;
+    right:25px;
+    width:55px;
+    height:55px;
+    border:none;
+    border-radius:50%;
+    background:#8B0000;
+    color:#fff;
+    font-size:24px;
+    cursor:pointer;
+    display:none;
+    z-index:9999;
+    box-shadow:0 5px 15px rgba(0,0,0,.3);
+    transition:.3s;
+}
+
+#topBtn:hover{
+    background:#a50000;
+    transform:scale(1.1);
+}
