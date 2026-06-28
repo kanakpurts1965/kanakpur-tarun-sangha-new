@@ -688,6 +688,26 @@ section{
 .stats-card p{
     font-size:11px;
 }
+   /* ==========================
+   HERO VIDEO MOBILE
+========================== */
+
+.hero{
+    grid-template-columns:1fr;
+    gap:20px;
+}
+
+.hero-video{
+    width:100%;
+}
+
+.hero-video video{
+    width:100%;
+    height:350px;      /* চাইলে 350px বা 400px করতে পারো */
+    object-fit:cover;
+    border-radius:18px;
+}
+   
 }
 /* ==========================
    BACK TO TOP
