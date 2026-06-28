@@ -884,3 +884,38 @@ justify-content:center;
     background:#a30000;
 
 }
+/* ==========================
+   REPLY CARD
+========================== */
+
+.reply-card{
+
+    margin-top:10px;
+
+    margin-left:45px;
+
+    background:#f4f4f4;
+
+    padding:10px;
+
+    border-left:4px solid #8B0000;
+
+    border-radius:8px;
+
+}
+
+.reply-name{
+
+    font-weight:bold;
+
+    color:#8B0000;
+
+    margin-bottom:5px;
+
+}
+
+.reply-text{
+
+    font-size:15px;
+
+}
