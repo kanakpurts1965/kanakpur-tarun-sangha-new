@@ -336,57 +336,7 @@ if (adminLogo) {
     });
 
 }
-/* ==========================================
-   HIDDEN ADMIN (5 SEC HOLD LOGO)
-========================================== */
 
-const topLogo = document.getElementById("topLogo");
-
-let holdTimer;
-
-if (topLogo) {
-
-    // Mobile
-    topLogo.addEventListener("touchstart", () => {
-
-        holdTimer = setTimeout(() => {
-
-            window.location.href = "admin.html";
-
-        }, 5000);
-
-    });
-
-    topLogo.addEventListener("touchend", () => {
-
-        clearTimeout(holdTimer);
-
-    });
-
-    // Desktop
-    topLogo.addEventListener("mousedown", () => {
-
-        holdTimer = setTimeout(() => {
-
-            window.location.href = "admin.html";
-
-        }, 5000);
-
-    });
-
-    topLogo.addEventListener("mouseup", () => {
-
-        clearTimeout(holdTimer);
-
-    });
-
-    topLogo.addEventListener("mouseleave", () => {
-
-        clearTimeout(holdTimer);
-
-    });
-
-}
 /* ==========================================
    PROFESSIONAL HOLD ADMIN LOGIN
 ========================================== */
@@ -395,7 +345,7 @@ const topLogo = document.getElementById("topLogo");
 const holdIndicator = document.getElementById("holdIndicator");
 const holdText = document.getElementById("holdText");
 
-let holdTimer = null;
+let holdTimer = 
 let progressTimer = null;
 let progress = 0;
 
