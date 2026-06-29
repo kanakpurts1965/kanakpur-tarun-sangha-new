@@ -1046,3 +1046,28 @@ color:#8B0000;
 box-shadow:0 10px 30px rgba(0,0,0,.35);
 
 }
+.holdCircle{
+
+    animation:holdPop .35s ease;
+
+}
+
+@keyframes holdPop{
+
+0%{
+
+transform:scale(.6);
+
+opacity:0;
+
+}
+
+100%{
+
+transform:scale(1);
+
+opacity:1;
+
+}
+
+}
