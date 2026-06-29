@@ -993,3 +993,56 @@ if (adminLogo) {
     });
 
 }
+/* ==========================================
+   HOLD ADMIN INDICATOR
+========================================== */
+
+#holdIndicator{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+width:100%;
+
+height:100%;
+
+background:rgba(0,0,0,.35);
+
+display:none;
+
+justify-content:center;
+
+align-items:center;
+
+z-index:99999;
+
+}
+
+.holdCircle{
+
+width:120px;
+
+height:120px;
+
+border-radius:50%;
+
+background:white;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+font-size:28px;
+
+font-weight:bold;
+
+color:#8B0000;
+
+box-shadow:0 10px 30px rgba(0,0,0,.35);
+
+}
