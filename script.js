@@ -282,142 +282,54 @@ behavior:"smooth"
 
 }
 /* ==========================================
-   GOOGLE APPS SCRIPT URL
+   SECRET ADMIN (5 DOUBLE CLICK)
 ========================================== */
 
+const topLogo = document.getElementById("topLogo");
 
-/* ==========================================
-   COMMENT SUBMIT
-========================================== */
+let clickCount = 0;
+let clickTimeout;
 
+if (topLogo) {
 
-/* ==========================================
-   LOAD RECENT COMMENTS
-========================================== */
+    topLogo.addEventListener("dblclick", () => {
 
+        clickCount++;
 
+        clearTimeout(clickTimeout);
 
+        clickTimeout = setTimeout(() => {
 
-/* ==========================================
-   FINISHED
-========================================== */
+            clickCount = 0;
 
-console.log("Kanakpur Tarun Sangha Website v3.0 Loaded Successfully"); 
-/* ==========================================
-   HIDDEN ADMIN LOGIN
-========================================== */
+        }, 3000);
 
-let adminClick = 0;
+        if (clickCount >= 5) {
 
-const adminLogo = document.getElementById("adminLogo");
-
-if (adminLogo) {
-
-    adminLogo.addEventListener("click", () => {
-
-        adminClick++;
-
-        console.log("Admin Click:", adminClick);
-
-        if (adminClick >= 5) {
-
-            adminClick = 0;
+            clickCount = 0;
 
             window.location.href = "admin.html";
 
         }
 
-        setTimeout(() => {
-
-            adminClick = 0;
-
-        }, 3000);
-
     });
 
 }
-
 /* ==========================================
-   PROFESSIONAL HOLD ADMIN LOGIN
+   SECRET ADMIN (CTRL + SHIFT + A)
 ========================================== */
 
-const topLogo = document.getElementById("topLogo");
-const holdIndicator = document.getElementById("holdIndicator");
-const holdText = document.getElementById("holdText");
+document.addEventListener("keydown", (e) => {
 
-let holdTimer = null;
-let progressTimer = null;
-let progress = 0;
+    if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "a") {
 
-function startHold() {
-
-    progress = 0;
-
-    holdIndicator.style.display = "flex";
-
-    if (navigator.vibrate) {
-
-        navigator.vibrate(80);
-
-    }
-
-    holdText.innerHTML = "0%";
-
-    progressTimer = setInterval(() => {
-
-        progress += 2;
-
-        holdText.innerHTML = progress + "%";
-
-        if (progress >= 100) {
-
-            clearInterval(progressTimer);
-
-        }
-
-    }, 100);
-
-    holdTimer = setTimeout(() => {
-
-        holdIndicator.style.display = "none";
+        e.preventDefault();
 
         window.location.href = "admin.html";
 
-    }, 5000);
+    }
 
-}
+});
 
-function cancelHold() {
+console.log("Kanakpur Tarun Sangha Website v5.0 Loaded Successfully"); 
 
-    clearTimeout(holdTimer);
-
-    clearInterval(progressTimer);
-
-    progress = 0;
-
-    holdText.innerHTML = "0%";
-
-    holdIndicator.style.display = "none";
-
-}
-
-if (topLogo) {
-
-    // Desktop
-
-    topLogo.addEventListener("mousedown", startHold);
-
-    topLogo.addEventListener("mouseup", cancelHold);
-
-    topLogo.addEventListener("mouseleave", cancelHold);
-
-    // Mobile
-
-    topLogo.addEventListener("touchstart", startHold);
-
-    topLogo.addEventListener("touchend", cancelHold);
-
-    topLogo.addEventListener("touchcancel", cancelHold);
-
-}
-    
