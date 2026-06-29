@@ -387,3 +387,86 @@ if (topLogo) {
     });
 
 }
+/* ==========================================
+   PROFESSIONAL HOLD ADMIN LOGIN
+========================================== */
+
+const topLogo = document.getElementById("topLogo");
+const holdIndicator = document.getElementById("holdIndicator");
+const holdText = document.getElementById("holdText");
+
+let holdTimer = null;
+let progressTimer = null;
+let progress = 0;
+
+function startHold() {
+
+    progress = 0;
+
+    holdIndicator.style.display = "flex";
+
+    if (navigator.vibrate) {
+
+        navigator.vibrate(80);
+
+    }
+
+    holdText.innerHTML = "0%";
+
+    progressTimer = setInterval(() => {
+
+        progress += 2;
+
+        holdText.innerHTML = progress + "%";
+
+        if (progress >= 100) {
+
+            clearInterval(progressTimer);
+
+        }
+
+    }, 100);
+
+    holdTimer = setTimeout(() => {
+
+        holdIndicator.style.display = "none";
+
+        window.location.href = "admin.html";
+
+    }, 5000);
+
+}
+
+function cancelHold() {
+
+    clearTimeout(holdTimer);
+
+    clearInterval(progressTimer);
+
+    progress = 0;
+
+    holdText.innerHTML = "0%";
+
+    holdIndicator.style.display = "none";
+
+}
+
+if (topLogo) {
+
+    // Desktop
+
+    topLogo.addEventListener("mousedown", startHold);
+
+    topLogo.addEventListener("mouseup", cancelHold);
+
+    topLogo.addEventListener("mouseleave", cancelHold);
+
+    // Mobile
+
+    topLogo.addEventListener("touchstart", startHold);
+
+    topLogo.addEventListener("touchend", cancelHold);
+
+    topLogo.addEventListener("touchcancel", cancelHold);
+
+}
