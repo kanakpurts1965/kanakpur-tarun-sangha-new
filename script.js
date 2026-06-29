@@ -470,3 +470,4 @@ if (topLogo) {
     topLogo.addEventListener("touchcancel", cancelHold);
 
 }
+    
