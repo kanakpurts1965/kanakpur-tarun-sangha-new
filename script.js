@@ -345,7 +345,7 @@ const topLogo = document.getElementById("topLogo");
 const holdIndicator = document.getElementById("holdIndicator");
 const holdText = document.getElementById("holdText");
 
-let holdTimer = 
+let holdTimer = null;
 let progressTimer = null;
 let progress = 0;
 
