@@ -1,14 +1,94 @@
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
+
 <meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Admin Dashboard</title>
+
+<link rel="stylesheet" href="admin.css">
+
 </head>
+
 <body>
 
-<h1>👑 Welcome Admin</h1>
+<div class="dashboard">
 
-<p>Kanakpur Tarun Sangha Dashboard</p>
+    <aside class="sidebar">
+
+        <h2>👑 KTS Admin</h2>
+
+        <ul>
+
+            <li id="menuDashboard">🏠 Dashboard</li>
+
+            <li id="menuComments">💬 Comments</li>
+
+            <li id="menuReplies">↩ Replies</li>
+
+            <li id="menuNotice">📢 Notice</li>
+
+            <li id="menuGallery">🖼 Gallery</li>
+
+            <li id="menuMembers">👥 Members</li>
+
+            <li id="menuSettings">⚙ Settings</li>
+
+            <li id="logoutBtn">🚪 Logout</li>
+
+        </ul>
+
+    </aside>
+
+    <main class="content">
+
+        <h1>👑 Kanakpur Tarun Sangha</h1>
+
+        <p>Welcome Admin</p>
+
+        <div class="cards">
+
+            <div class="card">
+
+                <h3 id="totalComments">0</h3>
+
+                <p>Total Comments</p>
+
+            </div>
+
+            <div class="card">
+
+                <h3 id="totalReplies">0</h3>
+
+                <p>Total Replies</p>
+
+            </div>
+
+            <div class="card">
+
+                <h3 id="totalLikes">0</h3>
+
+                <p>Total Likes</p>
+
+            </div>
+
+        </div>
+
+        <div id="pageContent">
+
+            Dashboard Loading...
+
+        </div>
+
+    </main>
+
+</div>
+
+<script type="module" src="dashboard.js"></script>
 
 </body>
+
 </html>
