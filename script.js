@@ -303,3 +303,36 @@ behavior:"smooth"
 ========================================== */
 
 console.log("Kanakpur Tarun Sangha Website v3.0 Loaded Successfully"); 
+/* ==========================================
+   HIDDEN ADMIN LOGIN
+========================================== */
+
+let adminClick = 0;
+
+const adminLogo = document.getElementById("adminLogo");
+
+if (adminLogo) {
+
+    adminLogo.addEventListener("click", () => {
+
+        adminClick++;
+
+        console.log("Admin Click:", adminClick);
+
+        if (adminClick >= 5) {
+
+            adminClick = 0;
+
+            window.location.href = "admin.html";
+
+        }
+
+        setTimeout(() => {
+
+            adminClick = 0;
+
+        }, 3000);
+
+    });
+
+}
