@@ -408,7 +408,7 @@ document.addEventListener("click", async (e) => {
             name,
 
             text,
-
+             isAdmin: false,
             likes: 0,
 
             createdAt: serverTimestamp()
