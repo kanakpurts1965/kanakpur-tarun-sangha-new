@@ -5,7 +5,8 @@ import {
     onSnapshot,
     deleteDoc,
     updateDoc,
-    doc
+    doc,
+   getdoc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const repliesRef = collection(db, "replies");
@@ -40,7 +41,17 @@ if (menuReplies) {
             }
 
             snapshot.forEach((item) => {
+                const commentSnap = await getDoc(
+    doc(db, "comments", data.commentId)
+);
 
+let originalComment = "Comment পাওয়া যায়নি";
+
+if (commentSnap.exists()) {
+
+    originalComment = commentSnap.data().comment;
+
+}
                 const data = item.data();
 
                 const card = document.createElement("div");
