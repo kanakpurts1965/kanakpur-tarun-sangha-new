@@ -174,3 +174,42 @@ document.addEventListener("click", async (e) => {
     }
 
 });
+
+
+// ==========================================
+// PIN / UNPIN COMMENT
+// ==========================================
+
+document.addEventListener("click", async (e) => {
+
+    const pinBtn = e.target.closest(".pin-comment");
+
+    if (!pinBtn) return;
+
+    const commentId = pinBtn.dataset.id;
+    const isPinned = pinBtn.dataset.pinned === "true";
+
+    try {
+
+        await updateDoc(
+            doc(db, "comments", commentId),
+            {
+                pinned: !isPinned
+            }
+        );
+
+        alert(
+            isPinned
+                ? "📍 Comment Unpinned"
+                : "📌 Comment Pinned"
+        );
+
+    } catch (err) {
+
+        console.error(err);
+
+        alert("❌ Pin Update Failed");
+
+    }
+
+});
