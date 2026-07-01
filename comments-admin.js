@@ -96,3 +96,50 @@ document.addEventListener("click", async (e) => {
     }
 
 });
+/* ==========================================
+   EDIT COMMENT
+========================================== */
+
+document.addEventListener("click", async (e) => {
+
+    const btn = e.target.closest(".edit-comment");
+
+    if (!btn) return;
+
+    const newComment = prompt(
+        "নতুন Comment লিখুন:",
+        btn.dataset.comment
+    );
+
+    if (newComment === null) return;
+
+    if (newComment.trim() === "") {
+
+        alert("Comment খালি রাখা যাবে না।");
+
+        return;
+
+    }
+
+    try {
+
+        await updateDoc(
+            doc(db, "comments", btn.dataset.id),
+            {
+                comment: newComment.trim()
+            }
+        );
+
+        alert("✅ Comment Update হয়েছে");
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+        alert("❌ Update Failed");
+
+    }
+
+});
