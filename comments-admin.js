@@ -56,30 +56,43 @@ data-pinned="${data.pinned || false}">
 
 ${data.pinned ? "📍 Unpin" : "📌 Pin"}
 
-</button>
+/* ==========================================
+   TOGGLE PIN
+========================================== */
 
-    <button class="edit-comment"
-            data-id="${item.id}"
-            data-comment="${data.comment}">
-        ✏ Edit
-    </button>
+document.addEventListener("click", async (e) => {
 
-    <button class="delete-comment"
-            data-id="${item.id}">
-        🗑 Delete
-    </button>
+    const btn = e.target.closest(".pin-comment");
 
-</div>
+    if (!btn) return;
 
-            </div>
+    const id = btn.dataset.id;
 
-            `;
+    const pinned = btn.dataset.pinned === "true";
 
-        });
+    try {
 
-    });
+        await updateDoc(
 
-};
+            doc(db, "comments", id),
+
+            {
+                pinned: !pinned
+            }
+
+        );
+
+    }
+
+    catch(err){
+
+        console.error(err);
+
+        alert("Pin Update Failed");
+
+    }
+
+});
 
 
 document.addEventListener("click", async (e) => {
