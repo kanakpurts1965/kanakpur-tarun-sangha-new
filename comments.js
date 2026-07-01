@@ -80,8 +80,8 @@ if (form) {
 
 const q = query(
     commentsRef,
+    orderBy("pinned", "desc"),
     orderBy("createdAt", "desc")
-  orderBy("createdAt", "desc")
 );
 
 onSnapshot(q, (snapshot) => {
