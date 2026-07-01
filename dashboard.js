@@ -43,24 +43,3 @@ onSnapshot(commentsRef,(snap)=>{
 
 });
 
-// Logout
-document.getElementById("logoutBtn").onclick=()=>{
-
-    localStorage.removeItem("adminLoggedIn");
-
-    window.location.href="admin.html";
-
-};
-document.getElementById("menuComments").onclick = () => {
-
-    document.getElementById("pageContent").innerHTML = `
-        <h2>💬 Comment Management</h2>
-
-        <div id="adminComments">
-
-            Loading...
-
-        </div>
-    `;
-
-};
