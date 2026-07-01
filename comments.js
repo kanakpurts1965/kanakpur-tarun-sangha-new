@@ -263,7 +263,11 @@ data-id="${item.id}">
 
 <div class="reply-name">
 
-${reply.name}
+    ${
+        reply.isAdmin
+        ? '👑 <span class="admin-badge">ADMIN</span>'
+        : "👤 " + reply.name
+    }
 
 </div>
 
