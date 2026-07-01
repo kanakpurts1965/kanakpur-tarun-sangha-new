@@ -1,12 +1,8 @@
 import { db } from "./firebase.js";
 
 import {
-   collection,
-    onSnapshot,
-    deleteDoc,
-    updateDoc,
-    doc,
-   getdoc
+    collection,
+    onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const repliesRef = collection(db, "replies");
@@ -20,35 +16,34 @@ if (menuReplies) {
         const page = document.getElementById("pageContent");
 
         page.innerHTML = `
-            <h2>💬 Reply Management</h2>
-            <div id="adminReplies">
-                Loading...
-            </div>
-        `;
 
-        const box = document.getElementById("adminReplies");
+<h2>💬 Reply Management</h2>
+
+<div id="adminReplies">
+
+Loading...
+
+</div>
+
+`;
+
+        const adminReplies = document.getElementById("adminReplies");
 
         onSnapshot(repliesRef, (snapshot) => {
 
-            box.innerHTML = "";
+            adminReplies.innerHTML = "";
 
             if (snapshot.empty) {
 
-                box.innerHTML = "কোনো Reply নেই।";
+                adminReplies.innerHTML = "কোনো Reply নেই।";
 
                 return;
 
             }
 
             snapshot.forEach((item) => {
-           snapshot.forEach((item) => {
 
-    const data = item.data();
-
-    const card = document.createElement("div");
-
-    ...
-});                  const data = item.data();
+                const data = item.data();
 
                 const card = document.createElement("div");
 
@@ -56,19 +51,11 @@ if (menuReplies) {
 
                 card.innerHTML = `
 
-<h3>${data.name}</h3>
+<h3>👤 ${data.name}</h3>
 
 <p>${data.text}</p>
 
 <div class="admin-actions">
-
-<button
-class="delete-reply"
-data-id="${item.id}">
-
-🗑 Delete
-
-</button>
 
 <button
 class="edit-reply"
@@ -79,11 +66,19 @@ data-text="${data.text}">
 
 </button>
 
+<button
+class="delete-reply"
+data-id="${item.id}">
+
+🗑 Delete
+
+</button>
+
 </div>
 
 `;
 
-                box.appendChild(card);
+                adminReplies.appendChild(card);
 
             });
 
@@ -92,82 +87,3 @@ data-text="${data.text}">
     });
 
 }
-
-
-// ==========================================
-// DELETE REPLY
-// ==========================================
-
-document.addEventListener("click", async (e) => {
-
-    const btn = e.target.closest(".delete-reply");
-
-    if (!btn) return;
-
-    if (!confirm("এই Reply Delete করবেন?")) return;
-
-    try {
-
-        await deleteDoc(
-            doc(db, "replies", btn.dataset.id)
-        );
-
-        alert("✅ Reply Delete হয়েছে");
-
-    } catch (err) {
-
-        console.error(err);
-
-        alert("❌ Reply Delete Failed");
-
-    }
-
-});
-
-// ==========================================
-// EDIT REPLY
-// ==========================================
-
-document.addEventListener("click", async (e) => {
-
-    const btn = e.target.closest(".edit-reply");
-
-    if (!btn) return;
-
-    const newReply = prompt(
-        "নতুন Reply লিখুন:",
-        btn.dataset.text
-    );
-
-    if (newReply === null) return;
-
-    if (newReply.trim() === "") {
-
-        alert("Reply খালি রাখা যাবে না।");
-
-        return;
-
-    }
-
-    try {
-
-        await updateDoc(
-            doc(db, "replies", btn.dataset.id),
-            {
-                text: newReply.trim()
-            }
-        );
-
-        alert("✅ Reply Update হয়েছে");
-
-    }
-
-    catch (err) {
-
-        console.error(err);
-
-        alert("❌ Reply Update Failed");
-
-    }
-
-});
