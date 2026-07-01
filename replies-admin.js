@@ -61,6 +61,14 @@ Loading...
 <div class="admin-actions">
 
 <button
+class="admin-reply"
+data-comment="${data.commentId}">
+
+👑 Admin Reply
+
+</button>
+
+<button
 class="edit-reply"
 data-id="${item.id}"
 data-text="${data.text}">
