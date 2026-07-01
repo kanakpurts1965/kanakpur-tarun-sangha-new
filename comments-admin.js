@@ -49,10 +49,14 @@ document.getElementById("menuComments").onclick = () => {
 
             <div class="admin-actions">
 
-    <button class="pin-comment"
-            data-id="${item.id}">
-        📌 Pin
-    </button>
+  <button
+class="pin-comment"
+data-id="${item.id}"
+data-pinned="${data.pinned || false}">
+
+${data.pinned ? "📍 Unpin" : "📌 Pin"}
+
+</button>
 
     <button class="edit-comment"
             data-id="${item.id}"
