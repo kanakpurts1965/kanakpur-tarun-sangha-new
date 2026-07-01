@@ -1,167 +1,98 @@
-
 import { db } from "./firebase.js";
 
-
 import {
-   collection,
-    onSnapshot,
-    deleteDoc,
-    updateDoc,
-    doc
+    collection,
+    onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const commentsRef = collection(db, "comments");
 
-document.getElementById("menuComments").onclick = () => {
+const menuComments = document.getElementById("menuComments");
 
-    const page = document.getElementById("pageContent");
+if (menuComments) {
 
-    page.innerHTML = `
-        <h2>💬 Comment Management</h2>
-        <div id="adminComments">Loading...</div>
-    `;
+    menuComments.addEventListener("click", () => {
 
-    const adminComments = document.getElementById("adminComments");
+        const page = document.getElementById("pageContent");
 
-    onSnapshot(commentsRef, (snapshot) => {
+        page.innerHTML = `
 
-        adminComments.innerHTML = "";
+<h2>💬 Comment Management</h2>
 
-        if (snapshot.empty) {
+<div id="adminComments">
 
-            adminComments.innerHTML = "কোনো Comment নেই।";
+Loading...
 
-            return;
+</div>
 
-        }
+`;
 
-        snapshot.forEach((item) => {
+        const adminComments = document.getElementById("adminComments");
 
-            const data = item.data();
+        onSnapshot(commentsRef, (snapshot) => {
 
-            adminComments.innerHTML += `
+            adminComments.innerHTML = "";
 
-            <div class="admin-comment">
+            if (snapshot.empty) {
 
-                <h3>${data.name}</h3>
+                adminComments.innerHTML = "কোনো Comment নেই।";
 
-                <p>${data.comment}</p>
+                return;
 
-            <div class="admin-actions">
+            }
 
-  <button
+            snapshot.forEach((item) => {
+
+                const data = item.data();
+
+                const card = document.createElement("div");
+
+                card.className = "admin-comment";
+
+                card.innerHTML = `
+
+<h3>${data.name}</h3>
+
+<p>${data.comment}</p>
+
+<div class="admin-actions">
+
+<button
 class="pin-comment"
 data-id="${item.id}"
 data-pinned="${data.pinned || false}">
 
 ${data.pinned ? "📍 Unpin" : "📌 Pin"}
 
-/* ==========================================
-   TOGGLE PIN
-========================================== */
+</button>
 
-document.addEventListener("click", async (e) => {
+<button
+class="edit-comment"
+data-id="${item.id}"
+data-comment="${data.comment}">
 
-    const btn = e.target.closest(".pin-comment");
+✏ Edit
 
-    if (!btn) return;
+</button>
 
-    const id = btn.dataset.id;
+<button
+class="delete-comment"
+data-id="${item.id}">
 
-    const pinned = btn.dataset.pinned === "true";
+🗑 Delete
 
-    try {
+</button>
 
-        await updateDoc(
+</div>
 
-            doc(db, "comments", id),
+`;
 
-            {
-                pinned: !pinned
-            }
+                adminComments.appendChild(card);
 
-        );
+            });
 
-    }
+        });
 
-    catch(err){
+    });
 
-        console.error(err);
-
-        alert("Pin Update Failed");
-
-    }
-
-});
-
-
-document.addEventListener("click", async (e) => {
-
-    const btn = e.target.closest(".delete-comment");
-
-    if (!btn) return;
-
-    if (!confirm("এই Comment Delete করবেন?")) return;
-
-    try {
-
-        await deleteDoc(doc(db, "comments", btn.dataset.id));
-
-        alert("✅ Comment Delete হয়েছে");
-
-    } catch (err) {
-
-        console.error(err);
-
-        alert("❌ Delete Failed");
-
-    }
-
-});
-/* ==========================================
-   EDIT COMMENT
-========================================== */
-
-document.addEventListener("click", async (e) => {
-
-    const btn = e.target.closest(".edit-comment");
-
-    if (!btn) return;
-
-    const newComment = prompt(
-        "নতুন Comment লিখুন:",
-        btn.dataset.comment
-    );
-
-    if (newComment === null) return;
-
-    if (newComment.trim() === "") {
-
-        alert("Comment খালি রাখা যাবে না।");
-
-        return;
-
-    }
-
-    try {
-
-        await updateDoc(
-            doc(db, "comments", btn.dataset.id),
-            {
-                comment: newComment.trim()
-            }
-        );
-
-        alert("✅ Comment Update হয়েছে");
-
-    }
-
-    catch (err) {
-
-        console.error(err);
-
-        alert("❌ Update Failed");
-
-    }
-
-});
+}
