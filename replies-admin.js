@@ -1,10 +1,12 @@
 import { db } from "./firebase.js"; 
 
 import {
-   collection,
+    collection,
     onSnapshot,
+    addDoc,
     deleteDoc,
     updateDoc,
+    serverTimestamp,
     doc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
@@ -183,10 +185,7 @@ document.addEventListener("click", async (e) => {
 // ADMIN REPLY
 // ==========================================
 
-document.addEventListener("click",(e)=>{
-
-const btn=e.target.closest(".admin-reply");
-
+document.addEventListener("click", async (e)=>{
 if(!btn) return;
 
 const text=prompt("Admin Reply লিখুন");
@@ -201,6 +200,33 @@ return;
 
 }
 
-alert("✅ পরের ধাপে এই Reply Firestore-এ Save হবে");
+try {
 
+    await addDoc(collection(db, "replies"), {
+
+        commentId: btn.dataset.comment,
+
+        name: "ADMIN",
+
+        text: text.trim(),
+
+        isAdmin: true,
+
+        likes: 0,
+
+        createdAt: serverTimestamp()
+
+    });
+
+    alert("✅ Admin Reply পাঠানো হয়েছে");
+
+}
+
+catch(err){
+
+    console.error(err);
+
+    alert("❌ Reply পাঠানো যায়নি");
+
+}
 });
