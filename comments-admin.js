@@ -46,10 +46,20 @@ document.getElementById("menuComments").onclick = () => {
 
                 <p>${data.comment}</p>
 
-                <button class="delete-comment"
-                        data-id="${item.id}">
-                    🗑 Delete
-                </button>
+               <div class="admin-actions">
+
+    <button class="edit-comment"
+            data-id="${item.id}"
+            data-comment="${data.comment}">
+        ✏ Edit
+    </button>
+
+    <button class="delete-comment"
+            data-id="${item.id}">
+        🗑 Delete
+    </button>
+
+</div>
 
             </div>
 
