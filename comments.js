@@ -289,3 +289,137 @@ ${reply.text}
     });
 
 });
+
+// ==========================================
+// LIKE BUTTON
+// ==========================================
+
+document.addEventListener("click", async (e) => {
+
+    const likeBtn = e.target.closest(".like-btn");
+
+    if (!likeBtn) return;
+
+    try {
+
+        await updateDoc(
+            doc(db, "comments", likeBtn.dataset.id),
+            {
+                likes: increment(1)
+            }
+        );
+
+    } catch (err) {
+
+        console.error("Like Error:", err);
+
+    }
+
+});
+
+
+// ==========================================
+// REPLY BOX
+// ==========================================
+
+document.addEventListener("click", (e) => {
+
+    const btn = e.target.closest(".reply-btn");
+
+    if (!btn) return;
+
+    const id = btn.dataset.id;
+
+    const replyArea = document.getElementById(`reply-list-${id}`);
+
+    if (!replyArea) return;
+
+    if (replyArea.querySelector(".reply-box")) return;
+
+    replyArea.insertAdjacentHTML("beforeend", `
+
+<div class="reply-box">
+
+<input
+type="text"
+id="reply-name-${id}"
+placeholder="আপনার নাম">
+
+<textarea
+id="reply-text-${id}"
+placeholder="আপনার উত্তর লিখুন..."></textarea>
+
+<button
+class="reply-submit"
+data-id="${id}">
+
+📩 Reply পাঠান
+
+</button>
+
+</div>
+
+`);
+
+});
+
+
+// ==========================================
+// REPLY SUBMIT
+// ==========================================
+
+document.addEventListener("click", async (e) => {
+
+    const btn = e.target.closest(".reply-submit");
+
+    if (!btn) return;
+
+    const id = btn.dataset.id;
+
+    const name = document
+        .getElementById(`reply-name-${id}`)
+        .value
+        .trim();
+
+    const text = document
+        .getElementById(`reply-text-${id}`)
+        .value
+        .trim();
+
+    if (!name || !text) {
+
+        alert("নাম ও Reply লিখুন");
+
+        return;
+
+    }
+
+    try {
+
+        await addDoc(repliesRef, {
+
+            commentId: id,
+
+            name,
+
+            text,
+
+            likes: 0,
+
+            createdAt: serverTimestamp()
+
+        });
+
+        alert("✅ Reply সফলভাবে পাঠানো হয়েছে");
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+        alert("❌ Reply পাঠানো যায়নি");
+
+    }
+
+});
