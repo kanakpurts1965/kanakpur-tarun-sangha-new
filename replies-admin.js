@@ -2,7 +2,9 @@ import { db } from "./firebase.js";
 
 import {
     collection,
-    onSnapshot
+    onSnapshot,
+    deleteDoc,
+    doc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const repliesRef = collection(db, "replies");
@@ -82,3 +84,34 @@ data-text="${data.text}">
     });
 
 }
+
+
+// ==========================================
+// DELETE REPLY
+// ==========================================
+
+document.addEventListener("click", async (e) => {
+
+    const btn = e.target.closest(".delete-reply");
+
+    if (!btn) return;
+
+    if (!confirm("এই Reply Delete করবেন?")) return;
+
+    try {
+
+        await deleteDoc(
+            doc(db, "replies", btn.dataset.id)
+        );
+
+        alert("✅ Reply Delete হয়েছে");
+
+    } catch (err) {
+
+        console.error(err);
+
+        alert("❌ Reply Delete Failed");
+
+    }
+
+});
