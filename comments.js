@@ -139,7 +139,9 @@ onSnapshot(q, (snapshot) => {
 
         const card = document.createElement("div");
 
-        card.className = "comment-card";
+card.className = data.pinned
+    ? "comment-card pinned"
+    : "comment-card";
 
         card.innerHTML = `
 
