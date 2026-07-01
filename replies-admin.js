@@ -1,9 +1,10 @@
 import { db } from "./firebase.js";
 
 import {
-    collection,
+   collection,
     onSnapshot,
     deleteDoc,
+    updateDoc,
     doc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
@@ -111,6 +112,54 @@ document.addEventListener("click", async (e) => {
         console.error(err);
 
         alert("❌ Reply Delete Failed");
+
+    }
+
+});
+
+// ==========================================
+// EDIT REPLY
+// ==========================================
+
+document.addEventListener("click", async (e) => {
+
+    const btn = e.target.closest(".edit-reply");
+
+    if (!btn) return;
+
+    const newReply = prompt(
+        "নতুন Reply লিখুন:",
+        btn.dataset.text
+    );
+
+    if (newReply === null) return;
+
+    if (newReply.trim() === "") {
+
+        alert("Reply খালি রাখা যাবে না।");
+
+        return;
+
+    }
+
+    try {
+
+        await updateDoc(
+            doc(db, "replies", btn.dataset.id),
+            {
+                text: newReply.trim()
+            }
+        );
+
+        alert("✅ Reply Update হয়েছে");
+
+    }
+
+    catch (err) {
+
+        console.error(err);
+
+        alert("❌ Reply Update Failed");
 
     }
 
