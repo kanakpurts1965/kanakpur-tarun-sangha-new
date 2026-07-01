@@ -47,7 +47,12 @@ document.getElementById("menuComments").onclick = () => {
 
                 <p>${data.comment}</p>
 
-               <div class="admin-actions">
+            <div class="admin-actions">
+
+    <button class="pin-comment"
+            data-id="${item.id}">
+        📌 Pin
+    </button>
 
     <button class="edit-comment"
             data-id="${item.id}"
