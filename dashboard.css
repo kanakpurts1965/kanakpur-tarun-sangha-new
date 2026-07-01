@@ -91,3 +91,43 @@ body{
 }
 
 }
+
+.admin-comment{
+
+    background:white;
+
+    padding:20px;
+
+    margin-bottom:15px;
+
+    border-left:5px solid #8B0000;
+
+    border-radius:10px;
+
+}
+
+.admin-comment h3{
+
+    color:#8B0000;
+
+    margin-bottom:8px;
+
+}
+
+.delete-comment{
+
+    margin-top:10px;
+
+    background:#c00000;
+
+    color:white;
+
+    border:none;
+
+    padding:10px 15px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+}
