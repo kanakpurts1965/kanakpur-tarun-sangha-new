@@ -1090,3 +1090,36 @@ border-radius:20px;
 font-weight:bold;
 
 }
+
+           
+/* ==========================================
+   PINNED COMMENT
+========================================== */
+
+.comment-card.pinned{
+
+border:2px solid #ff9800;
+
+box-shadow:0 8px 25px rgba(255,152,0,.25);
+
+}
+
+.pin-badge{
+
+display:inline-block;
+
+margin-left:8px;
+
+padding:3px 10px;
+
+background:#ff9800;
+
+color:white;
+
+font-size:12px;
+
+border-radius:20px;
+
+font-weight:bold;
+
+}
