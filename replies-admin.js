@@ -178,3 +178,29 @@ document.addEventListener("click", async (e) => {
     }
 
 });
+
+// ==========================================
+// ADMIN REPLY
+// ==========================================
+
+document.addEventListener("click",(e)=>{
+
+const btn=e.target.closest(".admin-reply");
+
+if(!btn) return;
+
+const text=prompt("Admin Reply লিখুন");
+
+if(text===null) return;
+
+if(text.trim()===""){
+
+alert("Reply খালি রাখা যাবে না");
+
+return;
+
+}
+
+alert("✅ পরের ধাপে এই Reply Firestore-এ Save হবে");
+
+});
