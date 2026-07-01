@@ -219,10 +219,34 @@ try {
 
     });
 
-    alert("✅ Admin Reply পাঠানো হয়েছে");
+  
+const commentId = btn.dataset.comment;
+
+if (!commentId || commentId === "undefined") {
+
+    alert("❌ Comment ID পাওয়া যায়নি");
+
+    return;
 
 }
+  await addDoc(collection(db, "replies"), {
 
+        commentId: commentId,
+
+        name: "ADMIN",
+
+        text: text.trim(),
+
+        isAdmin: true,
+
+        likes: 0,
+
+        createdAt: serverTimestamp()
+
+    });   
+      alert("✅ Admin Reply পাঠানো হয়েছে");
+
+}
 catch(err){
 
     console.error(err);
