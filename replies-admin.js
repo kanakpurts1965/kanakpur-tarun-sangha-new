@@ -186,6 +186,7 @@ document.addEventListener("click", async (e) => {
 // ==========================================
 
 document.addEventListener("click", async (e)=>{
+     const btn = e.target.closest(".admin-reply");
 if(!btn) return;
 
 const text=prompt("Admin Reply লিখুন");
