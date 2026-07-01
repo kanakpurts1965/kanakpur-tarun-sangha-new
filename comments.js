@@ -86,13 +86,16 @@ msg.innerHTML="❌ মন্তব্য পাঠানো যায়নি";
 // QUERY
 // ==========================================
 
-const q=query(
+const q = query(
 
 commentsRef,
 
-orderBy("createdAt","desc")
+orderBy("pinned", "desc"),
+
+orderBy("createdAt", "desc")
 
 );
+
 // ==========================================
 // REAL TIME COMMENT LOAD
 // ==========================================
