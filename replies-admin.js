@@ -41,18 +41,14 @@ if (menuReplies) {
             }
 
             snapshot.forEach((item) => {
-                const commentSnap = await getDoc(
-    doc(db, "comments", data.commentId)
-);
+           snapshot.forEach((item) => {
 
-let originalComment = "Comment পাওয়া যায়নি";
+    const data = item.data();
 
-if (commentSnap.exists()) {
+    const card = document.createElement("div");
 
-    originalComment = commentSnap.data().comment;
-
-}
-                const data = item.data();
+    ...
+});                  const data = item.data();
 
                 const card = document.createElement("div");
 
