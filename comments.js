@@ -81,6 +81,7 @@ if (form) {
 const q = query(
     commentsRef,
     orderBy("createdAt", "desc")
+  orderBy("createdAt", "desc")
 );
 
 onSnapshot(q, (snapshot) => {
@@ -131,9 +132,13 @@ onSnapshot(q, (snapshot) => {
 
                 <div class="comment-info">
 
-                    <div class="comment-name">
-                        ${data.name}
-                    </div>
+                   <div class="comment-name">
+
+    ${data.name}
+
+    ${data.pinned ? '<span class="pin-badge">📌 Pinned</span>' : ''}
+
+</div>
 
                     <div class="comment-date">
                         🕒 ${dateText}
