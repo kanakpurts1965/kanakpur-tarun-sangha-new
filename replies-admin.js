@@ -7,7 +7,8 @@ import {
     deleteDoc,
     updateDoc,
     serverTimestamp,
-    doc
+    doc,
+    getDoc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const repliesRef = collection(db, "replies");
