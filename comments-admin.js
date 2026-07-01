@@ -1,8 +1,11 @@
 import { db } from "./firebase.js";
 
 import {
-    collection,
-    onSnapshot
+   collection,
+    onSnapshot,
+    deleteDoc,
+    updateDoc,
+    doc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const commentsRef = collection(db, "comments");
@@ -96,3 +99,78 @@ data-id="${item.id}">
     });
 
 }
+
+
+// ==========================================
+// DELETE COMMENT
+// ==========================================
+
+
+document.addEventListener("click", async (e) => {
+
+    const deleteBtn = e.target.closest(".delete-comment");
+
+    if (deleteBtn) {
+
+        if (!confirm("এই Comment Delete করবেন?")) return;
+
+        try {
+
+            await deleteDoc(
+                doc(db, "comments", deleteBtn.dataset.id)
+            );
+
+            alert("✅ Comment Delete হয়েছে");
+
+        } catch (err) {
+
+            console.error(err);
+
+            alert("❌ Delete Failed");
+
+        }
+
+        return;
+    }
+
+    const editBtn = e.target.closest(".edit-comment");
+
+    if (editBtn) {
+
+        const newComment = prompt(
+            "নতুন Comment লিখুন:",
+            editBtn.dataset.comment
+        );
+
+        if (newComment === null) return;
+
+        if (newComment.trim() === "") {
+
+            alert("Comment খালি রাখা যাবে না।");
+
+            return;
+
+        }
+
+        try {
+
+            await updateDoc(
+                doc(db, "comments", editBtn.dataset.id),
+                {
+                    comment: newComment.trim()
+                }
+            );
+
+            alert("✅ Comment Update হয়েছে");
+
+        } catch (err) {
+
+            console.error(err);
+
+            alert("❌ Update Failed");
+
+        }
+
+    }
+
+});
