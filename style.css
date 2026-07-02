@@ -1434,23 +1434,23 @@ margin-bottom:30px;
 ALL MEMBERS
 ========================== */
 
-.all-members{
+.all-members-section{
 
 max-width:1200px;
 
 margin:50px auto;
 
-padding:35px;
-
 background:#fff;
 
-border-radius:20px;
+padding:30px;
 
-box-shadow:0 8px 20px rgba(0,0,0,.08);
+border-radius:18px;
+
+box-shadow:0 10px 25px rgba(0,0,0,.08);
 
 }
 
-.all-members h2{
+.all-members-section h2{
 
 text-align:center;
 
@@ -1458,45 +1458,167 @@ font-size:40px;
 
 color:#c40000;
 
-margin-bottom:35px;
+margin-bottom:10px;
 
 }
 
-.member-list{
+.member-subtitle{
 
-display:grid;
+text-align:center;
 
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+font-size:20px;
 
-gap:18px;
+margin-bottom:25px;
+
+color:#666;
 
 }
 
-.member-name{
+/* Scroll Box */
 
-background:#f5f5f5;
+.member-scroll-box{
 
-padding:18px;
+height:480px;
 
-border-radius:12px;
+overflow-y:auto;
 
-font-size:22px;
+padding-right:10px;
 
-font-weight:600;
+}
+
+/* Scrollbar */
+
+.member-scroll-box::-webkit-scrollbar{
+
+width:8px;
+
+}
+
+.member-scroll-box::-webkit-scrollbar-thumb{
+
+background:#c40000;
+
+border-radius:20px;
+
+}
+
+/* Member Row */
+
+.member-row{
+
+display:flex;
+
+align-items:center;
+
+gap:20px;
+
+padding:15px;
+
+border-bottom:1px solid #ddd;
 
 transition:.3s;
 
 }
 
-.member-name:hover{
+.member-row:hover{
 
-background:#c40000;
+background:#f8f8f8;
 
-color:#fff;
+}
 
-transform:translateY(-5px);
+/* Serial */
 
-}           
+.serial{
+
+font-size:22px;
+
+font-weight:bold;
+
+color:#c40000;
+
+width:70px;
+
+}
+
+/* Photo */
+
+.member-photo-small{
+
+width:70px;
+
+height:70px;
+
+border-radius:50%;
+
+object-fit:cover;
+
+border:3px solid #c40000;
+
+}
+
+/* Details */
+
+.member-details{
+
+flex:1;
+
+}
+
+.member-details h3{
+
+font-size:24px;
+
+margin-bottom:5px;
+
+}
+
+.member-details p{
+
+font-size:18px;
+
+margin:2px 0;
+
+}
+
+/* Mobile */
+
+@media(max-width:768px){
+
+.member-scroll-box{
+
+height:420px;
+
+}
+
+.member-photo-small{
+
+width:55px;
+
+height:55px;
+
+}
+
+.member-details h3{
+
+font-size:18px;
+
+}
+
+.member-details p{
+
+font-size:14px;
+
+}
+
+.serial{
+
+width:45px;
+
+font-size:16px;
+
+}
+
+}     
 /* ==========================
 MEMBER CARD
 ========================== */
