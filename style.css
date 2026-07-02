@@ -1718,7 +1718,27 @@ line-height:2;
 text-align:justify;
 
 }
+.phone-row{
 
+    font-size:16px;
+
+    white-space:nowrap;
+
+    margin-top:4px;
+
+}
+
+.blood-row{
+
+    font-size:16px;
+
+    margin-top:4px;
+
+    color:#c40000;
+
+    font-weight:600;
+
+}
 /* MOBILE */
 
 @media(max-width:768px){
@@ -1750,5 +1770,15 @@ font-size:32px;
 font-size:18px;
 
 }
+.phone-row{
 
+    font-size:14px;
+
+}
+
+.blood-row{
+
+    font-size:14px;
+
+}
 }
