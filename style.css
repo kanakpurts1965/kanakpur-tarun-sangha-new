@@ -1430,51 +1430,118 @@ font-size:20px;
 margin-bottom:30px;
 
 }
+/* =====================================================
+   MEMBER PAGE v6.2
+===================================================== */
+
 /* ==========================
-ALL MEMBERS
+   MEMBER CARD (President etc.)
+========================== */
+
+.member-section{
+
+    max-width:1200px;
+    margin:40px auto;
+    padding:20px;
+
+}
+
+.member-section h2{
+
+    font-size:38px;
+    color:#c40000;
+    margin-bottom:25px;
+
+}
+
+.member-card{
+
+    display:flex;
+    align-items:center;
+    gap:35px;
+    background:#fff;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 8px 20px rgba(0,0,0,.10);
+
+}
+
+.member-photo img{
+
+    width:260px;
+    height:320px;
+    object-fit:cover;
+    border-radius:15px;
+    border:5px solid #c40000;
+
+}
+
+.member-info{
+
+    flex:1;
+
+}
+
+.member-info h3{
+
+    font-size:42px;
+    color:#c40000;
+    margin-bottom:10px;
+
+}
+
+.member-info h4{
+
+    font-size:28px;
+    color:#444;
+    margin-bottom:20px;
+
+}
+
+.member-info p{
+
+    font-size:22px;
+    line-height:2;
+    text-align:justify;
+
+}
+
+/* ==========================
+   ALL MEMBERS
 ========================== */
 
 .all-members-section{
 
-max-width:1200px;
-
-margin:50px auto;
-
-background:#fff;
-
-padding:30px;
-
-border-radius:18px;
-
-box-shadow:0 10px 25px rgba(0,0,0,.08);
+    max-width:1200px;
+    margin:50px auto;
+    background:#fff;
+    padding:30px;
+    border-radius:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
 
 }
 
 .all-members-section h2{
 
-text-align:center;
-
-font-size:40px;
-
-color:#c40000;
-
-margin-bottom:10px;
+    text-align:center;
+    font-size:40px;
+    color:#c40000;
+    margin-bottom:10px;
 
 }
 
 .member-subtitle{
 
-text-align:center;
-
-font-size:20px;
-
-margin-bottom:25px;
-
-color:#666;
+    text-align:center;
+    font-size:20px;
+    color:#666;
+    margin-bottom:25px;
 
 }
 
-/* Scroll Box */
+/* ==========================
+   SCROLL BOX
+========================== */
 
 .member-scroll-box{
 
@@ -1483,8 +1550,6 @@ color:#666;
     padding-right:10px;
 
 }
-
-/* কার্যকরী সদস্য Box */
 
 .executive-list{
 
@@ -1501,13 +1566,6 @@ color:#666;
 
 }
 
-.member-scroll-box::-webkit-scrollbar-thumb{
-
-    background:#c40000;
-    border-radius:20px;
-
-}
-
 .member-scroll-box::-webkit-scrollbar-track{
 
     background:#f2f2f2;
@@ -1515,17 +1573,44 @@ color:#666;
 
 }
 
+.member-scroll-box::-webkit-scrollbar-thumb{
+
+    background:#c40000;
+    border-radius:20px;
+
+}
+
+/* ==========================
+   MEMBER ROW
+========================== */
+
+.member-row{
+
+    display:flex;
+    align-items:center;
+    gap:18px;
+    padding:14px 12px;
+    border-bottom:1px solid #ddd;
+    transition:.3s;
+
+}
+
+.member-row:hover{
+
+    background:#f8f8f8;
+
+}
+
 /* Serial */
 
 .serial{
 
-font-size:22px;
-
-font-weight:bold;
-
-color:#c40000;
-
-width:70px;
+    width:55px;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+    color:#c40000;
+    flex-shrink:0;
 
 }
 
@@ -1533,15 +1618,12 @@ width:70px;
 
 .member-photo-small{
 
-width:70px;
-
-height:70px;
-
-border-radius:50%;
-
-object-fit:cover;
-
-border:3px solid #c40000;
+    width:70px;
+    height:70px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid #c40000;
+    flex-shrink:0;
 
 }
 
@@ -1549,225 +1631,159 @@ border:3px solid #c40000;
 
 .member-details{
 
-flex:1;
+    flex:1;
+    min-width:0;
 
 }
 
 .member-details h3{
 
-font-size:24px;
-
-margin-bottom:5px;
-
-}
-
-.member-details h3{
-
+    margin:0;
     font-size:22px;
-
     font-weight:700;
-
-    margin:0 0 6px;
-
+    color:#222;
     white-space:nowrap;
-
     overflow:hidden;
-
     text-overflow:ellipsis;
 
 }
 
-/* Mobile */
+/* Phone */
+
+.phone-row{
+
+    margin-top:6px;
+    font-size:16px;
+    color:#444;
+    white-space:nowrap;
+
+}
+
+/* Blood */
+
+.blood-row{
+
+    margin-top:4px;
+    font-size:16px;
+    color:#c40000;
+    font-weight:700;
+
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
 
 @media(max-width:768px){
 
-.member-scroll-box{
-
-height:420px;
-
-}
-
-.member-photo-small{
-
-width:55px;
-
-height:55px;
-
-}
-
-.member-details h3{
-
-font-size:18px;
-
-}
-
-.member-details p{
-
-font-size:14px;
-
-}
-
-.serial{
-
-width:45px;
-
-font-size:16px;
-
-}
-
-}     
-/* ==========================
-MEMBER CARD
-========================== */
-
 .member-section{
 
-max-width:1200px;
-
-margin:40px auto;
-
-padding:20px;
-
-}
-
-.member-section h2{
-
-font-size:38px;
-
-color:#d50000;
-
-margin-bottom:25px;
+    padding:15px;
 
 }
 
 .member-card{
 
-display:flex;
-
-align-items:center;
-
-gap:35px;
-
-background:#fff;
-
-padding:30px;
-
-border-radius:20px;
-
-box-shadow:0 8px 20px rgba(0,0,0,.10);
+    flex-direction:column;
+    text-align:center;
+    gap:20px;
 
 }
 
 .member-photo img{
 
-width:260px;
-
-height:320px;
-
-object-fit:cover;
-
-border-radius:15px;
-
-border:5px solid #d50000;
-
-}
-
-.member-info{
-
-flex:1;
+    width:220px;
+    height:270px;
 
 }
 
 .member-info h3{
 
-font-size:42px;
-
-color:#d50000;
-
-margin-bottom:10px;
+    font-size:32px;
 
 }
 
 .member-info h4{
 
-font-size:28px;
-
-color:#444;
-
-margin-bottom:20px;
+    font-size:22px;
 
 }
 
 .member-info p{
 
-font-size:22px;
-
-line-height:2;
-
-text-align:justify;
+    font-size:18px;
+    text-align:center;
 
 }
+
+.all-members-section{
+
+    margin:20px 10px;
+    padding:18px;
+
+}
+
+.all-members-section h2{
+
+    font-size:28px;
+
+}
+
+.member-subtitle{
+
+    font-size:15px;
+
+}
+
+.member-scroll-box{
+
+    height:420px;
+
+}
+
+.executive-list{
+
+    height:380px;
+
+}
+
+.member-row{
+
+    gap:10px;
+    padding:10px;
+
+}
+
+.serial{
+
+    width:38px;
+    font-size:15px;
+
+}
+
+.member-photo-small{
+
+    width:55px;
+    height:55px;
+
+}
+
+.member-details h3{
+
+    font-size:17px;
+
+}
+
 .phone-row{
 
-    font-size:16px;
-
-    white-space:nowrap;
-
-    margin-top:4px;
+    font-size:13px;
 
 }
 
 .blood-row{
 
-    font-size:16px;
-
-    margin-top:4px;
-
-    color:#c40000;
-
-    font-weight:600;
-
-}
-/* MOBILE */
-
-@media(max-width:768px){
-
-.member-card{
-
-flex-direction:column;
-
-text-align:center;
+    font-size:13px;
 
 }
 
-.member-photo img{
-
-width:220px;
-
-height:270px;
-
-}
-
-.member-info h3{
-
-font-size:32px;
-
-}
-
-.member-info p{
-
-font-size:18px;
-
-}
-.phone-row{
-
-    font-size:14px;
-
-}
-
-.blood-row{
-
-    font-size:14px;
-
-}
 }
