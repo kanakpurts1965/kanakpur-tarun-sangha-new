@@ -195,13 +195,6 @@ data-id="${item.id}">
 
 </button>
 
-<button
-class="admin-reply-btn"
-data-id="${item.id}">
-
-👑 Admin Reply
-
-</button>
 
 </div>
 
