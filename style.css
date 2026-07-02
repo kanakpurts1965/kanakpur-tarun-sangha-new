@@ -1572,11 +1572,19 @@ margin-bottom:5px;
 
 }
 
-.member-details p{
+.member-details h3{
 
-font-size:18px;
+    font-size:22px;
 
-margin:2px 0;
+    font-weight:700;
+
+    margin:0 0 6px;
+
+    white-space:nowrap;
+
+    overflow:hidden;
+
+    text-overflow:ellipsis;
 
 }
 
