@@ -1478,11 +1478,18 @@ color:#666;
 
 .member-scroll-box{
 
-height:480px;
+    height:480px;
+    overflow-y:auto;
+    padding-right:10px;
 
-overflow-y:auto;
+}
 
-padding-right:10px;
+/* কার্যকরী সদস্য Box */
+
+.executive-list{
+
+    height:420px;
+    overflow-y:auto;
 
 }
 
@@ -1490,39 +1497,21 @@ padding-right:10px;
 
 .member-scroll-box::-webkit-scrollbar{
 
-width:8px;
+    width:8px;
 
 }
 
 .member-scroll-box::-webkit-scrollbar-thumb{
 
-background:#c40000;
-
-border-radius:20px;
-
-}
-
-/* Member Row */
-
-.member-row{
-
-display:flex;
-
-align-items:center;
-
-gap:20px;
-
-padding:15px;
-
-border-bottom:1px solid #ddd;
-
-transition:.3s;
+    background:#c40000;
+    border-radius:20px;
 
 }
 
-.member-row:hover{
+.member-scroll-box::-webkit-scrollbar-track{
 
-background:#f8f8f8;
+    background:#f2f2f2;
+    border-radius:20px;
 
 }
 
