@@ -1497,3 +1497,128 @@ color:#fff;
 transform:translateY(-5px);
 
 }           
+/* ==========================
+MEMBER CARD
+========================== */
+
+.member-section{
+
+max-width:1200px;
+
+margin:40px auto;
+
+padding:20px;
+
+}
+
+.member-section h2{
+
+font-size:38px;
+
+color:#d50000;
+
+margin-bottom:25px;
+
+}
+
+.member-card{
+
+display:flex;
+
+align-items:center;
+
+gap:35px;
+
+background:#fff;
+
+padding:30px;
+
+border-radius:20px;
+
+box-shadow:0 8px 20px rgba(0,0,0,.10);
+
+}
+
+.member-photo img{
+
+width:260px;
+
+height:320px;
+
+object-fit:cover;
+
+border-radius:15px;
+
+border:5px solid #d50000;
+
+}
+
+.member-info{
+
+flex:1;
+
+}
+
+.member-info h3{
+
+font-size:42px;
+
+color:#d50000;
+
+margin-bottom:10px;
+
+}
+
+.member-info h4{
+
+font-size:28px;
+
+color:#444;
+
+margin-bottom:20px;
+
+}
+
+.member-info p{
+
+font-size:22px;
+
+line-height:2;
+
+text-align:justify;
+
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+.member-card{
+
+flex-direction:column;
+
+text-align:center;
+
+}
+
+.member-photo img{
+
+width:220px;
+
+height:270px;
+
+}
+
+.member-info h3{
+
+font-size:32px;
+
+}
+
+.member-info p{
+
+font-size:18px;
+
+}
+
+}
