@@ -79,6 +79,15 @@ data-comment="${data.comment}">
 </button>
 
 <button
+<button
+class="admin-reply-btn"
+data-id="${item.id}">
+
+👑 Admin Reply
+
+</button>
+
+</div>
 class="delete-comment"
 data-id="${item.id}">
 
