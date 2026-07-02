@@ -1675,6 +1675,32 @@ margin-bottom:30px;
 ===================================================== */
 
 @media(max-width:768px){
+   
+.member-search-card{
+
+    margin:20px 10px;
+
+    padding:20px;
+
+}
+
+.member-search-card h2{
+
+    font-size:26px;
+
+}
+
+.member-search-card p{
+
+    font-size:14px;
+
+}
+
+#memberSearch{
+
+    font-size:16px;
+
+}   
 
 .member-section{
 
@@ -1785,5 +1811,74 @@ margin-bottom:30px;
     font-size:13px;
 
 }
+
+}
+/* ==========================
+   MEMBER SEARCH BOX
+========================== */
+
+.member-search-card{
+
+    max-width:850px;
+
+    margin:45px auto;
+
+    padding:30px;
+
+    background:#fff;
+
+    border-radius:18px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    text-align:center;
+
+}
+
+.member-search-card h2{
+
+    color:#c40000;
+
+    font-size:34px;
+
+    margin-bottom:12px;
+
+}
+
+.member-search-card p{
+
+    color:#666;
+
+    font-size:18px;
+
+    margin-bottom:22px;
+
+}
+
+#memberSearch{
+
+    width:100%;
+
+    max-width:600px;
+
+    padding:15px 20px;
+
+    font-size:18px;
+
+    border:2px solid #c40000;
+
+    border-radius:50px;
+
+    outline:none;
+
+    transition:.3s;
+
+}
+
+#memberSearch:focus{
+
+    border-color:#a00000;
+
+    box-shadow:0 0 10px rgba(196,0,0,.25);
 
 }
