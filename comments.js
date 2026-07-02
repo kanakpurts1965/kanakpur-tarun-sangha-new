@@ -195,6 +195,14 @@ data-id="${item.id}">
 
 </button>
 
+<button
+class="admin-reply-btn"
+data-id="${item.id}">
+
+👑 Admin Reply
+
+</button>
+
 </div>
 
 <div id="reply-list-${item.id}"></div>
