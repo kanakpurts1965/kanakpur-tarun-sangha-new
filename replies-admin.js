@@ -279,3 +279,56 @@ catch(err){
 
 }
 });
+// ==========================================
+// ADMIN REPLY FROM WEBSITE
+// ==========================================
+
+document.addEventListener("click", async (e) => {
+
+    const btn = e.target.closest(".admin-reply-btn");
+
+    if (!btn) return;
+
+    const text = prompt("Admin Reply লিখুন");
+
+    if (text === null) return;
+
+    if (text.trim() === "") {
+
+        alert("Reply খালি রাখা যাবে না");
+
+        return;
+
+    }
+
+    try {
+
+        await addDoc(repliesRef, {
+
+            commentId: btn.dataset.id,
+
+            name: "ADMIN",
+
+            text: text.trim(),
+
+            isAdmin: true,
+
+            likes: 0,
+
+            createdAt: serverTimestamp()
+
+        });
+
+        alert("✅ Admin Reply পাঠানো হয়েছে");
+
+    }
+
+    catch(err){
+
+        console.error(err);
+
+        alert("❌ Reply পাঠানো যায়নি");
+
+    }
+
+});
