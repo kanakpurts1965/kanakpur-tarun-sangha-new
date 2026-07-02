@@ -1150,3 +1150,54 @@ margin-right:6px;
 letter-spacing:.5px;
 
 }
+.page-banner{
+
+padding:80px 20px;
+
+text-align:center;
+
+background:#0d47a1;
+
+color:#fff;
+
+}
+
+.about-section{
+
+max-width:1000px;
+
+margin:40px auto;
+
+padding:25px;
+
+background:#fff;
+
+border-radius:12px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+.about-section h2{
+
+margin-bottom:15px;
+
+color:#0d47a1;
+
+}
+
+.about-section p{
+
+line-height:1.8;
+
+text-align:justify;
+
+}
+
+.about-section ul{
+
+padding-left:20px;
+
+line-height:2;
+
+}
