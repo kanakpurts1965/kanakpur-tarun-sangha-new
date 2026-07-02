@@ -55,11 +55,34 @@ Loading...
 
                 card.className = "admin-comment";
 
-                card.innerHTML = `
+               card.innerHTML = `
 
-<h3>👤 ${data.name}</h3>
+<div class="reply-header">
+
+<h3>
+
+${
+data.isAdmin
+? '👑 <span class="admin-badge">ADMIN</span>'
+: '👤 ' + data.name
+}
+
+</h3>
+
+</div>
+
+<div class="reply-body">
 
 <p>${data.text}</p>
+
+</div>
+
+<div class="reply-info">
+
+🆔 Comment ID:
+${data.commentId || "Not Found"}
+
+</div>
 
 <div class="admin-actions">
 
