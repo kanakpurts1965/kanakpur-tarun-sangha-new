@@ -1,216 +1,65 @@
 <!DOCTYPE html>
+
 <html lang="bn">
-
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Admin Dashboard</title>
-
-<link rel="stylesheet" href="dashboard.css">
-
+<link href="dashboard.css" rel="stylesheet"/>
 </head>
-
 <body>
-
 <div class="dashboard">
-
-    <aside class="sidebar">
-
-        <h2>👑 KTS Admin</h2>
-
-        <ul>
-
-            <li id="menuDashboard">🏠 Dashboard</li>
-
-            <li id="menuComments">💬 Comments</li>
-
-            <li id="menuReplies">↩ Replies</li>
-
-            <li id="menuNotice">📢 Notice</li>
-
-            <li id="menuGallery">🖼 Gallery</li>
-
-            <li id="menuMembers">👥 Members</li>
-
-            <li id="menuSettings">⚙ Settings</li>
-
-            <li id="logoutBtn">🚪 Logout</li>
-
-        </ul>
-
-    </aside>
-
-    <main class="content">
-
-        <h1>👑 Kanakpur Tarun Sangha</h1>
-
-        <p>Welcome Admin</p>
-
-        <div class="cards">
-
-            <div class="card">
-
-                <h3 id="totalComments">0</h3>
-
-                <p>Total Comments</p>
-
-            </div>
-
-            <div class="card">
-
-                <h3 id="totalReplies">0</h3>
-
-                <p>Total Replies</p>
-
-            </div>
-
-            <div class="card">
-
-                <h3 id="totalLikes">0</h3>
-
-                <p>Total Likes</p>
-
-            </div>
-
-        </div>
-
-        <div id="pageContent">
-
-            Dashboard Loading...
-
-        </div>
-
-    </main>
-
+<aside class="sidebar">
+<h2>👑 KTS Admin</h2>
+<ul>
+<li id="menuDashboard">🏠 Dashboard</li>
+<li id="menuComments">💬 Comments</li>
+<li id="menuReplies">↩ Replies</li>
+<li id="menuNotice">📢 Notice</li>
+<li id="menuGallery">🖼 Gallery</li>
+<li id="menuMembers">👥 Members</li>
+<li id="menuSettings">⚙ Settings</li>
+<li id="logoutBtn">🚪 Logout</li>
+</ul>
+</aside>
+<main class="content">
+<h1>👑 Kanakpur Tarun Sangha</h1>
+<p>Welcome Admin</p>
+<div class="cards">
+<div class="card">
+<h3 id="totalComments">0</h3>
+<p>Total Comments</p>
 </div>
-    <!-- ==========================================
-MEMBER MANAGEMENT
-========================================== -->
-
-<section class="admin-box">
-
-    <h2>👥 Member Management</h2>
-
-    <div class="member-form">
-
-        <input
-            type="text"
-            id="memberName"
-            placeholder="👤 Member Name"
-        >
-
-        <input
-            type="text"
-            id="memberMobile"
-            placeholder="📞 Mobile Number"
-        >
-
-        <input
-            type="text"
-            id="memberBlood"
-            placeholder="🩸 Blood Group"
-        >
-
-        <input
-            type="text"
-            id="memberPhoto"
-            placeholder="🖼 Photo URL / File Name"
-        >
-
-        <select id="memberPosition">
-
-            <option value="">Select Position</option>
-
-            <option>President</option>
-
-            <option>Vice President</option>
-
-            <option>Secretary</option>
-
-            <option>Assistant Secretary</option>
-
-            <option>Treasurer</option>
-
-            <option>Executive</option>
-
-            <option>General</option>
-
-        </select>
-
-        <button id="addMemberBtn">
-
-            ➕ Add Member
-
-        </button>
-
-    </div>
-
-</section>
+<div class="card">
+<h3 id="totalReplies">0</h3>
+<p>Total Replies</p>
+</div>
+<div class="card">
+<h3 id="totalLikes">0</h3>
+<p>Total Likes</p>
+</div>
+</div>
+<div id="pageContent">
+<section class="page active" id="dashboardPage"><h2>🏠 Dashboard</h2><p>Welcome to Kanakpur Tarun Sangha Admin Dashboard</p></section>
+<section class="page" id="commentsPage"><h2>💬 Comments</h2></section>
+<section class="page" id="repliesPage"><h2>↩ Replies</h2></section>
+<section class="page" id="membersPage"><h2>👥 Members</h2><p>Member Management Coming Soon...</p></section>
+<section class="page" id="noticePage"><h2>📢 Notice</h2></section>
+<section class="page" id="galleryPage"><h2>🖼 Gallery</h2></section>
+<section class="page" id="settingsPage"><h2>⚙ Settings</h2></section>
+</div>
+</main>
+</div>
 <!-- ==========================================
 MEMBER MANAGEMENT
 ========================================== -->
 
-<section class="admin-box" id="memberManagement">
+<!-- ==========================================
+MEMBER MANAGEMENT
+========================================== -->
 
-<h2>👥 Member Management</h2>
-
-<div class="member-form">
-
-<input
-type="text"
-id="memberName"
-placeholder="👤 Member Name">
-
-<input
-type="text"
-id="memberMobile"
-placeholder="📞 Mobile Number">
-
-<input
-type="text"
-id="memberBlood"
-placeholder="🩸 Blood Group">
-
-<input
-type="text"
-id="memberPhoto"
-placeholder="🖼 Photo URL">
-
-<select id="memberPosition">
-
-<option value="">Select Position</option>
-
-<option>President</option>
-
-<option>Vice President</option>
-
-<option>Secretary</option>
-
-<option>Assistant Secretary</option>
-
-<option>Treasurer</option>
-
-<option>Executive</option>
-
-<option>General</option>
-
-</select>
-
-<button id="addMemberBtn">
-
-➕ Add Member
-
-</button>
-
-</div>
-
-</section>
-<script type="module" src="dashboard.js"></script>
-<script type="module" src="replies-admin.js"></script>
-<script type="module" src="comments-admin.js"></script>
+<script src="dashboard.js" type="module"></script>
+<script src="replies-admin.js" type="module"></script>
+<script src="comments-admin.js" type="module"></script>
 </body>
-
 </html>
