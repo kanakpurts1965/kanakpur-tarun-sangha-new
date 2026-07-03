@@ -1,433 +1,387 @@
-// =====================================================
-// KTS PUBLIC MEMBER SYSTEM
-// Firestore Real-time Load
-// Search + Blood Filter
-// =====================================================
-
-
 import { db } from "./firebase.js";
 
-
 import {
-
     collection,
-
     onSnapshot,
-
     query,
-
     orderBy
-
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
-
-// =====================================================
-// FIRESTORE MEMBERS COLLECTION
-// =====================================================
+const membersRef =
+    collection(db, "members");
 
 
-const membersRef = collection(db, "members");
-
-
-
-// =====================================================
-// HTML ELEMENTS
-// =====================================================
+const executiveMemberList =
+    document.getElementById(
+        "executiveMemberList"
+    );
 
 
 const memberList =
-    document.getElementById("memberList");
+    document.getElementById(
+        "memberList"
+    );
 
 
 const memberSearch =
-    document.getElementById("memberSearch");
+    document.getElementById(
+        "memberSearch"
+    );
 
 
 const bloodFilter =
-    document.getElementById("bloodFilter");
-
-
-
-// =====================================================
-// STORE MEMBER DATA
-// =====================================================
+    document.getElementById(
+        "bloodFilter"
+    );
 
 
 let allMembers = [];
 
 
-
 // =====================================================
-// FIRESTORE REAL-TIME MEMBER LOAD
+// REAL-TIME LOAD
 // =====================================================
 
+const memberQuery = query(
 
-if (memberList) {
+    membersRef,
 
+    orderBy("serial", "asc")
 
-    const memberQuery = query(
-
-        membersRef,
-
-        orderBy("serial", "asc")
-
-    );
+);
 
 
+onSnapshot(
 
-    onSnapshot(
+    memberQuery,
 
-        memberQuery,
+    (snapshot) => {
 
-
-        (snapshot) => {
-
-
-            allMembers = [];
+        allMembers = [];
 
 
-            snapshot.forEach((memberDoc) => {
+        snapshot.forEach((item) => {
+
+            const data =
+                item.data();
 
 
-                const data = memberDoc.data();
+            allMembers.push({
 
+                id: item.id,
 
-                allMembers.push({
+                name:
+                    data.name || "",
 
-                    id: memberDoc.id,
+                mobile:
+                    data.mobile || "",
 
-                    name:
-                        data.name || "",
+                bloodGroup:
+                    data.bloodGroup || "",
 
-                    mobile:
-                        data.mobile || "",
+                position:
+                    data.position || "",
 
-                    bloodGroup:
-                        data.bloodGroup || "",
+                category:
+                    data.category || "general",
 
-                    position:
-                        data.position || "",
+                photo:
+                    data.photo || "",
 
-                    photo:
-                        data.photo || "member.png",
-
-                    serial:
-                        Number(data.serial) || 0
-
-                });
-
+                serial:
+                    Number(data.serial) || 0
 
             });
 
+        });
 
 
-            // Member List Show
+        renderAll();
 
-            displayMembers(allMembers);
+    },
 
+    (error) => {
 
-        },
+        console.error(
+            "PUBLIC MEMBER ERROR:",
+            error
+        );
 
+    }
 
-        (error) => {
-
-
-            console.error(
-                "Member Load Error:",
-                error
-            );
-
-
-            memberList.innerHTML = `
-
-                <p style="text-align:center; padding:30px;">
-
-                    ❌ সদস্য তালিকা Load করা যায়নি।
-
-                </p>
-
-            `;
+);
 
 
-        }
+// =====================================================
+// RENDER ALL
+// =====================================================
 
+function renderAll() {
+
+    const executiveMembers =
+        allMembers.filter(
+
+            member =>
+                member.category ===
+                "executive"
+
+        );
+
+
+    const generalMembers =
+        allMembers.filter(
+
+            member =>
+                member.category ===
+                "general"
+
+        );
+
+
+    renderMembers(
+        executiveMemberList,
+        executiveMembers
     );
 
+
+    renderMembers(
+        memberList,
+        generalMembers
+    );
 
 }
 
 
-
 // =====================================================
-// DISPLAY MEMBERS
+// RENDER MEMBER LIST
 // =====================================================
 
+function renderMembers(
+    container,
+    members
+) {
 
-function displayMembers(members) {
-
-
-    if (!memberList) return;
-
-
-
-    memberList.innerHTML = "";
+    if (!container) return;
 
 
-
-    // কোনো Member না থাকলে
+    container.innerHTML = "";
 
 
     if (members.length === 0) {
 
+        container.innerHTML = `
 
-        memberList.innerHTML = `
-
-            <p style="text-align:center; padding:30px;">
-
+            <p style="
+                text-align:center;
+                padding:25px;
+            ">
                 কোনো সদস্য পাওয়া যায়নি।
-
             </p>
 
         `;
 
-
         return;
-
-
     }
 
 
-
-   members.forEach((member, index) => {
-
-
-        const row =
-            document.createElement("div");
+    members.forEach(
+        (member, index) => {
 
 
-        row.className = "member-row";
+            const row =
+                document.createElement(
+                    "div"
+                );
 
 
-
-        // Serial Format
-        // 1 = 001
-        // 2 = 002
-        // 10 = 010
+            row.className =
+                "member-row";
 
 
-       const serialNumber = String(
-    index + 1
-).padStart(3, "0");
+            const photoHTML =
+                member.photo
+
+                ? `
+                    <img
+                        src="${member.photo}"
+                        class="member-photo-small"
+                        alt="Member Photo"
+                    >
+                  `
+
+                : `
+                    <div
+                        class="member-photo-small"
+                        style="
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            font-size:28px;
+                        "
+                    >
+                        👤
+                    </div>
+                  `;
 
 
+            row.innerHTML = `
 
-        row.innerHTML = `
+                <div class="serial">
 
-
-            <div class="serial">
-
-                ${serialNumber}
-
-            </div>
-
-
-
-            <img
-
-                src="${member.photo}"
-
-                class="member-photo-small"
-
-                alt="${member.name}"
-
-                onerror="this.src='member.png'"
-
-            >
-
-
-
-            <div class="member-details">
-
-
-                <h3>
-
-                    ${member.name}
-
-                </h3>
-
-
-
-                <div class="phone-row">
-
-                    📞 ${member.mobile}
+                    ${String(
+                        index + 1
+                    ).padStart(3, "0")}
 
                 </div>
 
 
+                ${photoHTML}
 
-                <div class="blood-row">
 
-                    🩸 ${member.bloodGroup}
+                <div class="member-details">
+
+                    <h3>
+                        ${safe(member.name)}
+                    </h3>
+
+
+                    <div class="phone-row">
+
+                        📞 ${safe(member.mobile)}
+
+                    </div>
+
+
+                    <div class="blood-row">
+
+                        🩸 ${safe(
+                            member.bloodGroup
+                        )}
+
+                    </div>
 
                 </div>
 
-
-            </div>
-
-
-        `;
+            `;
 
 
+            container.appendChild(row);
 
-        memberList.appendChild(row);
-
-
-    });
-
+        }
+    );
 
 }
 
 
-
 // =====================================================
-// SEARCH + BLOOD FILTER TOGETHER
+// SEARCH + BLOOD FILTER
 // =====================================================
-
 
 function filterMembers() {
-
 
     const searchValue =
 
         memberSearch
+            ?.value
+            .toLowerCase()
+            .trim()
 
-            ? memberSearch.value
-                .toLowerCase()
-                .trim()
-
-            : "";
-
+        || "";
 
 
     const bloodValue =
 
         bloodFilter
+            ?.value
+            .toLowerCase()
+            .trim()
 
-            ? bloodFilter.value
-                .toLowerCase()
-                .trim()
-
-            : "";
-
+        || "";
 
 
-    const filteredMembers = allMembers.filter(
-
-        (member) => {
-
-
-            // Search Text
+    const generalMembers =
+        allMembers.filter((member) => {
 
 
-            const memberText = `
+            if (
+                member.category !== "general"
+            ) {
+
+                return false;
+
+            }
+
+
+            const text = `
 
                 ${member.name}
-
                 ${member.mobile}
-
                 ${member.bloodGroup}
-
                 ${member.position}
-
-                ${member.serial}
 
             `.toLowerCase();
 
 
-
             const searchMatch =
-
-                memberText.includes(
-                    searchValue
-                );
-
-
-
-            // Blood Group Exact Match
+                text.includes(searchValue);
 
 
             const bloodMatch =
 
-                bloodValue === ""
+                !bloodValue
 
                 ||
 
                 member.bloodGroup
-                    .toLowerCase() === bloodValue;
-
+                    .toLowerCase()
+                    === bloodValue;
 
 
             return (
-
-                searchMatch
-
-                &&
-
+                searchMatch &&
                 bloodMatch
-
             );
 
+        });
 
-        }
 
+    renderMembers(
+        memberList,
+        generalMembers
     );
-
-
-
-    displayMembers(filteredMembers);
-
 
 }
 
 
-
-// =====================================================
-// MEMBER SEARCH
-// =====================================================
-
-
-if (memberSearch) {
+memberSearch?.addEventListener(
+    "input",
+    filterMembers
+);
 
 
-    memberSearch.addEventListener(
-
-        "input",
-
-        filterMembers
-
-    );
-
-
-}
-
+bloodFilter?.addEventListener(
+    "change",
+    filterMembers
+);
 
 
 // =====================================================
-// BLOOD GROUP FILTER
+// SAFE TEXT
 // =====================================================
 
+function safe(value = "") {
 
-if (bloodFilter) {
+    return String(value)
 
+        .replaceAll("&", "&amp;")
 
-    bloodFilter.addEventListener(
+        .replaceAll("<", "&lt;")
 
-        "change",
+        .replaceAll(">", "&gt;")
 
-        filterMembers
+        .replaceAll('"', "&quot;")
 
-    );
-
+        .replaceAll("'", "&#039;");
 
 }
