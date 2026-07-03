@@ -253,13 +253,17 @@ function renderMembers(
                     </div>
 
 
-                    <div class="blood-row">
+              <div class="public-member-meta-row">
 
-                        🩸 ${safe(
-                            member.bloodGroup
-                        )}
+    <span>
+        🩸 ${safe(member.bloodGroup)}
+    </span>
 
-                    </div>
+    <span>
+        👔 ${safe(member.position)}
+    </span>
+
+</div>    
 
                 </div>
 
