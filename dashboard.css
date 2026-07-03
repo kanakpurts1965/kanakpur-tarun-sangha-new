@@ -591,3 +591,81 @@ SPA PAGE SYSTEM
     }
 
 }
+/* ==========================================
+ADMIN MEMBER PHOTO SIZE FIX
+========================================== */
+
+.admin-member-photo{
+
+    width:70px;
+    height:70px;
+
+    border-radius:50%;
+
+    object-fit:cover;
+
+    border:3px solid #c40000;
+
+    flex-shrink:0;
+
+}
+
+
+/* PHOTO না থাকলে PLACEHOLDER */
+
+.admin-member-photo-placeholder{
+
+    width:70px;
+    height:70px;
+
+    border-radius:50%;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:28px;
+
+    background:#f2f2f2;
+
+    border:3px solid #c40000;
+
+    flex-shrink:0;
+
+}
+
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+    .admin-member-photo,
+    .admin-member-photo-placeholder{
+
+        width:55px;
+        height:55px;
+
+    }
+
+}
+
+/* ==========================================
+MEMBER SEPARATOR LINE
+========================================== */
+
+.admin-member-card{
+
+    border-bottom:2px solid #e0e0e0;
+
+    padding:15px 10px;
+
+}
+
+
+/* শেষ Member-এর নিচে Line থাকবে না */
+
+.admin-member-card:last-child{
+
+    border-bottom:none;
+
+}
