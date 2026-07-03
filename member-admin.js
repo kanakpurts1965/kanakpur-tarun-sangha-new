@@ -605,29 +605,21 @@ onSnapshot(
                 ${photoHTML}
 
 
-                <div class="admin-member-info">
+               <div class="admin-member-meta-row">
 
-                    <h4>
-                        ${safe(data.name)}
-                    </h4>
+    <span>
+        🩸 ${safe(data.bloodGroup)}
+    </span>
 
-                    <p>
-                        📞 ${safe(data.mobile)}
-                    </p>
+    <span>
+        👔 ${safe(data.position)}
+    </span>
 
-                    <p>
-                        🩸 ${safe(data.bloodGroup)}
-                    </p>
+    <span>
+        ${categoryText}
+    </span>
 
-                    <p>
-                        👔 ${safe(data.position)}
-                    </p>
-
-                    <p>
-                        ${categoryText}
-                    </p>
-
-                </div>
+</div> 
 
 
                 <div class="admin-member-actions">
