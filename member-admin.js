@@ -1,15 +1,11 @@
 // =====================================================
 // KTS MEMBER ADMIN SYSTEM
-// ADD + EDIT + DELETE + CATEGORY + PHOTO UPLOAD
-// FIRESTORE + FIREBASE STORAGE
+// VERSION: CLOUDINARY + FIRESTORE
 // =====================================================
 
-
-import { db, storage } from "./firebase.js";
-
+import { db } from "./firebase.js";
 
 import {
-
     collection,
     addDoc,
     onSnapshot,
@@ -20,170 +16,202 @@ import {
     deleteDoc,
     doc,
     getDocs
-
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
-import {
+// =====================================================
+// CLOUDINARY CONFIG
+// =====================================================
 
-    ref,
-    uploadBytes,
-    getDownloadURL,
-    deleteObject
-
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-storage.js";
-
+const CLOUD_NAME = "wf6ocs3j";
+const UPLOAD_PRESET = "kts_members";
 
 
 // =====================================================
-// FIRESTORE COLLECTION
+// FIRESTORE
 // =====================================================
 
-
-const membersRef =
-    collection(db, "members");
-
+const membersRef = collection(db, "members");
 
 
 // =====================================================
-// FORM ELEMENTS
+// HTML ELEMENTS
 // =====================================================
-
 
 const memberName =
     document.getElementById("memberName");
 
-
 const memberMobile =
     document.getElementById("memberMobile");
-
 
 const memberBlood =
     document.getElementById("memberBlood");
 
-
 const memberPosition =
     document.getElementById("memberPosition");
-
 
 const memberCategory =
     document.getElementById("memberCategory");
 
-
 const memberPhotoFile =
     document.getElementById("memberPhotoFile");
 
-
 const memberPhotoPreviewBox =
-    document.getElementById(
-        "memberPhotoPreviewBox"
-    );
-
+    document.getElementById("memberPhotoPreviewBox");
 
 const memberPhotoPreview =
-    document.getElementById(
-        "memberPhotoPreview"
-    );
-
+    document.getElementById("memberPhotoPreview");
 
 const addMemberBtn =
     document.getElementById("addMemberBtn");
 
-
 const adminMemberList =
-    document.getElementById(
-        "adminMemberList"
-    );
-
+    document.getElementById("adminMemberList");
 
 const adminMemberSearch =
-    document.getElementById(
-        "adminMemberSearch"
-    );
-
+    document.getElementById("adminMemberSearch");
 
 
 // =====================================================
-// EDIT MODE VARIABLES
+// EDIT MODE
 // =====================================================
-
 
 let editingMemberId = null;
 
-
 let oldPhotoURL = "";
 
-
-let oldPhotoPath = "";
-
+let oldPhotoPublicId = "";
 
 
 // =====================================================
 // PHOTO PREVIEW
 // =====================================================
 
-
 if (memberPhotoFile) {
 
+    memberPhotoFile.addEventListener("change", () => {
 
-    memberPhotoFile.addEventListener(
+        const file = memberPhotoFile.files[0];
 
-        "change",
+        if (!file) {
 
-        () => {
+            memberPhotoPreview.src = "";
 
+            memberPhotoPreviewBox.style.display = "none";
 
-            const file =
-                memberPhotoFile.files[0];
-
-
-            if (!file) {
-
-
-                memberPhotoPreviewBox.style.display =
-                    "none";
-
-
-                return;
-
-            }
-
-
-            const reader =
-                new FileReader();
-
-
-            reader.onload = (event) => {
-
-
-                memberPhotoPreview.src =
-                    event.target.result;
-
-
-                memberPhotoPreviewBox.style.display =
-                    "block";
-
-            };
-
-
-            reader.readAsDataURL(file);
-
-
+            return;
         }
 
-    );
+
+        // 5 MB limit
+
+        if (file.size > 5 * 1024 * 1024) {
+
+            alert("❌ ছবির Size 5MB-এর কম রাখুন");
+
+            memberPhotoFile.value = "";
+
+            memberPhotoPreviewBox.style.display = "none";
+
+            return;
+        }
+
+
+        if (!file.type.startsWith("image/")) {
+
+            alert("❌ শুধু Image File নির্বাচন করুন");
+
+            memberPhotoFile.value = "";
+
+            memberPhotoPreviewBox.style.display = "none";
+
+            return;
+        }
+
+
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+
+            memberPhotoPreview.src =
+                event.target.result;
+
+            memberPhotoPreviewBox.style.display =
+                "block";
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
 
 }
 
 
+// =====================================================
+// CLOUDINARY PHOTO UPLOAD
+// =====================================================
+
+async function uploadPhotoToCloudinary(file) {
+
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    formData.append(
+        "upload_preset",
+        UPLOAD_PRESET
+    );
+
+
+    const uploadURL =
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+
+
+    const response = await fetch(
+        uploadURL,
+        {
+            method: "POST",
+            body: formData
+        }
+    );
+
+
+    const result = await response.json();
+
+
+    if (!response.ok) {
+
+        console.error(
+            "Cloudinary Error:",
+            result
+        );
+
+        throw new Error(
+            result.error?.message ||
+            "Photo upload failed"
+        );
+    }
+
+
+    return {
+
+        photoURL:
+            result.secure_url,
+
+        publicId:
+            result.public_id
+
+    };
+
+}
+
 
 // =====================================================
-// GET NEXT DATABASE SERIAL
+// GET NEXT SERIAL
 // =====================================================
-
 
 async function getNextSerial() {
-
 
     const snapshot =
         await getDocs(membersRef);
@@ -194,10 +222,8 @@ async function getNextSerial() {
 
     snapshot.forEach((memberDoc) => {
 
-
         const data =
             memberDoc.data();
-
 
         const serial =
             Number(data.serial) || 0;
@@ -205,11 +231,9 @@ async function getNextSerial() {
 
         if (serial > highestSerial) {
 
-
             highestSerial = serial;
 
         }
-
 
     });
 
@@ -219,190 +243,89 @@ async function getNextSerial() {
 }
 
 
-
-// =====================================================
-// PHOTO UPLOAD FUNCTION
-// =====================================================
-
-
-async function uploadMemberPhoto(file) {
-
-
-    const safeName =
-        file.name.replace(
-            /[^a-zA-Z0-9._-]/g,
-            "_"
-        );
-
-
-    const uniqueName =
-
-        Date.now()
-
-        + "_"
-
-        + safeName;
-
-
-    const photoPath =
-
-        "members/"
-
-        + uniqueName;
-
-
-    const photoRef =
-        ref(storage, photoPath);
-
-
-    await uploadBytes(
-        photoRef,
-        file
-    );
-
-
-    const photoURL =
-        await getDownloadURL(photoRef);
-
-
-    return {
-
-        photoURL,
-
-        photoPath
-
-    };
-
-}
-
-
-
 // =====================================================
 // SAVE / UPDATE MEMBER
 // =====================================================
 
-
 if (addMemberBtn) {
 
-
     addMemberBtn.addEventListener(
-
         "click",
-
         async () => {
 
 
             const name =
                 memberName.value.trim();
 
-
             const mobile =
                 memberMobile.value.trim();
-
 
             const bloodGroup =
                 memberBlood.value;
 
-
             const position =
                 memberPosition.value;
-
 
             const category =
                 memberCategory.value;
 
-
             const selectedPhoto =
                 memberPhotoFile.files[0];
-
 
 
             // ==========================================
             // VALIDATION
             // ==========================================
 
+            if (!name) {
 
-            if (name === "") {
-
-
-                alert(
-                    "❌ সদস্যের নাম লিখুন"
-                );
-
+                alert("❌ সদস্যের নাম লিখুন");
 
                 memberName.focus();
 
-
                 return;
-
             }
 
 
-            if (mobile === "") {
+            if (!mobile) {
 
-
-                alert(
-                    "❌ মোবাইল নম্বর লিখুন"
-                );
-
+                alert("❌ মোবাইল নম্বর লিখুন");
 
                 memberMobile.focus();
 
-
                 return;
-
             }
 
 
-            if (bloodGroup === "") {
+            if (!bloodGroup) {
 
-
-                alert(
-                    "❌ Blood Group নির্বাচন করুন"
-                );
-
+                alert("❌ Blood Group নির্বাচন করুন");
 
                 return;
-
             }
 
 
-            if (position === "") {
+            if (!position) {
 
-
-                alert(
-                    "❌ সদস্যের পদ নির্বাচন করুন"
-                );
-
+                alert("❌ সদস্যের পদ নির্বাচন করুন");
 
                 return;
-
             }
 
 
-            if (category === "") {
-
+            if (!category) {
 
                 alert(
                     "❌ কার্যকরী সদস্য অথবা সকল সদস্য নির্বাচন করুন"
                 );
 
-
                 return;
-
             }
-
-
-
-            // নতুন Member হলে Photo বাধ্যতামূলক নয়।
-            // Photo না দিলে member.png থাকবে।
 
 
             try {
 
-
                 addMemberBtn.disabled = true;
-
 
                 addMemberBtn.innerText =
                     editingMemberId
@@ -410,177 +333,99 @@ if (addMemberBtn) {
                         : "⏳ Saving...";
 
 
-
                 // ======================================
-                // DEFAULT PHOTO VALUES
+                // EXISTING PHOTO
                 // ======================================
-
 
                 let finalPhotoURL =
+                    oldPhotoURL || "";
 
-                    oldPhotoURL
-
-                    ||
-
-                    "member.png";
-
-
-                let finalPhotoPath =
-
-                    oldPhotoPath
-
-                    ||
-
-                    "";
-
+                let finalPhotoPublicId =
+                    oldPhotoPublicId || "";
 
 
                 // ======================================
-                // UPLOAD NEW PHOTO
+                // NEW PHOTO UPLOAD
                 // ======================================
-
 
                 if (selectedPhoto) {
 
+                    addMemberBtn.innerText =
+                        "📤 Photo Upload হচ্ছে...";
 
-                    const uploadedPhoto =
-                        await uploadMemberPhoto(
+
+                    const uploaded =
+                        await uploadPhotoToCloudinary(
                             selectedPhoto
                         );
 
 
                     finalPhotoURL =
-                        uploadedPhoto.photoURL;
+                        uploaded.photoURL;
 
-
-                    finalPhotoPath =
-                        uploadedPhoto.photoPath;
+                    finalPhotoPublicId =
+                        uploaded.publicId;
 
                 }
-
 
 
                 // ======================================
                 // EDIT MEMBER
                 // ======================================
 
-
                 if (editingMemberId) {
+
+                    addMemberBtn.innerText =
+                        "⏳ Updating...";
 
 
                     await updateDoc(
 
                         doc(
-
                             db,
-
                             "members",
-
                             editingMemberId
-
                         ),
 
                         {
-
-                            name: name,
-
-                            mobile: mobile,
-
-                            bloodGroup:
-                                bloodGroup,
-
-                            position:
-                                position,
-
-                            category:
-                                category,
+                            name,
+                            mobile,
+                            bloodGroup,
+                            position,
+                            category,
 
                             photo:
                                 finalPhotoURL,
 
-                            photoPath:
-                                finalPhotoPath,
+                            photoPublicId:
+                                finalPhotoPublicId,
 
                             updatedAt:
                                 serverTimestamp()
-
                         }
 
                     );
-
-
-
-                    // পুরোনো Storage Photo Delete
-                    // নতুন Photo নির্বাচন করলে
-
-
-                    if (
-
-                        selectedPhoto
-
-                        &&
-
-                        oldPhotoPath
-
-                        &&
-
-                        oldPhotoPath !==
-                            finalPhotoPath
-
-                    ) {
-
-
-                        try {
-
-
-                            const oldRef =
-                                ref(
-                                    storage,
-                                    oldPhotoPath
-                                );
-
-
-                            await deleteObject(
-                                oldRef
-                            );
-
-
-                        }
-
-                        catch (error) {
-
-
-                            console.warn(
-                                "Old photo delete skipped:",
-                                error
-                            );
-
-
-                        }
-
-
-                    }
 
 
                     alert(
                         "✅ সদস্যের তথ্য Update হয়েছে"
                     );
 
-
                 }
 
 
-
                 // ======================================
-                // ADD NEW MEMBER
+                // ADD MEMBER
                 // ======================================
-
 
                 else {
 
-
                     const nextSerial =
                         await getNextSerial();
+
+
+                    addMemberBtn.innerText =
+                        "💾 Member Save হচ্ছে...";
 
 
                     await addDoc(
@@ -588,34 +433,23 @@ if (addMemberBtn) {
                         membersRef,
 
                         {
-
-                            name:
-                                name,
-
-                            mobile:
-                                mobile,
-
-                            bloodGroup:
-                                bloodGroup,
-
-                            position:
-                                position,
-
-                            category:
-                                category,
+                            name,
+                            mobile,
+                            bloodGroup,
+                            position,
+                            category,
 
                             photo:
                                 finalPhotoURL,
 
-                            photoPath:
-                                finalPhotoPath,
+                            photoPublicId:
+                                finalPhotoPublicId,
 
                             serial:
                                 nextSerial,
 
                             createdAt:
                                 serverTimestamp()
-
                         }
 
                     );
@@ -625,24 +459,14 @@ if (addMemberBtn) {
                         "✅ সদস্য সফলভাবে যোগ হয়েছে"
                     );
 
-
                 }
-
-
-
-                // ======================================
-                // CLEAR FORM
-                // ======================================
 
 
                 clearMemberForm();
 
-
             }
 
-
             catch (error) {
-
 
                 console.error(
                     "Member Save Error:",
@@ -651,63 +475,50 @@ if (addMemberBtn) {
 
 
                 alert(
-                    "❌ Member Save / Update করা যায়নি"
+                    "❌ Save হয়নি: " +
+                    error.message
                 );
 
-
             }
-
 
             finally {
 
+                addMemberBtn.disabled = false;
 
-                addMemberBtn.disabled =
-                    false;
+                if (!editingMemberId) {
 
+                    addMemberBtn.innerText =
+                        "💾 সদস্য Save করুন";
 
-                addMemberBtn.innerText =
-                    "💾 সদস্য Save করুন";
-
+                }
 
             }
 
-
         }
-
     );
 
 }
-
 
 
 // =====================================================
 // CLEAR FORM
 // =====================================================
 
-
 function clearMemberForm() {
-
 
     memberName.value = "";
 
-
     memberMobile.value = "";
-
 
     memberBlood.value = "";
 
-
     memberPosition.value = "";
-
 
     memberCategory.value = "";
 
-
     memberPhotoFile.value = "";
 
-
     memberPhotoPreview.src = "";
-
 
     memberPhotoPreviewBox.style.display =
         "none";
@@ -715,11 +526,9 @@ function clearMemberForm() {
 
     editingMemberId = null;
 
-
     oldPhotoURL = "";
 
-
-    oldPhotoPath = "";
+    oldPhotoPublicId = "";
 
 
     addMemberBtn.innerText =
@@ -728,241 +537,168 @@ function clearMemberForm() {
 }
 
 
-
 // =====================================================
-// REAL-TIME ADMIN MEMBER LIST
+// ADMIN MEMBER LIST
 // =====================================================
-
 
 if (adminMemberList) {
 
+    const memberQuery = query(
 
-    const memberQuery =
-        query(
+        membersRef,
 
-            membersRef,
+        orderBy("serial", "asc")
 
-            orderBy(
-                "serial",
-                "asc"
-            )
-
-        );
+    );
 
 
     onSnapshot(
 
         memberQuery,
 
-
         (snapshot) => {
 
-
-            adminMemberList.innerHTML =
-                "";
+            adminMemberList.innerHTML = "";
 
 
             if (snapshot.empty) {
 
-
                 adminMemberList.innerHTML = `
 
                     <p class="member-loading">
-
                         কোনো সদস্য পাওয়া যায়নি।
-
                     </p>
 
                 `;
 
-
                 return;
-
             }
-
-
-
-            // Firestore snapshot.forEach index দেয় না।
-            // তাই আলাদা display serial ব্যবহার করা হচ্ছে।
 
 
             let displaySerial = 1;
 
 
-
             snapshot.forEach((item) => {
-
 
                 const data =
                     item.data();
 
 
                 const card =
-                    document.createElement(
-                        "div"
-                    );
+                    document.createElement("div");
 
 
                 card.className =
                     "admin-member-card";
 
 
+                const serialText =
+                    String(displaySerial++)
+                        .padStart(3, "0");
+
 
                 const categoryText =
 
-                    data.category ===
-                    "executive"
+                    data.category === "executive"
 
-                    ? "⭐ কার্যকরী সদস্য"
+                        ? "⭐ কার্যকরী সদস্য"
 
-                    : "👥 সকল সদস্য";
-
+                        : "👥 সকল সদস্য";
 
 
-                const serialText =
-                    String(
-                        displaySerial++
-                    ).padStart(
-                        3,
-                        "0"
-                    );
-
+                const photoURL =
+                    data.photo || "";
 
 
                 card.innerHTML = `
 
-
                     <div class="admin-member-serial">
-
                         ${serialText}
-
                     </div>
 
 
+                    ${
+                        photoURL
 
-                    <img
+                        ? `
+                        <img
+                            src="${photoURL}"
+                            class="admin-member-photo"
+                            alt="Member Photo"
+                        >
+                        `
 
-                        src="${data.photo || "member.png"}"
-
-                        class="admin-member-photo"
-
-                        alt="Member Photo"
-
-                        onerror="this.src='member.png'"
-
-                    >
-
+                        : `
+                        <div class="admin-member-photo-placeholder">
+                            👤
+                        </div>
+                        `
+                    }
 
 
                     <div class="admin-member-info">
 
-
                         <h4>
-
-                            ${data.name || ""}
-
+                            ${escapeHTML(data.name || "")}
                         </h4>
 
-
                         <p>
-
-                            📞 ${data.mobile || ""}
-
+                            📞 ${escapeHTML(data.mobile || "")}
                         </p>
 
-
                         <p>
-
-                            🩸 ${data.bloodGroup || ""}
-
+                            🩸 ${escapeHTML(data.bloodGroup || "")}
                         </p>
 
-
                         <p>
-
-                            👔 ${data.position || ""}
-
+                            👔 ${escapeHTML(data.position || "")}
                         </p>
 
-
                         <p>
-
                             ${categoryText}
-
                         </p>
-
 
                     </div>
-
 
 
                     <div class="admin-member-actions">
 
-
                         <button
-
                             class="edit-member-btn"
-
                             data-id="${item.id}"
-
-                            data-name="${data.name || ""}"
-
-                            data-mobile="${data.mobile || ""}"
-
-                            data-blood="${data.bloodGroup || ""}"
-
-                            data-position="${data.position || ""}"
-
-                            data-category="${data.category || "general"}"
-
-                            data-photo="${data.photo || "member.png"}"
-
-                            data-photo-path="${data.photoPath || ""}"
-
                         >
-
                             ✏️ Edit
-
                         </button>
-
 
 
                         <button
-
                             class="delete-member-btn"
-
                             data-id="${item.id}"
-
-                            data-name="${data.name || ""}"
-
-                            data-photo-path="${data.photoPath || ""}"
-
+                            data-name="${escapeAttribute(data.name || "")}"
                         >
-
                             🗑️ Delete
-
                         </button>
-
 
                     </div>
-
 
                 `;
 
 
-                adminMemberList.appendChild(
-                    card
-                );
+                // Store data safely on element
 
+                card._memberData = {
+                    id: item.id,
+                    ...data
+                };
+
+
+                adminMemberList.appendChild(card);
 
             });
 
-
         },
 
-
         (error) => {
-
 
             console.error(
                 "Member Load Error:",
@@ -973,32 +709,24 @@ if (adminMemberList) {
             adminMemberList.innerHTML = `
 
                 <p class="member-loading">
-
                     ❌ সদস্য তালিকা Load করা যায়নি।
-
                 </p>
 
             `;
-
 
         }
 
     );
 
-
 }
-
 
 
 // =====================================================
 // EDIT MEMBER
 // =====================================================
 
-
 document.addEventListener(
-
     "click",
-
     (event) => {
 
 
@@ -1011,120 +739,106 @@ document.addEventListener(
         if (!editBtn) return;
 
 
+        const card =
+            editBtn.closest(
+                ".admin-member-card"
+            );
+
+
+        const data =
+            card._memberData;
+
+
+        if (!data) return;
+
 
         editingMemberId =
-            editBtn.dataset.id;
+            data.id;
 
 
         oldPhotoURL =
-            editBtn.dataset.photo;
+            data.photo || "";
 
 
-        oldPhotoPath =
-            editBtn.dataset.photoPath;
-
+        oldPhotoPublicId =
+            data.photoPublicId || "";
 
 
         memberName.value =
-            editBtn.dataset.name;
+            data.name || "";
 
 
         memberMobile.value =
-            editBtn.dataset.mobile;
+            data.mobile || "";
 
 
         memberBlood.value =
-            editBtn.dataset.blood;
+            data.bloodGroup || "";
 
 
         memberPosition.value =
-            editBtn.dataset.position;
+            data.position || "";
 
 
         memberCategory.value =
-            editBtn.dataset.category;
+            data.category || "general";
 
 
+        memberPhotoFile.value = "";
 
-        // পুরোনো ছবি Preview
 
-
-        if (
-
-            oldPhotoURL
-
-            &&
-
-            oldPhotoURL !==
-                "member.png"
-
-        ) {
-
+        if (oldPhotoURL) {
 
             memberPhotoPreview.src =
                 oldPhotoURL;
 
-
             memberPhotoPreviewBox.style.display =
                 "block";
-
 
         }
 
         else {
 
+            memberPhotoPreview.src = "";
 
             memberPhotoPreviewBox.style.display =
                 "none";
 
-
         }
-
 
 
         addMemberBtn.innerText =
             "🔄 সদস্য Update করুন";
 
 
-
-        const formBox =
+        const memberForm =
             document.querySelector(
                 ".member-management-box"
             );
 
 
-        if (formBox) {
+        if (memberForm) {
 
+            memberForm.scrollIntoView({
 
-            formBox.scrollIntoView({
+                behavior: "smooth",
 
-                behavior:
-                    "smooth",
-
-                block:
-                    "start"
+                block: "start"
 
             });
 
-
         }
 
-
     }
-
 );
-
 
 
 // =====================================================
 // DELETE MEMBER
 // =====================================================
 
-
 document.addEventListener(
-
     "click",
-
     async (event) => {
 
 
@@ -1137,18 +851,12 @@ document.addEventListener(
         if (!deleteBtn) return;
 
 
-
         const memberId =
             deleteBtn.dataset.id;
 
 
         const name =
             deleteBtn.dataset.name;
-
-
-        const photoPath =
-            deleteBtn.dataset.photoPath;
-
 
 
         const confirmDelete =
@@ -1162,91 +870,41 @@ document.addEventListener(
         if (!confirmDelete) return;
 
 
-
         try {
 
+            deleteBtn.disabled = true;
 
-            // Firestore Member Delete
+            deleteBtn.innerText =
+                "⏳ Deleting...";
 
 
             await deleteDoc(
 
                 doc(
-
                     db,
-
                     "members",
-
                     memberId
-
                 )
 
             );
 
 
-
-            // Storage Photo Delete
-
-
-            if (photoPath) {
-
-
-                try {
-
-
-                    const photoRef =
-                        ref(
-                            storage,
-                            photoPath
-                        );
-
-
-                    await deleteObject(
-                        photoRef
-                    );
-
-
-                }
-
-                catch (error) {
-
-
-                    console.warn(
-                        "Photo delete skipped:",
-                        error
-                    );
-
-
-                }
-
-
-            }
-
-
-
             if (
-                editingMemberId ===
-                memberId
+                editingMemberId === memberId
             ) {
-
 
                 clearMemberForm();
 
-
             }
-
 
 
             alert(
                 "✅ সদস্য সফলভাবে Delete হয়েছে"
             );
 
-
         }
 
-
         catch (error) {
-
 
             console.error(
                 "Delete Error:",
@@ -1254,32 +912,30 @@ document.addEventListener(
             );
 
 
-            alert(
-                "❌ Member Delete করা যায়নি"
-            );
+            deleteBtn.disabled = false;
 
+            deleteBtn.innerText =
+                "🗑️ Delete";
+
+
+            alert(
+                "❌ Delete করা যায়নি"
+            );
 
         }
 
-
     }
-
 );
 
 
-
 // =====================================================
-// ADMIN MEMBER SEARCH
+// ADMIN SEARCH
 // =====================================================
-
 
 if (adminMemberSearch) {
 
-
     adminMemberSearch.addEventListener(
-
         "input",
-
         () => {
 
 
@@ -1291,43 +947,59 @@ if (adminMemberSearch) {
                     .trim();
 
 
-
-            const memberCards =
+            const cards =
 
                 document.querySelectorAll(
                     ".admin-member-card"
                 );
 
 
+            cards.forEach((card) => {
 
-            memberCards.forEach(
-
-                (card) => {
-
-
-                    const text =
-                        card.innerText
-                            .toLowerCase();
+                const text =
+                    card.innerText
+                        .toLowerCase();
 
 
-                    card.style.display =
+                card.style.display =
 
-                        text.includes(
-                            searchValue
-                        )
+                    text.includes(searchValue)
 
                         ? "flex"
 
                         : "none";
 
-
-                }
-
-            );
-
+            });
 
         }
-
     );
+
+}
+
+
+// =====================================================
+// BASIC HTML SAFETY
+// =====================================================
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replaceAll("&", "&amp;")
+
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+
+}
+
+
+function escapeAttribute(value) {
+
+    return escapeHTML(value);
 
 }
