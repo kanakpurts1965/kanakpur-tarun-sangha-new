@@ -1942,3 +1942,23 @@ EXECUTIVE MEMBER BOX
     padding-right:10px;
 
 }
+.public-member-meta-row{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+    margin-top:5px;
+}
+
+.public-member-meta-row span{
+    white-space:nowrap;
+}
+
+@media(max-width:600px){
+
+    .public-member-meta-row{
+        gap:10px;
+        font-size:14px;
+    }
+
+}
