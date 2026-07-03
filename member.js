@@ -34,3 +34,42 @@ if (memberSearch) {
     });
 
 }
+// ==========================================
+// BLOOD GROUP FILTER
+// ==========================================
+
+const bloodFilter = document.getElementById("bloodFilter");
+
+if (bloodFilter) {
+
+    bloodFilter.addEventListener("change", () => {
+
+        const value = bloodFilter.value.toLowerCase();
+
+        document.querySelectorAll(".member-row").forEach((member)=>{
+
+            const text = member.innerText.toLowerCase();
+
+            if(value===""){
+
+                member.style.display="flex";
+
+            }
+
+            else if(text.includes(value)){
+
+                member.style.display="flex";
+
+            }
+
+            else{
+
+                member.style.display="none";
+
+            }
+
+        });
+
+    });
+
+}
