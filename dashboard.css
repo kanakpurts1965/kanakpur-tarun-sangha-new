@@ -591,216 +591,130 @@ SPA PAGE SYSTEM
     }
 
 }
-/* ==========================================
-ADMIN MEMBER PHOTO SIZE FIX
-========================================== */
 
-.admin-member-photo{
 
-    width:70px;
-    height:70px;
-
-    border-radius:50%;
-
-    object-fit:cover;
-
-    border:3px solid #c40000;
-
-    flex-shrink:0;
-
+/* =====================================================
+   PHOTO PICKER
+===================================================== */
+.photo-picker-group{
+    position:relative;
+    z-index:2;
+}
+.choose-photo-btn{
+    width:100%;
+    padding:14px 18px;
+    border:2px dashed #c40000;
+    border-radius:10px;
+    background:#fff7f7;
+    color:#8b0000;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    touch-action:manipulation;
+    -webkit-tap-highlight-color:transparent;
+}
+.choose-photo-btn:active{ transform:scale(.99); }
+.photo-file-name{
+    margin-top:6px;
+    color:#666;
+    font-size:14px;
+    word-break:break-word;
 }
 
-
-/* PHOTO না থাকলে PLACEHOLDER */
-
-.admin-member-photo-placeholder{
-
-    width:70px;
-    height:70px;
-
-    border-radius:50%;
-
-    display:flex;
-    align-items:center;
-    justify-content:center;
-
-    font-size:28px;
-
-    background:#f2f2f2;
-
-    border:3px solid #c40000;
-
-    flex-shrink:0;
-
-}
-
-
-/* MOBILE */
-
-@media(max-width:768px){
-
-    .admin-member-photo,
-    .admin-member-photo-placeholder{
-
-        width:55px;
-        height:55px;
-
-    }
-
-}
-
-/* ==========================================
-MEMBER SEPARATOR LINE
-========================================== */
-
+/* =====================================================
+   ADMIN MEMBER CARD — CLEAN FINAL LAYOUT
+===================================================== */
 .admin-member-card{
-
-    border-bottom:2px solid #e0e0e0;
-
-    padding:15px 10px;
-
-}
-
-
-/* শেষ Member-এর নিচে Line থাকবে না */
-
-.admin-member-card:last-child{
-
-    border-bottom:none;
-
-}
-/* ==========================================
-ADMIN MEMBER CARD NEW LAYOUT
-========================================== */
-
-.admin-member-card{
-    display: grid;
-    grid-template-columns: 95px 1fr;
+    display:grid;
+    grid-template-columns:100px minmax(0,1fr);
     grid-template-areas:
         "photo serial"
         "photo info"
         "photo actions";
-
-    column-gap: 18px;
-    align-items: start;
-
-    padding: 18px 12px;
-
-    border-bottom: 2px solid #e0e0e0;
+    column-gap:18px;
+    align-items:start;
+    padding:18px 12px;
+    border-bottom:2px solid #e0e0e0;
 }
-
-
-/* SERIAL */
+.admin-member-card:last-child{ border-bottom:none; }
 
 .admin-member-serial{
-    grid-area: serial;
-
-    font-size: 18px;
-    font-weight: bold;
-
-    margin-bottom: 5px;
+    grid-area:serial;
+    font-size:18px;
+    font-weight:700;
+    margin-bottom:4px;
 }
-
-
-/* PHOTO */
-
 .admin-member-photo,
 .admin-member-photo-placeholder{
-    grid-area: photo;
-
-    width: 90px;
-    height: 90px;
-
-    border-radius: 50%;
-    object-fit: cover;
-
-    border: 3px solid #c40000;
-
-    flex-shrink: 0;
+    grid-area:photo;
+    width:92px;
+    height:92px;
+    border-radius:50%;
+    border:3px solid #c40000;
+    flex-shrink:0;
 }
-
-
-/* MEMBER DETAILS */
-
+.admin-member-photo{ object-fit:cover; }
+.admin-member-photo-placeholder{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#f2f2f2;
+    font-size:30px;
+}
 .admin-member-info{
-    grid-area: info;
+    grid-area:info;
+    min-width:0;
 }
-
-.admin-member-info h4{
-    margin: 0 0 5px 0;
-    font-size: 20px;
-}
-
-.admin-member-info p{
-    margin: 3px 0;
-}
-
-
-/* EDIT DELETE BUTTON */
-
-.admin-member-actions{
-    grid-area: actions;
-
-    margin-top: 8px;
-
-    display: flex;
-    gap: 8px;
-}
-
-
-/* LAST MEMBER */
-
-.admin-member-card:last-child{
-    border-bottom: none;
-}
-
-
-/* MOBILE */
-
-@media(max-width: 600px){
-
-    .admin-member-card{
-        grid-template-columns: 80px 1fr;
-        column-gap: 12px;
-    }
-
-    .admin-member-photo,
-    .admin-member-photo-placeholder{
-        width: 75px;
-        height: 75px;
-    }
-
+.admin-member-name{
+    margin:0 0 7px;
+    font-size:20px;
+    font-weight:700;
+    overflow-wrap:anywhere;
 }
 .admin-member-meta-row{
     display:flex;
     align-items:center;
     gap:18px;
     flex-wrap:wrap;
-    margin:5px 0;
+    margin:4px 0;
 }
+.admin-member-meta-row span{ white-space:nowrap; }
 
-.admin-member-meta-row span{
-    white-space:nowrap;
+.admin-member-actions{
+    grid-area:actions;
+    display:flex;
+    gap:8px;
+    margin-top:10px;
 }
+.admin-member-actions button{
+    border:none;
+    border-radius:7px;
+    padding:8px 12px;
+    cursor:pointer;
+    font-weight:700;
+}
+.edit-member-btn{ background:#1976d2; color:#fff; }
+.delete-member-btn{ background:#c40000; color:#fff; }
 
 @media(max-width:600px){
-
-    .admin-member-meta-row{
-        gap:8px;
-        font-size:14px;
+    .content{ padding:14px; }
+    #pageContent{ padding:14px; }
+    .admin-member-card{
+        grid-template-columns:82px minmax(0,1fr);
+        column-gap:12px;
+        padding:15px 4px;
     }
-
-}
-
-.admin-member-name{
-    margin: 0 0 6px 0;
-    font-size: 20px;
-    font-weight: 700;
-}
-
-.admin-member-meta-row{
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    flex-wrap: wrap;
+    .admin-member-photo,
+    .admin-member-photo-placeholder{
+        width:76px;
+        height:76px;
+    }
+    .admin-member-name{ font-size:18px; }
+    .admin-member-meta-row{
+        gap:8px 12px;
+        font-size:13px;
+    }
+    .admin-member-actions{
+        flex-wrap:wrap;
+    }
 }
