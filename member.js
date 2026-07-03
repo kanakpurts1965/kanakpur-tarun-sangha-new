@@ -8,47 +8,31 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
-const membersRef =
-    collection(db, "members");
-
+const membersRef = collection(db, "members");
 
 const executiveMemberList =
-    document.getElementById(
-        "executiveMemberList"
-    );
-
+    document.getElementById("executiveMemberList");
 
 const memberList =
-    document.getElementById(
-        "memberList"
-    );
-
+    document.getElementById("memberList");
 
 const memberSearch =
-    document.getElementById(
-        "memberSearch"
-    );
-
+    document.getElementById("memberSearch");
 
 const bloodFilter =
-    document.getElementById(
-        "bloodFilter"
-    );
+    document.getElementById("bloodFilter");
 
 
 let allMembers = [];
 
 
 // =====================================================
-// REAL-TIME LOAD
+// REAL-TIME MEMBER LOAD
 // =====================================================
 
 const memberQuery = query(
-
     membersRef,
-
     orderBy("serial", "asc")
-
 );
 
 
@@ -60,12 +44,9 @@ onSnapshot(
 
         allMembers = [];
 
-
         snapshot.forEach((item) => {
 
-            const data =
-                item.data();
-
+            const data = item.data();
 
             allMembers.push({
 
@@ -121,22 +102,14 @@ function renderAll() {
 
     const executiveMembers =
         allMembers.filter(
-
             member =>
-                member.category ===
-                "executive"
-
+                member.category === "executive"
         );
 
 
-    const generalMembers =
-        allMembers.filter(
+    // সকল সদস্য box-এ সব member দেখাবে
 
-            member =>
-                member.category ===
-                "general"
-
-        );
+    const allMemberList = [...allMembers];
 
 
     renderMembers(
@@ -147,7 +120,7 @@ function renderAll() {
 
     renderMembers(
         memberList,
-        generalMembers
+        allMemberList
     );
 
 }
@@ -157,10 +130,7 @@ function renderAll() {
 // RENDER MEMBER LIST
 // =====================================================
 
-function renderMembers(
-    container,
-    members
-) {
+function renderMembers(container, members) {
 
     if (!container) return;
 
@@ -182,98 +152,93 @@ function renderMembers(
         `;
 
         return;
+
     }
 
 
-    members.forEach(
-        (member, index) => {
+    members.forEach((member, index) => {
 
 
-            const row =
-                document.createElement(
-                    "div"
-                );
+        const row =
+            document.createElement("div");
 
 
-            row.className =
-                "member-row";
+        row.className = "member-row";
 
 
-            const photoHTML =
-                member.photo
+        const photoHTML = member.photo
 
-                ? `
-                    <img
-                        src="${member.photo}"
-                        class="member-photo-small"
-                        alt="Member Photo"
-                    >
-                  `
+            ? `
+                <img
+                    src="${member.photo}"
+                    class="member-photo-small"
+                    alt="Member Photo"
+                >
+              `
 
-                : `
-                    <div
-                        class="member-photo-small"
-                        style="
-                            display:flex;
-                            align-items:center;
-                            justify-content:center;
-                            font-size:28px;
-                        "
-                    >
-                        👤
-                    </div>
-                  `;
+            : `
+                <div
+                    class="member-photo-small"
+                    style="
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:28px;
+                    "
+                >
+                    👤
+                </div>
+              `;
 
 
-            row.innerHTML = `
+        row.innerHTML = `
 
-                <div class="serial">
+            <div class="serial">
 
-                    ${String(
-                        index + 1
-                    ).padStart(3, "0")}
+                ${String(index + 1).padStart(3, "0")}
+
+            </div>
+
+
+            ${photoHTML}
+
+
+            <div class="member-details">
+
+
+                <h3>
+                    ${safe(member.name)}
+                </h3>
+
+
+                <div class="phone-row">
+
+                    📞 ${safe(member.mobile)}
 
                 </div>
 
 
-                ${photoHTML}
+                <div class="public-member-meta-row">
 
+                    <span>
+                        🩸 ${safe(member.bloodGroup)}
+                    </span>
 
-                <div class="member-details">
-
-                    <h3>
-                        ${safe(member.name)}
-                    </h3>
-
-
-                    <div class="phone-row">
-
-                        📞 ${safe(member.mobile)}
-
-                    </div>
-
-
-              <div class="public-member-meta-row">
-
-    <span>
-        🩸 ${safe(member.bloodGroup)}
-    </span>
-
-    <span>
-        👔 ${safe(member.position)}
-    </span>
-
-</div>    
+                    <span>
+                        👔 ${safe(member.position)}
+                    </span>
 
                 </div>
 
-            `;
+
+            </div>
+
+        `;
 
 
-            container.appendChild(row);
+        container.appendChild(row);
 
-        }
-    );
+    });
 
 }
 
@@ -283,6 +248,7 @@ function renderMembers(
 // =====================================================
 
 function filterMembers() {
+
 
     const searchValue =
 
@@ -304,20 +270,11 @@ function filterMembers() {
         || "";
 
 
-    const generalMembers =
+    const filteredMembers =
         allMembers.filter((member) => {
 
 
-            if (
-                member.category !== "general"
-            ) {
-
-                return false;
-
-            }
-
-
-            const text = `
+            const searchableText = `
 
                 ${member.name}
                 ${member.mobile}
@@ -328,7 +285,7 @@ function filterMembers() {
 
 
             const searchMatch =
-                text.includes(searchValue);
+                searchableText.includes(searchValue);
 
 
             const bloodMatch =
@@ -342,24 +299,31 @@ function filterMembers() {
                     === bloodValue;
 
 
-            return (
-                searchMatch &&
-                bloodMatch
-            );
+            return searchMatch && bloodMatch;
 
         });
 
 
     renderMembers(
         memberList,
-        generalMembers
+        filteredMembers
     );
 
 }
 
 
+// =====================================================
+// SEARCH EVENTS
+// =====================================================
+
 memberSearch?.addEventListener(
     "input",
+    filterMembers
+);
+
+
+memberSearch?.addEventListener(
+    "keyup",
     filterMembers
 );
 
