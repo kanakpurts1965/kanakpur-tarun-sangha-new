@@ -172,6 +172,9 @@ MAIN
     </div>
 
 </div>
+
+</section>
+
 <section class="member-section">
 
 <h2>📝 সম্পাদক</h2>
@@ -231,132 +234,38 @@ MAIN
 </div>
 
 </section>
- <section class="member-search-card">
-    
-    <h2>⭐ কার্যকরী সদস্য</h2>
-
-    <p class="member-subtitle">
-        কনকপুর তরুণ সংঘের কার্যকরী সদস্যবৃন্দ
-    </p>
-
-    <div class="member-scroll-box executive-list">
-
-        <!-- Member Row 1 -->
-
-        <!-- Member Row 2 -->
-
-        <!-- Member Row 3 -->
-
-    </div>
-
-</section>
-   <section class="member-search-card">
-
-    <h2>🔍 সদস্য খুঁজুন</h2>
-
-    <p>নাম, মোবাইল নম্বর অথবা রক্তের গ্রুপ লিখে সদস্য খুঁজুন</p>
-
-    <input
-        type="text"
-        id="memberSearch"
-        placeholder="🔎 সদস্যের নাম / মোবাইল / Blood Group..."
-    >
-<select id="bloodFilter">
-
-    <option value="">🩸 সকল Blood Group</option>
-
-    <option>A+</option>
-    <option>A-</option>
-
-    <option>B+</option>
-    <option>B-</option>
-
-    <option>O+</option>
-    <option>O-</option>
-
-    <option>AB+</option>
-    <option>AB-</option>
-
-</select>
-</section>
 
 <section class="executive-section">
-<section class="all-members-section">
-
-<h2>👥 সকল সদস্য</h2>
-
-<p class="member-subtitle">
-
-কনকপুর তরুণ সংঘের সকল সদস্যের তালিকা
-
-</p>
-
-<div
-    class="member-scroll-box executive-list"
-    id="executiveMemberList"
->
-
-<!-- Member 1 -->
-
-<div class="member-row">
-
-    <div class="serial">001</div>
-
-    <img src="member.png" class="member-photo-small">
-
-    <div class="member-details">
-
-        <h3>তন্ময় আদক</h3>
-
-        <div class="phone-row">
-
-            📞 6296062310
-
-        </div>
-
-        <div class="blood-row">
-
-            🩸 B+
-
-        </div>
-
+    <h2>⭐ কার্যকরী সদস্য</h2>
+    <p class="member-subtitle">কনকপুর তরুণ সংঘের কার্যকরী সদস্যবৃন্দ</p>
+    <div class="member-scroll-box executive-list" id="executiveMemberList">
+        <p style="text-align:center;padding:25px;">সদস্য তালিকা Loading...</p>
     </div>
-
-</div>
-<!-- Member 2 -->
-
-<!-- Member 2 -->
-
-<div class="member-row">
-
-    <div class="serial">002</div>
-
-    <img src="member.png" class="member-photo-small">
-
-    <div class="member-details">
-
-        <h3>project trayel</h3>
-
-        <div class="phone-row">
-
-            📞 1234567890
-
-        </div>
-
-        <div class="blood-row">
-
-            🩸 B+
-
-        </div>
-
-    </div>
-
-</div>
-<!-- পরে Admin Panel থেকে Auto Load হবে -->
-
-</div>
-
 </section>
+
+<section class="member-search-card">
+    <h2>🔍 সদস্য খুঁজুন</h2>
+    <p>নাম, মোবাইল নম্বর অথবা রক্তের গ্রুপ লিখে সদস্য খুঁজুন</p>
+    <input type="search" id="memberSearch"
+           placeholder="🔎 সদস্যের নাম / মোবাইল / Blood Group..."
+           autocomplete="off">
+    <select id="bloodFilter">
+        <option value="">🩸 সকল Blood Group</option>
+        <option value="A+">A+</option><option value="A-">A-</option>
+        <option value="B+">B+</option><option value="B-">B-</option>
+        <option value="O+">O+</option><option value="O-">O-</option>
+        <option value="AB+">AB+</option><option value="AB-">AB-</option>
+    </select>
+</section>
+
+<section class="all-members-section">
+    <h2>👥 সকল সদস্য</h2>
+    <p class="member-subtitle">কনকপুর তরুণ সংঘের সকল সদস্যের তালিকা</p>
+    <div class="member-scroll-box" id="memberList">
+        <p style="text-align:center;padding:25px;">সদস্য তালিকা Loading...</p>
+    </div>
+</section>
+
  <section class="join-club">
 
 <h2>🤝 সদস্য হতে চান?</h2>
