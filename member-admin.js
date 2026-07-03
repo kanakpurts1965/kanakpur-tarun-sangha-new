@@ -604,7 +604,12 @@ onSnapshot(
 
                 ${photoHTML}
 
+                  <div class="admin-member-info">
 
+    <h4 class="admin-member-name">
+        ${safe(data.name)}
+    </h4>
+    
                <div class="admin-member-meta-row">
 
     <span>
