@@ -42,17 +42,128 @@
 <div id="pageContent">
 <section class="page active" id="dashboardPage"><h2>🏠 Dashboard</h2><p>Welcome to Kanakpur Tarun Sangha Admin Dashboard</p></section>
 <section class="page" id="commentsPage"><h2>💬 Comments</h2></section>
-<section id="repliesPage" class="page">
-
-    <h2>💬 Reply Management</h2>
-
-    <div id="adminReplies">
+<section class="page" id="repliesPage">
+<h2>💬 Reply Management</h2>
+<div id="adminReplies">
         Loading...
     </div>
-
 </section>
+<section class="page" id="membersPage">
+<div class="admin-page-header">
+<h2>👥 Member Management</h2>
+<p>
+            কনকপুর তরুণ সংঘের সদস্যদের যোগ, সম্পাদনা ও পরিচালনা করুন।
+        </p>
+</div>
+<!-- ======================================
+    ADD MEMBER FORM
+    ======================================= -->
+<div class="admin-box member-management-box">
+<h3>➕ নতুন সদস্য যোগ করুন</h3>
+<div class="member-admin-form">
+<!-- Member Name -->
+<div class="admin-form-group">
+<label for="memberName">
+                    👤 সদস্যের নাম
+                </label>
+<input autocomplete="off" id="memberName" placeholder="সদস্যের সম্পূর্ণ নাম লিখুন" type="text"/>
+</div>
+<!-- Mobile Number -->
+<div class="admin-form-group">
+<label for="memberMobile">
+                    📞 মোবাইল নম্বর
+                </label>
+<input autocomplete="off" id="memberMobile" placeholder="মোবাইল নম্বর লিখুন" type="tel"/>
+</div>
+<!-- Blood Group -->
+<div class="admin-form-group">
+<label for="memberBlood">
+                    🩸 রক্তের গ্রুপ
+                </label>
+<select id="memberBlood">
+<option value="">
+                        Blood Group নির্বাচন করুন
+                    </option>
+<option value="A+">A+</option>
+<option value="A-">A-</option>
+<option value="B+">B+</option>
+<option value="B-">B-</option>
+<option value="O+">O+</option>
+<option value="O-">O-</option>
+<option value="AB+">AB+</option>
+<option value="AB-">AB-</option>
+</select>
+</div>
+<!-- Position -->
+<div class="admin-form-group">
+<label for="memberPosition">
+                    👔 সদস্যের পদ
+                </label>
+<select id="memberPosition">
+<option value="">
+                        পদ নির্বাচন করুন
+                    </option>
+<option value="President">
+                        President
+                    </option>
+<option value="Vice President">
+                        Vice President
+                    </option>
+<option value="Secretary">
+                        Secretary
+                    </option>
+<option value="Assistant Secretary">
+                        Assistant Secretary
+                    </option>
+<option value="Treasurer">
+                        Treasurer
+                    </option>
+<option value="Executive">
+                        Executive Member
+                    </option>
+<option value="General">
+                        General Member
+                    </option>
+</select>
+</div>
+<!-- Photo -->
+<div class="admin-form-group full-width">
+<label for="memberPhoto">
+                    🖼 সদস্যের ছবির URL
+                </label>
+<input autocomplete="off" id="memberPhoto" placeholder="ছবির URL অথবা member.png লিখুন" type="text"/>
+</div>
+<!-- Save Button -->
+<div class="admin-form-group full-width">
+<button class="save-member-btn" id="addMemberBtn" type="button">
+                    💾 সদস্য Save করুন
+                </button>
+</div>
+</div>
+</div>
+<!-- ======================================
+    MEMBER LIST
+    ======================================= -->
+<div class="admin-box member-list-box">
+<div class="member-list-header">
+<div>
+<h3>📋 সদস্য তালিকা</h3>
+<p>
+                    যোগ করা সকল সদস্য এখানে দেখা যাবে।
+                </p>
+</div>
+<input id="adminMemberSearch" placeholder="🔍 সদস্য খুঁজুন..." type="search"/>
+</div>
+<!-- Dynamic Member List -->
+<div id="adminMemberList">
+<p class="member-loading">
 
-<section class="page" id="noticePage"><h2>📢 Notice</h2></section>
+                সদস্য তালিকা Loading...
+
+            </p>
+</div>
+</div>
+</section><section class="page" id="noticePage"><h2>📢 Notice</h2></section>
 <section class="page" id="galleryPage"><h2>🖼 Gallery</h2></section>
 <section class="page" id="settingsPage"><h2>⚙ Settings</h2></section>
 </div>
@@ -62,227 +173,8 @@
 MEMBER MANAGEMENT PAGE
 ========================================== -->
 
-<section id="membersPage" class="page">
-
-    <div class="admin-page-header">
-
-        <h2>👥 Member Management</h2>
-
-        <p>
-            কনকপুর তরুণ সংঘের সদস্যদের যোগ, সম্পাদনা ও পরিচালনা করুন।
-        </p>
-
-    </div>
-
-
-    <!-- ======================================
-    ADD MEMBER FORM
-    ======================================= -->
-
-    <div class="admin-box member-management-box">
-
-        <h3>➕ নতুন সদস্য যোগ করুন</h3>
-
-        <div class="member-admin-form">
-
-
-            <!-- Member Name -->
-
-            <div class="admin-form-group">
-
-                <label for="memberName">
-                    👤 সদস্যের নাম
-                </label>
-
-                <input
-                    type="text"
-                    id="memberName"
-                    placeholder="সদস্যের সম্পূর্ণ নাম লিখুন"
-                    autocomplete="off"
-                >
-
-            </div>
-
-
-            <!-- Mobile Number -->
-
-            <div class="admin-form-group">
-
-                <label for="memberMobile">
-                    📞 মোবাইল নম্বর
-                </label>
-
-                <input
-                    type="tel"
-                    id="memberMobile"
-                    placeholder="মোবাইল নম্বর লিখুন"
-                    autocomplete="off"
-                >
-
-            </div>
-
-
-            <!-- Blood Group -->
-
-            <div class="admin-form-group">
-
-                <label for="memberBlood">
-                    🩸 রক্তের গ্রুপ
-                </label>
-
-                <select id="memberBlood">
-
-                    <option value="">
-                        Blood Group নির্বাচন করুন
-                    </option>
-
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
-
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
-
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
-
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
-
-                </select>
-
-            </div>
-
-
-            <!-- Position -->
-
-            <div class="admin-form-group">
-
-                <label for="memberPosition">
-                    👔 সদস্যের পদ
-                </label>
-
-                <select id="memberPosition">
-
-                    <option value="">
-                        পদ নির্বাচন করুন
-                    </option>
-
-                    <option value="President">
-                        President
-                    </option>
-
-                    <option value="Vice President">
-                        Vice President
-                    </option>
-
-                    <option value="Secretary">
-                        Secretary
-                    </option>
-
-                    <option value="Assistant Secretary">
-                        Assistant Secretary
-                    </option>
-
-                    <option value="Treasurer">
-                        Treasurer
-                    </option>
-
-                    <option value="Executive">
-                        Executive Member
-                    </option>
-
-                    <option value="General">
-                        General Member
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <!-- Photo -->
-
-            <div class="admin-form-group full-width">
-
-                <label for="memberPhoto">
-                    🖼 সদস্যের ছবির URL
-                </label>
-
-                <input
-                    type="text"
-                    id="memberPhoto"
-                    placeholder="ছবির URL অথবা member.png লিখুন"
-                    autocomplete="off"
-                >
-
-            </div>
-
-
-            <!-- Save Button -->
-
-            <div class="admin-form-group full-width">
-
-                <button
-                    type="button"
-                    id="addMemberBtn"
-                    class="save-member-btn"
-                >
-                    💾 সদস্য Save করুন
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- ======================================
-    MEMBER LIST
-    ======================================= -->
-
-    <div class="admin-box member-list-box">
-
-        <div class="member-list-header">
-
-            <div>
-
-                <h3>📋 সদস্য তালিকা</h3>
-
-                <p>
-                    যোগ করা সকল সদস্য এখানে দেখা যাবে।
-                </p>
-
-            </div>
-
-
-            <input
-                type="search"
-                id="adminMemberSearch"
-                placeholder="🔍 সদস্য খুঁজুন..."
-            >
-
-        </div>
-
-
-        <!-- Dynamic Member List -->
-
-        <div id="adminMemberList">
-
-            <p class="member-loading">
-
-                সদস্য তালিকা Loading...
-
-            </p>
-
-        </div>
-
-    </div>
-
-</section>
-
 <script src="dashboard.js" type="module"></script>
 <script src="replies-admin.js" type="module"></script>
 <script src="comments-admin.js" type="module"></script>
-</body>
+<script src="member-admin.js" type="module"></script></body>
 </html>
