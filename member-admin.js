@@ -1,6 +1,6 @@
 // =====================================================
 // KTS MEMBER ADMIN SYSTEM
-// VERSION: CLOUDINARY + FIRESTORE
+// CLOUDINARY + FIRESTORE
 // =====================================================
 
 import { db } from "./firebase.js";
@@ -20,22 +20,17 @@ import {
 
 
 // =====================================================
-// CLOUDINARY CONFIG
+// CONFIG
 // =====================================================
 
 const CLOUD_NAME = "wf6ocs3j";
 const UPLOAD_PRESET = "kts_members";
 
-
-// =====================================================
-// FIRESTORE
-// =====================================================
-
 const membersRef = collection(db, "members");
 
 
 // =====================================================
-// HTML ELEMENTS
+// ELEMENTS
 // =====================================================
 
 const memberName =
@@ -73,13 +68,11 @@ const adminMemberSearch =
 
 
 // =====================================================
-// EDIT MODE
+// EDIT DATA
 // =====================================================
 
 let editingMemberId = null;
-
 let oldPhotoURL = "";
-
 let oldPhotoPublicId = "";
 
 
@@ -87,72 +80,54 @@ let oldPhotoPublicId = "";
 // PHOTO PREVIEW
 // =====================================================
 
-if (memberPhotoFile) {
+memberPhotoFile?.addEventListener("change", () => {
 
-    memberPhotoFile.addEventListener("change", () => {
+    const file = memberPhotoFile.files[0];
 
-        const file = memberPhotoFile.files[0];
+    if (!file) {
 
-        if (!file) {
+        memberPhotoPreview.src = "";
 
-            memberPhotoPreview.src = "";
+        memberPhotoPreviewBox.style.display = "none";
 
-            memberPhotoPreviewBox.style.display = "none";
-
-            return;
-        }
+        return;
+    }
 
 
-        // 5 MB limit
+    if (!file.type.startsWith("image/")) {
 
-        if (file.size > 5 * 1024 * 1024) {
+        alert("শুধু ছবি নির্বাচন করুন");
 
-            alert("❌ ছবির Size 5MB-এর কম রাখুন");
+        memberPhotoFile.value = "";
 
-            memberPhotoFile.value = "";
-
-            memberPhotoPreviewBox.style.display = "none";
-
-            return;
-        }
+        return;
+    }
 
 
-        if (!file.type.startsWith("image/")) {
+    if (file.size > 5 * 1024 * 1024) {
 
-            alert("❌ শুধু Image File নির্বাচন করুন");
+        alert("ছবির Size 5MB-এর কম রাখুন");
 
-            memberPhotoFile.value = "";
+        memberPhotoFile.value = "";
 
-            memberPhotoPreviewBox.style.display = "none";
-
-            return;
-        }
+        return;
+    }
 
 
-        const reader = new FileReader();
+    memberPhotoPreview.src =
+        URL.createObjectURL(file);
 
-        reader.onload = (event) => {
+    memberPhotoPreviewBox.style.display =
+        "block";
 
-            memberPhotoPreview.src =
-                event.target.result;
-
-            memberPhotoPreviewBox.style.display =
-                "block";
-
-        };
-
-        reader.readAsDataURL(file);
-
-    });
-
-}
+});
 
 
 // =====================================================
-// CLOUDINARY PHOTO UPLOAD
+// CLOUDINARY UPLOAD
 // =====================================================
 
-async function uploadPhotoToCloudinary(file) {
+async function uploadPhoto(file) {
 
     const formData = new FormData();
 
@@ -164,51 +139,70 @@ async function uploadPhotoToCloudinary(file) {
     );
 
 
-    const uploadURL =
+    const url =
         `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
 
-    const response = await fetch(
-        uploadURL,
-        {
+    const controller =
+        new AbortController();
+
+
+    const timeout =
+        setTimeout(() => {
+
+            controller.abort();
+
+        }, 30000);
+
+
+    try {
+
+        const response = await fetch(url, {
+
             method: "POST",
-            body: formData
+
+            body: formData,
+
+            signal: controller.signal
+
+        });
+
+
+        const result =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                result?.error?.message ||
+                "Cloudinary Upload Failed"
+            );
+
         }
-    );
 
 
-    const result = await response.json();
+        return {
 
+            url: result.secure_url,
 
-    if (!response.ok) {
+            publicId: result.public_id
 
-        console.error(
-            "Cloudinary Error:",
-            result
-        );
+        };
 
-        throw new Error(
-            result.error?.message ||
-            "Photo upload failed"
-        );
     }
 
+    finally {
 
-    return {
+        clearTimeout(timeout);
 
-        photoURL:
-            result.secure_url,
-
-        publicId:
-            result.public_id
-
-    };
+    }
 
 }
 
 
 // =====================================================
-// GET NEXT SERIAL
+// NEXT SERIAL
 // =====================================================
 
 async function getNextSerial() {
@@ -217,262 +211,230 @@ async function getNextSerial() {
         await getDocs(membersRef);
 
 
-    let highestSerial = 0;
+    let maxSerial = 0;
 
 
-    snapshot.forEach((memberDoc) => {
-
-        const data =
-            memberDoc.data();
+    snapshot.forEach((item) => {
 
         const serial =
-            Number(data.serial) || 0;
+            Number(item.data().serial) || 0;
 
 
-        if (serial > highestSerial) {
+        if (serial > maxSerial) {
 
-            highestSerial = serial;
+            maxSerial = serial;
 
         }
 
     });
 
 
-    return highestSerial + 1;
+    return maxSerial + 1;
 
 }
 
 
 // =====================================================
-// SAVE / UPDATE MEMBER
+// SAVE BUTTON
 // =====================================================
 
-if (addMemberBtn) {
-
-    addMemberBtn.addEventListener(
-        "click",
-        async () => {
+addMemberBtn?.addEventListener(
+    "click",
+    async () => {
 
 
-            const name =
-                memberName.value.trim();
+        const name =
+            memberName.value.trim();
 
-            const mobile =
-                memberMobile.value.trim();
+        const mobile =
+            memberMobile.value.trim();
 
-            const bloodGroup =
-                memberBlood.value;
+        const bloodGroup =
+            memberBlood.value;
 
-            const position =
-                memberPosition.value;
+        const position =
+            memberPosition.value;
 
-            const category =
-                memberCategory.value;
+        const category =
+            memberCategory.value;
 
-            const selectedPhoto =
-                memberPhotoFile.files[0];
+        const photoFile =
+            memberPhotoFile.files[0];
 
 
-            // ==========================================
-            // VALIDATION
-            // ==========================================
+        if (!name) {
 
-            if (!name) {
+            alert("সদস্যের নাম লিখুন");
 
-                alert("❌ সদস্যের নাম লিখুন");
+            return;
+        }
 
-                memberName.focus();
 
-                return;
+        if (!mobile) {
+
+            alert("মোবাইল নম্বর লিখুন");
+
+            return;
+        }
+
+
+        if (!bloodGroup) {
+
+            alert("Blood Group নির্বাচন করুন");
+
+            return;
+        }
+
+
+        if (!position) {
+
+            alert("পদ নির্বাচন করুন");
+
+            return;
+        }
+
+
+        if (!category) {
+
+            alert(
+                "কার্যকরী সদস্য অথবা সকল সদস্য নির্বাচন করুন"
+            );
+
+            return;
+        }
+
+
+        try {
+
+            addMemberBtn.disabled = true;
+
+
+            let photoURL =
+                oldPhotoURL || "";
+
+            let photoPublicId =
+                oldPhotoPublicId || "";
+
+
+            // PHOTO UPLOAD
+
+            if (photoFile) {
+
+                addMemberBtn.textContent =
+                    "📤 ছবি Upload হচ্ছে...";
+
+
+                const uploaded =
+                    await uploadPhoto(photoFile);
+
+
+                photoURL =
+                    uploaded.url;
+
+                photoPublicId =
+                    uploaded.publicId;
+
             }
 
 
-            if (!mobile) {
+            // EDIT
 
-                alert("❌ মোবাইল নম্বর লিখুন");
+            if (editingMemberId) {
 
-                memberMobile.focus();
-
-                return;
-            }
+                addMemberBtn.textContent =
+                    "⏳ Update হচ্ছে...";
 
 
-            if (!bloodGroup) {
+                await updateDoc(
 
-                alert("❌ Blood Group নির্বাচন করুন");
+                    doc(
+                        db,
+                        "members",
+                        editingMemberId
+                    ),
 
-                return;
-            }
+                    {
+                        name,
+                        mobile,
+                        bloodGroup,
+                        position,
+                        category,
+                        photo: photoURL,
+                        photoPublicId,
+                        updatedAt:
+                            serverTimestamp()
+                    }
 
+                );
 
-            if (!position) {
-
-                alert("❌ সদস্যের পদ নির্বাচন করুন");
-
-                return;
-            }
-
-
-            if (!category) {
 
                 alert(
-                    "❌ কার্যকরী সদস্য অথবা সকল সদস্য নির্বাচন করুন"
+                    "✅ Member Update হয়েছে"
                 );
 
-                return;
             }
 
 
-            try {
+            // ADD
 
-                addMemberBtn.disabled = true;
+            else {
 
-                addMemberBtn.innerText =
-                    editingMemberId
-                        ? "⏳ Updating..."
-                        : "⏳ Saving...";
+                addMemberBtn.textContent =
+                    "💾 Save হচ্ছে...";
 
 
-                // ======================================
-                // EXISTING PHOTO
-                // ======================================
-
-                let finalPhotoURL =
-                    oldPhotoURL || "";
-
-                let finalPhotoPublicId =
-                    oldPhotoPublicId || "";
+                const serial =
+                    await getNextSerial();
 
 
-                // ======================================
-                // NEW PHOTO UPLOAD
-                // ======================================
+                await addDoc(
 
-                if (selectedPhoto) {
+                    membersRef,
 
-                    addMemberBtn.innerText =
-                        "📤 Photo Upload হচ্ছে...";
+                    {
+                        name,
+                        mobile,
+                        bloodGroup,
+                        position,
+                        category,
+                        photo: photoURL,
+                        photoPublicId,
+                        serial,
+                        createdAt:
+                            serverTimestamp()
+                    }
 
-
-                    const uploaded =
-                        await uploadPhotoToCloudinary(
-                            selectedPhoto
-                        );
-
-
-                    finalPhotoURL =
-                        uploaded.photoURL;
-
-                    finalPhotoPublicId =
-                        uploaded.publicId;
-
-                }
+                );
 
 
-                // ======================================
-                // EDIT MEMBER
-                // ======================================
-
-                if (editingMemberId) {
-
-                    addMemberBtn.innerText =
-                        "⏳ Updating...";
-
-
-                    await updateDoc(
-
-                        doc(
-                            db,
-                            "members",
-                            editingMemberId
-                        ),
-
-                        {
-                            name,
-                            mobile,
-                            bloodGroup,
-                            position,
-                            category,
-
-                            photo:
-                                finalPhotoURL,
-
-                            photoPublicId:
-                                finalPhotoPublicId,
-
-                            updatedAt:
-                                serverTimestamp()
-                        }
-
-                    );
-
-
-                    alert(
-                        "✅ সদস্যের তথ্য Update হয়েছে"
-                    );
-
-                }
-
-
-                // ======================================
-                // ADD MEMBER
-                // ======================================
-
-                else {
-
-                    const nextSerial =
-                        await getNextSerial();
-
-
-                    addMemberBtn.innerText =
-                        "💾 Member Save হচ্ছে...";
-
-
-                    await addDoc(
-
-                        membersRef,
-
-                        {
-                            name,
-                            mobile,
-                            bloodGroup,
-                            position,
-                            category,
-
-                            photo:
-                                finalPhotoURL,
-
-                            photoPublicId:
-                                finalPhotoPublicId,
-
-                            serial:
-                                nextSerial,
-
-                            createdAt:
-                                serverTimestamp()
-                        }
-
-                    );
-
-
-                    alert(
-                        "✅ সদস্য সফলভাবে যোগ হয়েছে"
-                    );
-
-                }
-
-
-                clearMemberForm();
+                alert(
+                    "✅ Member Save হয়েছে"
+                );
 
             }
 
-            catch (error) {
 
-                console.error(
-                    "Member Save Error:",
-                    error
+            clearForm();
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "MEMBER SAVE ERROR:",
+                error
+            );
+
+
+            if (error.name === "AbortError") {
+
+                alert(
+                    "❌ Photo Upload Timeout হয়েছে"
                 );
 
+            }
+
+            else {
 
                 alert(
                     "❌ Save হয়নি: " +
@@ -481,30 +443,37 @@ if (addMemberBtn) {
 
             }
 
-            finally {
+        }
 
-                addMemberBtn.disabled = false;
+        finally {
 
-                if (!editingMemberId) {
+            addMemberBtn.disabled = false;
 
-                    addMemberBtn.innerText =
-                        "💾 সদস্য Save করুন";
+            if (editingMemberId) {
 
-                }
+                addMemberBtn.textContent =
+                    "🔄 সদস্য Update করুন";
+
+            }
+
+            else {
+
+                addMemberBtn.textContent =
+                    "💾 সদস্য Save করুন";
 
             }
 
         }
-    );
 
-}
+    }
+);
 
 
 // =====================================================
 // CLEAR FORM
 // =====================================================
 
-function clearMemberForm() {
+function clearForm() {
 
     memberName.value = "";
 
@@ -531,310 +500,177 @@ function clearMemberForm() {
     oldPhotoPublicId = "";
 
 
-    addMemberBtn.innerText =
+    addMemberBtn.textContent =
         "💾 সদস্য Save করুন";
 
 }
 
 
 // =====================================================
-// ADMIN MEMBER LIST
+// ADMIN LIST
 // =====================================================
 
-if (adminMemberList) {
+const memberQuery = query(
 
-    const memberQuery = query(
+    membersRef,
 
-        membersRef,
+    orderBy("serial", "asc")
 
-        orderBy("serial", "asc")
-
-    );
+);
 
 
-    onSnapshot(
+onSnapshot(
 
-        memberQuery,
+    memberQuery,
 
-        (snapshot) => {
+    (snapshot) => {
 
-            adminMemberList.innerHTML = "";
+        if (!adminMemberList) return;
 
 
-            if (snapshot.empty) {
+        adminMemberList.innerHTML = "";
 
-                adminMemberList.innerHTML = `
 
-                    <p class="member-loading">
-                        কোনো সদস্য পাওয়া যায়নি।
+        if (snapshot.empty) {
+
+            adminMemberList.innerHTML =
+                "<p>কোনো সদস্য নেই।</p>";
+
+            return;
+        }
+
+
+        let displaySerial = 1;
+
+
+        snapshot.forEach((item) => {
+
+            const data = item.data();
+
+
+            const card =
+                document.createElement("div");
+
+
+            card.className =
+                "admin-member-card";
+
+
+            card._memberData = {
+
+                id: item.id,
+
+                ...data
+
+            };
+
+
+            const categoryText =
+
+                data.category === "executive"
+
+                ? "⭐ কার্যকরী সদস্য"
+
+                : "👥 সকল সদস্য";
+
+
+            const photoHTML = data.photo
+
+                ? `
+                    <img
+                        src="${data.photo}"
+                        class="admin-member-photo"
+                        alt="Member Photo"
+                    >
+                  `
+
+                : `
+                    <div class="admin-member-photo-placeholder">
+                        👤
+                    </div>
+                  `;
+
+
+            card.innerHTML = `
+
+                <div class="admin-member-serial">
+
+                    ${String(
+                        displaySerial++
+                    ).padStart(3, "0")}
+
+                </div>
+
+
+                ${photoHTML}
+
+
+                <div class="admin-member-info">
+
+                    <h4>
+                        ${safe(data.name)}
+                    </h4>
+
+                    <p>
+                        📞 ${safe(data.mobile)}
                     </p>
 
-                `;
+                    <p>
+                        🩸 ${safe(data.bloodGroup)}
+                    </p>
 
-                return;
-            }
+                    <p>
+                        👔 ${safe(data.position)}
+                    </p>
 
+                    <p>
+                        ${categoryText}
+                    </p>
 
-            let displaySerial = 1;
-
-
-            snapshot.forEach((item) => {
-
-                const data =
-                    item.data();
-
-
-                const card =
-                    document.createElement("div");
+                </div>
 
 
-                card.className =
-                    "admin-member-card";
+                <div class="admin-member-actions">
 
+                    <button
+                        type="button"
+                        class="edit-member-btn"
+                    >
+                        ✏️ Edit
+                    </button>
 
-                const serialText =
-                    String(displaySerial++)
-                        .padStart(3, "0");
+                    <button
+                        type="button"
+                        class="delete-member-btn"
+                    >
+                        🗑️ Delete
+                    </button>
 
-
-                const categoryText =
-
-                    data.category === "executive"
-
-                        ? "⭐ কার্যকরী সদস্য"
-
-                        : "👥 সকল সদস্য";
-
-
-                const photoURL =
-                    data.photo || "";
-
-
-                card.innerHTML = `
-
-                    <div class="admin-member-serial">
-                        ${serialText}
-                    </div>
-
-
-                    ${
-                        photoURL
-
-                        ? `
-                        <img
-                            src="${photoURL}"
-                            class="admin-member-photo"
-                            alt="Member Photo"
-                        >
-                        `
-
-                        : `
-                        <div class="admin-member-photo-placeholder">
-                            👤
-                        </div>
-                        `
-                    }
-
-
-                    <div class="admin-member-info">
-
-                        <h4>
-                            ${escapeHTML(data.name || "")}
-                        </h4>
-
-                        <p>
-                            📞 ${escapeHTML(data.mobile || "")}
-                        </p>
-
-                        <p>
-                            🩸 ${escapeHTML(data.bloodGroup || "")}
-                        </p>
-
-                        <p>
-                            👔 ${escapeHTML(data.position || "")}
-                        </p>
-
-                        <p>
-                            ${categoryText}
-                        </p>
-
-                    </div>
-
-
-                    <div class="admin-member-actions">
-
-                        <button
-                            class="edit-member-btn"
-                            data-id="${item.id}"
-                        >
-                            ✏️ Edit
-                        </button>
-
-
-                        <button
-                            class="delete-member-btn"
-                            data-id="${item.id}"
-                            data-name="${escapeAttribute(data.name || "")}"
-                        >
-                            🗑️ Delete
-                        </button>
-
-                    </div>
-
-                `;
-
-
-                // Store data safely on element
-
-                card._memberData = {
-                    id: item.id,
-                    ...data
-                };
-
-
-                adminMemberList.appendChild(card);
-
-            });
-
-        },
-
-        (error) => {
-
-            console.error(
-                "Member Load Error:",
-                error
-            );
-
-
-            adminMemberList.innerHTML = `
-
-                <p class="member-loading">
-                    ❌ সদস্য তালিকা Load করা যায়নি।
-                </p>
+                </div>
 
             `;
 
-        }
 
-    );
+            adminMemberList.appendChild(card);
 
-}
+        });
 
+    },
 
-// =====================================================
-// EDIT MEMBER
-// =====================================================
+    (error) => {
 
-document.addEventListener(
-    "click",
-    (event) => {
-
-
-        const editBtn =
-            event.target.closest(
-                ".edit-member-btn"
-            );
-
-
-        if (!editBtn) return;
-
-
-        const card =
-            editBtn.closest(
-                ".admin-member-card"
-            );
-
-
-        const data =
-            card._memberData;
-
-
-        if (!data) return;
-
-
-        editingMemberId =
-            data.id;
-
-
-        oldPhotoURL =
-            data.photo || "";
-
-
-        oldPhotoPublicId =
-            data.photoPublicId || "";
-
-
-        memberName.value =
-            data.name || "";
-
-
-        memberMobile.value =
-            data.mobile || "";
-
-
-        memberBlood.value =
-            data.bloodGroup || "";
-
-
-        memberPosition.value =
-            data.position || "";
-
-
-        memberCategory.value =
-            data.category || "general";
-
-
-        memberPhotoFile.value = "";
-
-
-        if (oldPhotoURL) {
-
-            memberPhotoPreview.src =
-                oldPhotoURL;
-
-            memberPhotoPreviewBox.style.display =
-                "block";
-
-        }
-
-        else {
-
-            memberPhotoPreview.src = "";
-
-            memberPhotoPreviewBox.style.display =
-                "none";
-
-        }
-
-
-        addMemberBtn.innerText =
-            "🔄 সদস্য Update করুন";
-
-
-        const memberForm =
-            document.querySelector(
-                ".member-management-box"
-            );
-
-
-        if (memberForm) {
-
-            memberForm.scrollIntoView({
-
-                behavior: "smooth",
-
-                block: "start"
-
-            });
-
-        }
+        console.error(
+            "MEMBER LIST ERROR:",
+            error
+        );
 
     }
+
 );
 
 
 // =====================================================
-// DELETE MEMBER
+// EDIT + DELETE
 // =====================================================
 
 document.addEventListener(
@@ -842,85 +678,174 @@ document.addEventListener(
     async (event) => {
 
 
-        const deleteBtn =
+        // EDIT
+
+        const editButton =
+            event.target.closest(
+                ".edit-member-btn"
+            );
+
+
+        if (editButton) {
+
+            const card =
+                editButton.closest(
+                    ".admin-member-card"
+                );
+
+
+            const data =
+                card._memberData;
+
+
+            editingMemberId =
+                data.id;
+
+
+            oldPhotoURL =
+                data.photo || "";
+
+
+            oldPhotoPublicId =
+                data.photoPublicId || "";
+
+
+            memberName.value =
+                data.name || "";
+
+            memberMobile.value =
+                data.mobile || "";
+
+            memberBlood.value =
+                data.bloodGroup || "";
+
+            memberPosition.value =
+                data.position || "";
+
+            memberCategory.value =
+                data.category || "general";
+
+
+            memberPhotoFile.value = "";
+
+
+            if (oldPhotoURL) {
+
+                memberPhotoPreview.src =
+                    oldPhotoURL;
+
+                memberPhotoPreviewBox.style.display =
+                    "block";
+
+            }
+
+            else {
+
+                memberPhotoPreviewBox.style.display =
+                    "none";
+
+            }
+
+
+            addMemberBtn.textContent =
+                "🔄 সদস্য Update করুন";
+
+
+            document
+                .querySelector(
+                    ".member-management-box"
+                )
+                ?.scrollIntoView({
+
+                    behavior: "smooth",
+
+                    block: "start"
+
+                });
+
+
+            return;
+        }
+
+
+        // DELETE
+
+        const deleteButton =
             event.target.closest(
                 ".delete-member-btn"
             );
 
 
-        if (!deleteBtn) return;
+        if (deleteButton) {
+
+            const card =
+                deleteButton.closest(
+                    ".admin-member-card"
+                );
 
 
-        const memberId =
-            deleteBtn.dataset.id;
-
-
-        const name =
-            deleteBtn.dataset.name;
-
-
-        const confirmDelete =
-            confirm(
-
-                `"${name}" সদস্যকে Delete করবেন?`
-
-            );
-
-
-        if (!confirmDelete) return;
-
-
-        try {
-
-            deleteBtn.disabled = true;
-
-            deleteBtn.innerText =
-                "⏳ Deleting...";
-
-
-            await deleteDoc(
-
-                doc(
-                    db,
-                    "members",
-                    memberId
-                )
-
-            );
+            const data =
+                card._memberData;
 
 
             if (
-                editingMemberId === memberId
+                !confirm(
+                    `"${data.name}" সদস্যকে Delete করবেন?`
+                )
             ) {
 
-                clearMemberForm();
-
+                return;
             }
 
 
-            alert(
-                "✅ সদস্য সফলভাবে Delete হয়েছে"
-            );
+            try {
 
-        }
+                deleteButton.disabled = true;
 
-        catch (error) {
-
-            console.error(
-                "Delete Error:",
-                error
-            );
+                deleteButton.textContent =
+                    "⏳ Deleting...";
 
 
-            deleteBtn.disabled = false;
+                await deleteDoc(
 
-            deleteBtn.innerText =
-                "🗑️ Delete";
+                    doc(
+                        db,
+                        "members",
+                        data.id
+                    )
+
+                );
 
 
-            alert(
-                "❌ Delete করা যায়নি"
-            );
+                if (
+                    editingMemberId === data.id
+                ) {
+
+                    clearForm();
+
+                }
+
+
+                alert(
+                    "✅ Member Delete হয়েছে"
+                );
+
+            }
+
+            catch (error) {
+
+                console.error(error);
+
+                deleteButton.disabled = false;
+
+                deleteButton.textContent =
+                    "🗑️ Delete";
+
+                alert(
+                    "❌ Delete হয়নি"
+                );
+
+            }
 
         }
 
@@ -932,56 +857,46 @@ document.addEventListener(
 // ADMIN SEARCH
 // =====================================================
 
-if (adminMemberSearch) {
-
-    adminMemberSearch.addEventListener(
-        "input",
-        () => {
+adminMemberSearch?.addEventListener(
+    "input",
+    () => {
 
 
-            const searchValue =
-
-                adminMemberSearch
-                    .value
-                    .toLowerCase()
-                    .trim();
-
-
-            const cards =
-
-                document.querySelectorAll(
-                    ".admin-member-card"
-                );
+        const value =
+            adminMemberSearch
+                .value
+                .toLowerCase()
+                .trim();
 
 
-            cards.forEach((card) => {
-
-                const text =
-                    card.innerText
-                        .toLowerCase();
+        document
+            .querySelectorAll(
+                ".admin-member-card"
+            )
+            .forEach((card) => {
 
 
                 card.style.display =
 
-                    text.includes(searchValue)
+                    card.innerText
+                        .toLowerCase()
+                        .includes(value)
 
-                        ? "flex"
+                    ? "flex"
 
-                        : "none";
+                    : "none";
 
             });
 
-        }
-    );
-
-}
+    }
+);
 
 
 // =====================================================
-// BASIC HTML SAFETY
+// SAFE TEXT
 // =====================================================
 
-function escapeHTML(value) {
+function safe(value = "") {
 
     return String(value)
 
@@ -994,12 +909,5 @@ function escapeHTML(value) {
         .replaceAll('"', "&quot;")
 
         .replaceAll("'", "&#039;");
-
-}
-
-
-function escapeAttribute(value) {
-
-    return escapeHTML(value);
 
 }
