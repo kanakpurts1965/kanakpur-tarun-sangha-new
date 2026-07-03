@@ -199,7 +199,7 @@ function displayMembers(members) {
 
 
 
-    members.forEach((member) => {
+   members.forEach((member, index) => {
 
 
         const row =
@@ -216,11 +216,9 @@ function displayMembers(members) {
         // 10 = 010
 
 
-        const serialNumber = String(
-
-            member.serial
-
-        ).padStart(3, "0");
+       const serialNumber = String(
+    index + 1
+).padStart(3, "0");
 
 
 
