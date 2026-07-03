@@ -338,7 +338,9 @@ if (adminMemberList) {
             }
 
 
-            snapshot.forEach((item, index) => {
+           let displaySerial = 1;
+
+snapshot.forEach((item) => {
 
     const data = item.data();
 
@@ -355,9 +357,9 @@ if (adminMemberList) {
 
                     <div class="admin-member-serial">
 
-                      ${String(
-                         index + 1
-                         ).padStart(3, "0")}
+                    ${String(
+                    displaySerial++
+                    ).padStart(3, "0")}
 
                     </div>
 
