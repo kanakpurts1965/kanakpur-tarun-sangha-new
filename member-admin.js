@@ -1,7 +1,7 @@
 // =====================================================
 // KTS MEMBER ADMIN SYSTEM
 // Phase 1 - Part 4 - Step 4
-// ADD + LIST + SEARCH + EDIT + DELETE
+// ADD + LIST + SEARCH + EDIT + DELETE 
 // =====================================================
  
 import { db } from "./firebase.js";
