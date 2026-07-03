@@ -1,107 +1,146 @@
 import { db } from "./firebase.js";
 
 import {
-   collection,
+    collection,
     onSnapshot,
     deleteDoc,
     updateDoc,
     doc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
+
+// ==========================================
+// COMMENTS COLLECTION
+// ==========================================
+
 const commentsRef = collection(db, "comments");
 
-const menuComments = document.getElementById("menuComments");
 
-if (menuComments) {
+// ==========================================
+// ADMIN COMMENTS CONTAINER
+// ==========================================
 
-    menuComments.addEventListener("click", () => {
+const adminComments =
+    document.getElementById("adminComments");
 
-        const page = document.getElementById("pageContent");
 
-        page.innerHTML = `
+// ==========================================
+// LOAD COMMENTS
+// SPA SAFE VERSION
+// ==========================================
 
-<h2>💬 Comment Management</h2>
+if (adminComments) {
 
-<div id="adminComments">
+    onSnapshot(commentsRef, (snapshot) => {
 
-Loading...
+        adminComments.innerHTML = "";
 
-</div>
 
-`;
+        // কোনো Comment না থাকলে
 
-        const adminComments = document.getElementById("adminComments");
+        if (snapshot.empty) {
 
-        onSnapshot(commentsRef, (snapshot) => {
+            adminComments.innerHTML =
+                "<p>কোনো Comment নেই।</p>";
 
-            adminComments.innerHTML = "";
+            return;
 
-            if (snapshot.empty) {
+        }
 
-                adminComments.innerHTML = "কোনো Comment নেই।";
 
-                return;
+        // Comment Load
 
-            }
+        snapshot.forEach((item) => {
 
-            snapshot.forEach((item) => {
+            const data = item.data();
 
-                const data = item.data();
 
-                const card = document.createElement("div");
+            const card =
+                document.createElement("div");
 
-                card.className = "admin-comment";
 
-                card.innerHTML = `
+            card.className = "admin-comment";
 
-<h3>${data.name}</h3>
 
-<p>${data.comment}</p>
+            card.innerHTML = `
 
-<div class="admin-actions">
+                <h3>
 
-<button
-class="pin-comment"
-data-id="${item.id}"
-data-pinned="${data.pinned || false}">
+                    👤 ${data.name || "Unknown"}
 
-${data.pinned ? "📍 Unpin" : "📌 Pin"}
+                </h3>
 
-</button>
 
-<button
-class="edit-comment"
-data-id="${item.id}"
-data-comment="${data.comment}">
+                <p>
 
-✏ Edit
+                    ${data.comment || ""}
 
-</button>
+                </p>
 
-<button
-<button
-class="admin-reply-btn"
-data-id="${item.id}">
 
-👑 Admin Reply
+                <div class="admin-actions">
 
-</button>
 
-</div>
-class="delete-comment"
-data-id="${item.id}">
+                    <!-- PIN BUTTON -->
 
-🗑 Delete
+                    <button
+                        class="pin-comment"
+                        data-id="${item.id}"
+                        data-pinned="${data.pinned || false}"
+                    >
 
-</button>
+                        ${
+                            data.pinned
+                            ? "📍 Unpin"
+                            : "📌 Pin"
+                        }
 
-</div>
+                    </button>
 
-`;
 
-                adminComments.appendChild(card);
+                    <!-- EDIT BUTTON -->
 
-            });
+                    <button
+                        class="edit-comment"
+                        data-id="${item.id}"
+                        data-comment="${data.comment || ""}"
+                    >
+
+                        ✏ Edit
+
+                    </button>
+
+
+                    <!-- ADMIN REPLY BUTTON -->
+
+                    <button
+                        class="admin-reply-btn"
+                        data-id="${item.id}"
+                    >
+
+                        👑 Admin Reply
+
+                    </button>
+
+
+                    <!-- DELETE BUTTON -->
+
+                    <button
+                        class="delete-comment"
+                        data-id="${item.id}"
+                    >
+
+                        🗑 Delete
+
+                    </button>
+
+
+                </div>
+
+            `;
+
+
+            adminComments.appendChild(card);
 
         });
 
@@ -114,111 +153,237 @@ data-id="${item.id}">
 // DELETE COMMENT
 // ==========================================
 
+document.addEventListener(
+    "click",
 
-document.addEventListener("click", async (e) => {
+    async (e) => {
 
-    const deleteBtn = e.target.closest(".delete-comment");
 
-    if (deleteBtn) {
+        const deleteBtn =
+            e.target.closest(".delete-comment");
 
-        if (!confirm("এই Comment Delete করবেন?")) return;
+
+        if (!deleteBtn) return;
+
+
+        const confirmDelete =
+            confirm("এই Comment Delete করবেন?");
+
+
+        if (!confirmDelete) return;
+
 
         try {
 
+
             await deleteDoc(
-                doc(db, "comments", deleteBtn.dataset.id)
+
+                doc(
+
+                    db,
+
+                    "comments",
+
+                    deleteBtn.dataset.id
+
+                )
+
             );
 
-            alert("✅ Comment Delete হয়েছে");
 
-        } catch (err) {
+            alert(
+                "✅ Comment Delete হয়েছে"
+            );
 
-            console.error(err);
-
-            alert("❌ Delete Failed");
 
         }
 
-        return;
+        catch (err) {
+
+
+            console.error(err);
+
+
+            alert(
+                "❌ Delete Failed"
+            );
+
+
+        }
+
     }
 
-    const editBtn = e.target.closest(".edit-comment");
+);
 
-    if (editBtn) {
+
+// ==========================================
+// EDIT COMMENT
+// ==========================================
+
+document.addEventListener(
+    "click",
+
+    async (e) => {
+
+
+        const editBtn =
+            e.target.closest(".edit-comment");
+
+
+        if (!editBtn) return;
+
 
         const newComment = prompt(
+
             "নতুন Comment লিখুন:",
+
             editBtn.dataset.comment
+
         );
+
 
         if (newComment === null) return;
 
+
         if (newComment.trim() === "") {
 
-            alert("Comment খালি রাখা যাবে না।");
+
+            alert(
+                "Comment খালি রাখা যাবে না।"
+            );
+
 
             return;
 
         }
 
+
         try {
 
+
             await updateDoc(
-                doc(db, "comments", editBtn.dataset.id),
+
+                doc(
+
+                    db,
+
+                    "comments",
+
+                    editBtn.dataset.id
+
+                ),
+
                 {
-                    comment: newComment.trim()
+
+                    comment:
+                        newComment.trim()
+
                 }
+
             );
 
-            alert("✅ Comment Update হয়েছে");
 
-        } catch (err) {
+            alert(
+                "✅ Comment Update হয়েছে"
+            );
+
+
+        }
+
+        catch (err) {
+
 
             console.error(err);
 
-            alert("❌ Update Failed");
+
+            alert(
+                "❌ Update Failed"
+            );
+
 
         }
 
     }
 
-});
+);
 
 
 // ==========================================
 // PIN / UNPIN COMMENT
 // ==========================================
 
-document.addEventListener("click", async (e) => {
+document.addEventListener(
+    "click",
 
-    const pinBtn = e.target.closest(".pin-comment");
+    async (e) => {
 
-    if (!pinBtn) return;
 
-    const commentId = pinBtn.dataset.id;
-    const isPinned = pinBtn.dataset.pinned === "true";
+        const pinBtn =
+            e.target.closest(".pin-comment");
 
-    try {
 
-        await updateDoc(
-            doc(db, "comments", commentId),
-            {
-                pinned: !isPinned
-            }
-        );
+        if (!pinBtn) return;
 
-        alert(
-            isPinned
-                ? "📍 Comment Unpinned"
-                : "📌 Comment Pinned"
-        );
 
-    } catch (err) {
+        const commentId =
+            pinBtn.dataset.id;
 
-        console.error(err);
 
-        alert("❌ Pin Update Failed");
+        const isPinned =
+            pinBtn.dataset.pinned === "true";
+
+
+        try {
+
+
+            await updateDoc(
+
+                doc(
+
+                    db,
+
+                    "comments",
+
+                    commentId
+
+                ),
+
+                {
+
+                    pinned:
+                        !isPinned
+
+                }
+
+            );
+
+
+            alert(
+
+                isPinned
+
+                    ? "📍 Comment Unpinned"
+
+                    : "📌 Comment Pinned"
+
+            );
+
+
+        }
+
+        catch (err) {
+
+
+            console.error(err);
+
+
+            alert(
+                "❌ Pin Update Failed"
+            );
+
+
+        }
 
     }
 
-});
+);
