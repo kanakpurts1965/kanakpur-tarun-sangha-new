@@ -42,4 +42,64 @@ onSnapshot(commentsRef,(snap)=>{
     document.getElementById("totalLikes").innerHTML=total;
 
 });
+// ==========================================
+// KTS ADMIN DASHBOARD SPA MENU
+// Phase 1 - Part 3
+// ==========================================
 
+const spaPages = document.querySelectorAll(".page");
+
+const spaMenus = {
+    menuDashboard: "dashboardPage",
+    menuComments: "commentsPage",
+    menuReplies: "repliesPage",
+    menuMembers: "membersPage",
+    menuNotice: "noticePage",
+    menuGallery: "galleryPage",
+    menuSettings: "settingsPage"
+};
+
+
+// ==========================================
+// SHOW PAGE
+// ==========================================
+
+function showAdminPage(pageId) {
+
+    spaPages.forEach((page) => {
+
+        page.classList.remove("active");
+
+    });
+
+
+    const selectedPage = document.getElementById(pageId);
+
+    if (selectedPage) {
+
+        selectedPage.classList.add("active");
+
+    }
+
+}
+
+
+// ==========================================
+// MENU CLICK SYSTEM
+// ==========================================
+
+Object.entries(spaMenus).forEach(([menuId, pageId]) => {
+
+    const menu = document.getElementById(menuId);
+
+    if (menu) {
+
+        menu.addEventListener("click", () => {
+
+            showAdminPage(pageId);
+
+        });
+
+    }
+
+});
