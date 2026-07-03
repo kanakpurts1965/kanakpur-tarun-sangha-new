@@ -1,6 +1,7 @@
 // =====================================================
 // KTS MEMBER ADMIN SYSTEM
-// Phase 1 - Part 4 - Step 3
+// Phase 1 - Part 4 - Step 4
+// ADD + LIST + SEARCH + EDIT + DELETE
 // =====================================================
 
 import { db } from "./firebase.js";
@@ -11,7 +12,10 @@ import {
     onSnapshot,
     serverTimestamp,
     query,
-    orderBy
+    orderBy,
+    updateDoc,
+    deleteDoc,
+    doc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
@@ -52,102 +56,150 @@ const adminMemberSearch =
 
 
 // =====================================================
-// ADD MEMBER
+// EDIT MODE VARIABLE
+// =====================================================
+
+let editingMemberId = null;
+
+
+// =====================================================
+// ADD OR UPDATE MEMBER
 // =====================================================
 
 if (addMemberBtn) {
 
-    addMemberBtn.addEventListener(
-        "click",
+    addMemberBtn.addEventListener("click", async () => {
 
-        async () => {
+        const name =
+            memberName.value.trim();
 
-            const name =
-                memberName.value.trim();
+        const mobile =
+            memberMobile.value.trim();
 
-            const mobile =
-                memberMobile.value.trim();
+        const bloodGroup =
+            memberBlood.value;
 
-            const bloodGroup =
-                memberBlood.value;
+        const position =
+            memberPosition.value;
 
-            const position =
-                memberPosition.value;
+        const photo =
+            memberPhoto.value.trim();
 
-            const photo =
-                memberPhoto.value.trim();
+
+        // ==========================================
+        // VALIDATION
+        // ==========================================
+
+        if (name === "") {
+
+            alert("❌ সদস্যের নাম লিখুন");
+
+            memberName.focus();
+
+            return;
+
+        }
+
+
+        if (mobile === "") {
+
+            alert("❌ মোবাইল নম্বর লিখুন");
+
+            memberMobile.focus();
+
+            return;
+
+        }
+
+
+        if (bloodGroup === "") {
+
+            alert("❌ Blood Group নির্বাচন করুন");
+
+            return;
+
+        }
+
+
+        if (position === "") {
+
+            alert("❌ সদস্যের পদ নির্বাচন করুন");
+
+            return;
+
+        }
+
+
+        try {
+
+            addMemberBtn.disabled = true;
 
 
             // ==========================================
-            // VALIDATION
+            // EDIT MEMBER
             // ==========================================
 
-            if (name === "") {
+            if (editingMemberId) {
 
-                alert("❌ সদস্যের নাম লিখুন");
+                addMemberBtn.innerText =
+                    "⏳ Updating...";
 
-                memberName.focus();
 
-                return;
+                await updateDoc(
+
+                    doc(
+                        db,
+                        "members",
+                        editingMemberId
+                    ),
+
+                    {
+
+                        name: name,
+
+                        mobile: mobile,
+
+                        bloodGroup: bloodGroup,
+
+                        position: position,
+
+                        photo:
+                            photo || "member.png"
+
+                    }
+
+                );
+
+
+                alert(
+                    "✅ সদস্যের তথ্য Update হয়েছে"
+                );
+
+
+                editingMemberId = null;
 
             }
 
 
-            if (mobile === "") {
+            // ==========================================
+            // ADD NEW MEMBER
+            // ==========================================
 
-                alert("❌ মোবাইল নম্বর লিখুন");
-
-                memberMobile.focus();
-
-                return;
-
-            }
-
-
-            if (bloodGroup === "") {
-
-                alert("❌ Blood Group নির্বাচন করুন");
-
-                return;
-
-            }
-
-
-            if (position === "") {
-
-                alert("❌ সদস্যের পদ নির্বাচন করুন");
-
-                return;
-
-            }
-
-
-            try {
-
-                // Button Lock
-
-                addMemberBtn.disabled = true;
+            else {
 
                 addMemberBtn.innerText =
                     "⏳ Saving...";
 
 
-                // ======================================
-                // AUTO SERIAL
-                // ======================================
-
-                const currentMembers =
+                const currentCards =
                     document.querySelectorAll(
                         "#adminMemberList .admin-member-card"
                     );
 
+
                 const nextSerial =
-                    currentMembers.length + 1;
+                    currentCards.length + 1;
 
-
-                // ======================================
-                // SAVE TO FIRESTORE
-                // ======================================
 
                 await addDoc(membersRef, {
 
@@ -162,7 +214,8 @@ if (addMemberBtn) {
                     photo:
                         photo || "member.png",
 
-                    serial: nextSerial,
+                    serial:
+                        nextSerial,
 
                     createdAt:
                         serverTimestamp()
@@ -174,45 +227,61 @@ if (addMemberBtn) {
                     "✅ সদস্য সফলভাবে যোগ হয়েছে"
                 );
 
-
-                // ======================================
-                // CLEAR FORM
-                // ======================================
-
-                memberName.value = "";
-
-                memberMobile.value = "";
-
-                memberBlood.value = "";
-
-                memberPosition.value = "";
-
-                memberPhoto.value = "";
-
             }
 
-            catch (error) {
 
-                console.error(error);
+            // ==========================================
+            // CLEAR FORM
+            // ==========================================
 
-                alert(
-                    "❌ Member Save করা যায়নি"
-                );
-
-            }
-
-            finally {
-
-                addMemberBtn.disabled = false;
-
-                addMemberBtn.innerText =
-                    "💾 সদস্য Save করুন";
-
-            }
+            clearMemberForm();
 
         }
 
-    );
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "❌ Member Save / Update করা যায়নি"
+            );
+
+        }
+
+        finally {
+
+            addMemberBtn.disabled = false;
+
+            addMemberBtn.innerText =
+                "💾 সদস্য Save করুন";
+
+        }
+
+    });
+
+}
+
+
+// =====================================================
+// CLEAR MEMBER FORM
+// =====================================================
+
+function clearMemberForm() {
+
+    memberName.value = "";
+
+    memberMobile.value = "";
+
+    memberBlood.value = "";
+
+    memberPosition.value = "";
+
+    memberPhoto.value = "";
+
+    editingMemberId = null;
+
+    addMemberBtn.innerText =
+        "💾 সদস্য Save করুন";
 
 }
 
@@ -258,7 +327,8 @@ if (adminMemberList) {
 
             snapshot.forEach((item) => {
 
-                const data = item.data();
+                const data =
+                    item.data();
 
 
                 const card =
@@ -290,20 +360,71 @@ if (adminMemberList) {
                     <div class="admin-member-info">
 
                         <h4>
+
                             ${data.name || ""}
+
                         </h4>
 
+
                         <p>
+
                             📞 ${data.mobile || ""}
+
                         </p>
 
+
                         <p>
+
                             🩸 ${data.bloodGroup || ""}
+
                         </p>
 
+
                         <p>
+
                             👔 ${data.position || ""}
+
                         </p>
+
+                    </div>
+
+
+                    <div class="admin-member-actions">
+
+
+                        <button
+                            class="edit-member-btn"
+
+                            data-id="${item.id}"
+
+                            data-name="${data.name || ""}"
+
+                            data-mobile="${data.mobile || ""}"
+
+                            data-blood="${data.bloodGroup || ""}"
+
+                            data-position="${data.position || ""}"
+
+                            data-photo="${data.photo || "member.png"}"
+                        >
+
+                            ✏️ Edit
+
+                        </button>
+
+
+                        <button
+                            class="delete-member-btn"
+
+                            data-id="${item.id}"
+
+                            data-name="${data.name || ""}"
+                        >
+
+                            🗑️ Delete
+
+                        </button>
+
 
                     </div>
 
@@ -316,9 +437,11 @@ if (adminMemberList) {
 
         },
 
+
         (error) => {
 
             console.error(error);
+
 
             adminMemberList.innerHTML = `
 
@@ -335,6 +458,166 @@ if (adminMemberList) {
     );
 
 }
+
+
+// =====================================================
+// EDIT MEMBER BUTTON
+// =====================================================
+
+document.addEventListener(
+    "click",
+
+    (event) => {
+
+        const editBtn =
+            event.target.closest(
+                ".edit-member-btn"
+            );
+
+
+        if (!editBtn) return;
+
+
+        // Member ID
+
+        editingMemberId =
+            editBtn.dataset.id;
+
+
+        // Form Fill
+
+        memberName.value =
+            editBtn.dataset.name;
+
+
+        memberMobile.value =
+            editBtn.dataset.mobile;
+
+
+        memberBlood.value =
+            editBtn.dataset.blood;
+
+
+        memberPosition.value =
+            editBtn.dataset.position;
+
+
+        memberPhoto.value =
+            editBtn.dataset.photo;
+
+
+        // Button Change
+
+        addMemberBtn.innerText =
+            "🔄 সদস্য Update করুন";
+
+
+        // Form-এর উপরে নিয়ে যাবে
+
+        const memberManagementBox =
+            document.querySelector(
+                ".member-management-box"
+            );
+
+
+        if (memberManagementBox) {
+
+            memberManagementBox.scrollIntoView({
+
+                behavior: "smooth",
+
+                block: "start"
+
+            });
+
+        }
+
+    }
+
+);
+
+
+// =====================================================
+// DELETE MEMBER
+// =====================================================
+
+document.addEventListener(
+    "click",
+
+    async (event) => {
+
+        const deleteBtn =
+            event.target.closest(
+                ".delete-member-btn"
+            );
+
+
+        if (!deleteBtn) return;
+
+
+        const memberId =
+            deleteBtn.dataset.id;
+
+
+        const memberNameText =
+            deleteBtn.dataset.name;
+
+
+        const confirmDelete =
+            confirm(
+
+                `"${memberNameText}" সদস্যকে Delete করবেন?`
+
+            );
+
+
+        if (!confirmDelete) return;
+
+
+        try {
+
+            await deleteDoc(
+
+                doc(
+                    db,
+                    "members",
+                    memberId
+                )
+
+            );
+
+
+            alert(
+                "✅ সদস্য সফলভাবে Delete হয়েছে"
+            );
+
+
+            // যদি একই Member Edit Mode-এ থাকে
+
+            if (
+                editingMemberId === memberId
+            ) {
+
+                clearMemberForm();
+
+            }
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+
+            alert(
+                "❌ Member Delete করা যায়নি"
+            );
+
+        }
+
+    }
+
+);
 
 
 // =====================================================
@@ -369,16 +652,20 @@ if (adminMemberSearch) {
 
 
                 if (
-                    memberText.includes(searchValue)
+                    memberText.includes(
+                        searchValue
+                    )
                 ) {
 
-                    card.style.display = "flex";
+                    card.style.display =
+                        "flex";
 
                 }
 
                 else {
 
-                    card.style.display = "none";
+                    card.style.display =
+                        "none";
 
                 }
 
