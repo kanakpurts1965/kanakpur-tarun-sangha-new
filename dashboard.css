@@ -669,3 +669,105 @@ MEMBER SEPARATOR LINE
     border-bottom:none;
 
 }
+/* ==========================================
+ADMIN MEMBER CARD NEW LAYOUT
+========================================== */
+
+.admin-member-card{
+    display: grid;
+    grid-template-columns: 95px 1fr;
+    grid-template-areas:
+        "photo serial"
+        "photo info"
+        "photo actions";
+
+    column-gap: 18px;
+    align-items: start;
+
+    padding: 18px 12px;
+
+    border-bottom: 2px solid #e0e0e0;
+}
+
+
+/* SERIAL */
+
+.admin-member-serial{
+    grid-area: serial;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    margin-bottom: 5px;
+}
+
+
+/* PHOTO */
+
+.admin-member-photo,
+.admin-member-photo-placeholder{
+    grid-area: photo;
+
+    width: 90px;
+    height: 90px;
+
+    border-radius: 50%;
+    object-fit: cover;
+
+    border: 3px solid #c40000;
+
+    flex-shrink: 0;
+}
+
+
+/* MEMBER DETAILS */
+
+.admin-member-info{
+    grid-area: info;
+}
+
+.admin-member-info h4{
+    margin: 0 0 5px 0;
+    font-size: 20px;
+}
+
+.admin-member-info p{
+    margin: 3px 0;
+}
+
+
+/* EDIT DELETE BUTTON */
+
+.admin-member-actions{
+    grid-area: actions;
+
+    margin-top: 8px;
+
+    display: flex;
+    gap: 8px;
+}
+
+
+/* LAST MEMBER */
+
+.admin-member-card:last-child{
+    border-bottom: none;
+}
+
+
+/* MOBILE */
+
+@media(max-width: 600px){
+
+    .admin-member-card{
+        grid-template-columns: 80px 1fr;
+        column-gap: 12px;
+    }
+
+    .admin-member-photo,
+    .admin-member-photo-placeholder{
+        width: 75px;
+        height: 75px;
+    }
+
+}
