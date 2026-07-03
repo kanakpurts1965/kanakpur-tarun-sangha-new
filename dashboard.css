@@ -193,3 +193,40 @@ color:#555;
 word-break:break-all;
 
 }
+/* ==========================================
+SPA PAGE SYSTEM
+========================================== */
+
+.page{
+
+    display:none;
+
+}
+
+.page.active{
+
+    display:block;
+
+    animation:spaFade .3s ease;
+
+}
+
+@keyframes spaFade{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(8px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
