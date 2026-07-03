@@ -66,6 +66,16 @@ const adminMemberList =
 const adminMemberSearch =
     document.getElementById("adminMemberSearch");
 
+const chooseMemberPhotoBtn =
+    document.getElementById("chooseMemberPhotoBtn");
+
+const memberPhotoFileName =
+    document.getElementById("memberPhotoFileName");
+
+chooseMemberPhotoBtn?.addEventListener("click", () => {
+    memberPhotoFile?.click();
+});
+
 
 // =====================================================
 // EDIT DATA
@@ -83,6 +93,11 @@ let oldPhotoPublicId = "";
 memberPhotoFile?.addEventListener("change", () => {
 
     const file = memberPhotoFile.files[0];
+
+    if (memberPhotoFileName) {
+        memberPhotoFileName.textContent =
+            file ? file.name : "কোনো ছবি নির্বাচন করা হয়নি";
+    }
 
     if (!file) {
 
@@ -487,6 +502,11 @@ function clearForm() {
 
     memberPhotoFile.value = "";
 
+    if (memberPhotoFileName) {
+        memberPhotoFileName.textContent =
+            "কোনো ছবি নির্বাচন করা হয়নি";
+    }
+
     memberPhotoPreview.src = "";
 
     memberPhotoPreviewBox.style.display =
@@ -594,38 +614,34 @@ onSnapshot(
             card.innerHTML = `
 
                 <div class="admin-member-serial">
-
-                    ${String(
-                        displaySerial++
-                    ).padStart(3, "0")}
-
+                    ${String(displaySerial++).padStart(3, "0")}
                 </div>
-
 
                 ${photoHTML}
 
-                  <div class="admin-member-info">
+                <div class="admin-member-info">
 
-    <h4 class="admin-member-name">
-        ${safe(data.name)}
-    </h4>
-    
-               <div class="admin-member-meta-row">
+                    <h4 class="admin-member-name">
+                        ${safe(data.name)}
+                    </h4>
 
-    <span>
-        🩸 ${safe(data.bloodGroup)}
-    </span>
+                    <div class="admin-member-meta-row">
 
-    <span>
-        👔 ${safe(data.position)}
-    </span>
+                        <span>
+                            🩸 ${safe(data.bloodGroup)}
+                        </span>
 
-    <span>
-        ${categoryText}
-    </span>
+                        <span>
+                            👔 ${safe(data.position)}
+                        </span>
 
-</div> 
+                        <span>
+                            ${categoryText}
+                        </span>
 
+                    </div>
+
+                </div>
 
                 <div class="admin-member-actions">
 
@@ -879,7 +895,7 @@ adminMemberSearch?.addEventListener(
                         .toLowerCase()
                         .includes(value)
 
-                    ? "flex"
+                    ? "grid"
 
                     : "none";
 
