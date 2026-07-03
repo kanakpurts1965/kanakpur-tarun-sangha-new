@@ -1675,7 +1675,26 @@ margin-bottom:30px;
 ===================================================== */
 
 @media(max-width:768px){
-   
+
+   .executive-section{
+
+    margin:20px 10px;
+
+    padding:18px;
+
+}
+
+.executive-section h2{
+
+    font-size:28px;
+
+}
+
+.executive-list{
+
+    height:350px;
+
+}
 .member-search-card{
 
     margin:20px 10px;
@@ -1880,5 +1899,46 @@ margin-bottom:30px;
     border-color:#a00000;
 
     box-shadow:0 0 10px rgba(196,0,0,.25);
+
+}
+/* ==========================
+EXECUTIVE MEMBER BOX
+========================== */
+
+.executive-section{
+
+    max-width:1200px;
+
+    margin:50px auto;
+
+    background:#fff;
+
+    padding:30px;
+
+    border-radius:18px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+
+}
+
+.executive-section h2{
+
+    text-align:center;
+
+    font-size:40px;
+
+    color:#c40000;
+
+    margin-bottom:10px;
+
+}
+
+.executive-list{
+
+    height:420px;
+
+    overflow-y:auto;
+
+    padding-right:10px;
 
 }
