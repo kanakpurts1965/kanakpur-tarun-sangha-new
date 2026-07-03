@@ -1,7 +1,7 @@
 import { db } from "./firebase.js";
 
 import {
-    collection,
+    collection, 
     onSnapshot 
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
