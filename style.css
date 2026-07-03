@@ -1962,3 +1962,51 @@ EXECUTIVE MEMBER BOX
     }
 
 }
+
+
+/* MEMBER PAGE FINAL FIX */
+.executive-section,
+.all-members-section{
+    max-width:1200px;
+    margin:50px auto;
+    background:#fff;
+    padding:30px;
+    border-radius:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+#bloodFilter{
+    width:100%;
+    max-width:600px;
+    margin-top:14px;
+    padding:15px 20px;
+    font-size:17px;
+    border:2px solid #c40000;
+    border-radius:50px;
+    background:#fff;
+    outline:none;
+}
+
+.dark-mode .executive-section,
+.dark-mode .all-members-section,
+.dark-mode .member-search-card{
+    background:#1f1f1f;
+    color:#fff;
+}
+
+.dark-mode .member-details h3{ color:#fff; }
+
+.dark-mode #memberSearch,
+.dark-mode #bloodFilter{
+    background:#2b2b2b;
+    color:#fff;
+}
+
+@media(max-width:768px){
+    .executive-section,
+    .all-members-section{
+        margin:20px 10px;
+        padding:18px;
+    }
+    #bloodFilter{ font-size:16px; }
+}
