@@ -174,17 +174,24 @@ MEMBER CATEGORY
 MEMBER PHOTO FILE
 ======================================= -->
 
-<div class="admin-form-group">
+<div class="admin-form-group full-width photo-picker-group">
 
-    <label for="memberPhotoFile">
-        📷 সদস্যের ছবি নির্বাচন করুন
-    </label>
+    <label>📷 সদস্যের ছবি নির্বাচন করুন</label>
 
-   <input
-    type="file"
-    id="memberPhotoFile"
-    accept="image/*"
->
+    <input
+        type="file"
+        id="memberPhotoFile"
+        accept="image/*"
+        hidden
+    >
+
+    <button type="button" id="chooseMemberPhotoBtn" class="choose-photo-btn">
+        📷 ছবি নির্বাচন করুন
+    </button>
+
+    <div id="memberPhotoFileName" class="photo-file-name">
+        কোনো ছবি নির্বাচন করা হয়নি
+    </div>
 
 </div>
 
