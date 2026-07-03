@@ -141,12 +141,82 @@
                     </option>
 </select>
 </div>
-<!-- Photo -->
+<!-- ======================================
+MEMBER CATEGORY
+======================================= -->
+
+<div class="admin-form-group">
+
+    <label for="memberCategory">
+        👥 সদস্যের তালিকা
+    </label>
+
+    <select id="memberCategory">
+
+        <option value="">
+            তালিকা নির্বাচন করুন
+        </option>
+
+        <option value="executive">
+            কার্যকরী সদস্য
+        </option>
+
+        <option value="general">
+            সকল সদস্য
+        </option>
+
+    </select>
+
+</div>
+
+
+<!-- ======================================
+MEMBER PHOTO FILE
+======================================= -->
+
+<div class="admin-form-group">
+
+    <label for="memberPhotoFile">
+        📷 সদস্যের ছবি নির্বাচন করুন
+    </label>
+
+    <input
+        type="file"
+        id="memberPhotoFile"
+        accept="image/jpeg,image/png,image/webp"
+    >
+
+</div>
+
+
+<!-- PHOTO PREVIEW -->
+
 <div class="admin-form-group full-width">
-<label for="memberPhoto">
-                    🖼 সদস্যের ছবির URL
-                </label>
-<input autocomplete="off" id="memberPhoto" placeholder="ছবির URL অথবা member.png লিখুন" type="text"/>
+
+    <div
+        id="memberPhotoPreviewBox"
+        style="display:none; text-align:center;"
+    >
+
+        <img
+            id="memberPhotoPreview"
+            src=""
+            alt="Photo Preview"
+            style="
+                width:120px;
+                height:120px;
+                object-fit:cover;
+                border-radius:50%;
+                border:3px solid #c40000;
+            "
+        >
+
+        <p>
+            নির্বাচিত ছবি
+        </p>
+
+    </div>
+
 </div>
 <!-- Save Button -->
 <div class="admin-form-group full-width">
