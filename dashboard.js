@@ -34,7 +34,7 @@ onSnapshot(commentsRef,(snap)=>{
     let total=0;
 
     snap.forEach(doc=>{
-
+ 
         total+=doc.data().likes||0;
 
     });
