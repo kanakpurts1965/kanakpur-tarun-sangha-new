@@ -771,3 +771,23 @@ ADMIN MEMBER CARD NEW LAYOUT
     }
 
 }
+.admin-member-meta-row{
+    display:flex;
+    align-items:center;
+    gap:18px;
+    flex-wrap:wrap;
+    margin:5px 0;
+}
+
+.admin-member-meta-row span{
+    white-space:nowrap;
+}
+
+@media(max-width:600px){
+
+    .admin-member-meta-row{
+        gap:8px;
+        font-size:14px;
+    }
+
+}
