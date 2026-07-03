@@ -15,7 +15,8 @@ import {
     orderBy,
     updateDoc,
     deleteDoc,
-    doc
+    doc,
+    getDocs
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
@@ -191,14 +192,26 @@ if (addMemberBtn) {
                     "⏳ Saving...";
 
 
-                const currentCards =
-                    document.querySelectorAll(
-                        "#adminMemberList .admin-member-card"
-                    );
+              const membersSnapshot = await getDocs(membersRef);
 
+let highestSerial = 0;
 
-                const nextSerial =
-                    currentCards.length + 1;
+membersSnapshot.forEach((memberDoc) => {
+
+    const memberData = memberDoc.data();
+
+    const serialNumber =
+        Number(memberData.serial) || 0;
+
+    if (serialNumber > highestSerial) {
+
+        highestSerial = serialNumber;
+
+    }
+
+});
+
+const nextSerial = highestSerial + 1;
 
 
                 await addDoc(membersRef, {
