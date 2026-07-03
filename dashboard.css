@@ -791,3 +791,16 @@ ADMIN MEMBER CARD NEW LAYOUT
     }
 
 }
+
+.admin-member-name{
+    margin: 0 0 6px 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.admin-member-meta-row{
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
