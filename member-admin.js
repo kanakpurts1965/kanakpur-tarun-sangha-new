@@ -924,3 +924,251 @@ function safe(value = "") {
         .replaceAll("'", "&#039;");
 
 }
+
+// =====================================================
+// MEMBER LIST PDF DOWNLOAD
+// =====================================================
+
+document
+    .getElementById("downloadMemberPdf")
+    ?.addEventListener(
+        "click",
+        async () => {
+
+            try {
+
+                const snapshot =
+                    await getDocs(membersRef);
+
+
+                const members = [];
+
+
+                snapshot.forEach((item) => {
+
+                    members.push(
+                        item.data()
+                    );
+
+                });
+
+
+                members.sort((a, b) =>
+
+                    (Number(a.serial) || 0)
+
+                    -
+
+                    (Number(b.serial) || 0)
+
+                );
+
+
+                if (!members.length) {
+
+                    alert(
+                        "কোনো সদস্য নেই।"
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    !window.jspdf?.jsPDF
+                ) {
+
+                    alert(
+                        "PDF Library Load হয়নি।"
+                    );
+
+                    return;
+                }
+
+
+                const {
+                    jsPDF
+                } = window.jspdf;
+
+
+                const pdf =
+                    new jsPDF();
+
+
+                // CLUB NAME
+
+                pdf.setFont(
+                    "helvetica",
+                    "bold"
+                );
+
+
+                pdf.setFontSize(18);
+
+
+                pdf.text(
+
+                    "Kanakpur Tarun Sangha",
+
+                    105,
+
+                    18,
+
+                    {
+                        align:"center"
+                    }
+
+                );
+
+
+                // TITLE
+
+                pdf.setFontSize(13);
+
+
+                pdf.text(
+
+                    "Member List",
+
+                    105,
+
+                    27,
+
+                    {
+                        align:"center"
+                    }
+
+                );
+
+
+                pdf.setFont(
+                    "helvetica",
+                    "normal"
+                );
+
+
+                pdf.setFontSize(10);
+
+
+                let y = 40;
+
+
+                members.forEach(
+                    (member, index) => {
+
+
+                        if (y > 275) {
+
+                            pdf.addPage();
+
+                            y = 20;
+
+                        }
+
+
+                        const line =
+
+                            `${String(index + 1)
+                                .padStart(3, "0")} | `
+
+                            +
+
+                            `${String(
+                                member.name || ""
+                            )} | `
+
+                            +
+
+                            `${String(
+                                member.mobile || ""
+                            )} | `
+
+                            +
+
+                            `${String(
+                                member.bloodGroup || ""
+                            )} | `
+
+                            +
+
+                            `${String(
+                                member.position || ""
+                            )}`;
+
+
+                        const wrapped =
+
+                            pdf.splitTextToSize(
+
+                                line,
+
+                                185
+
+                            );
+
+
+                        pdf.text(
+
+                            wrapped,
+
+                            12,
+
+                            y
+
+                        );
+
+
+                        y +=
+
+                            (wrapped.length * 6)
+
+                            + 3;
+
+
+                        pdf.line(
+
+                            12,
+
+                            y - 2,
+
+                            198,
+
+                            y - 2
+
+                        );
+
+                    }
+
+                );
+
+
+                pdf.save(
+                    "KTS-Member-List.pdf"
+                );
+
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "PDF ERROR:",
+                    error
+                );
+
+
+                alert(
+
+                    "PDF তৈরি হয়নি: "
+
+                    +
+
+                    error.message
+
+                );
+
+            }
+
+        }
+
+    );
