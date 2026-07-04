@@ -76,7 +76,42 @@ onSnapshot(
             });
 
         });
+// =====================================================
+// REMOVE DUPLICATE ONLY FROM PUBLIC DISPLAY
+// Same Name + Same Mobile = Show only once
+// =====================================================
 
+const uniqueMembers = [];
+
+const seenMembers = new Set();
+
+
+allMembers.forEach((member) => {
+
+    const cleanName = String(member.name || "")
+        .trim()
+        .toLowerCase();
+
+    const cleanMobile = String(member.mobile || "")
+        .replace(/\D/g, "");
+
+
+    const uniqueKey =
+        cleanName + "|" + cleanMobile;
+
+
+    if (!seenMembers.has(uniqueKey)) {
+
+        seenMembers.add(uniqueKey);
+
+        uniqueMembers.push(member);
+
+    }
+
+});
+
+
+allMembers = uniqueMembers;
 
         renderAll();
 
