@@ -926,249 +926,490 @@ function safe(value = "") {
 }
 
 // =====================================================
-// MEMBER LIST PDF DOWNLOAD
+// MEMBER LIST PDF DOWNLOAD — TABLE FORMAT
 // =====================================================
 
 document
-    .getElementById("downloadMemberPdf")
-    ?.addEventListener(
-        "click",
-        async () => {
+  .getElementById("downloadMemberPdf")
+  ?.addEventListener("click", async () => {
 
-            try {
+    try {
 
-                const snapshot =
-                    await getDocs(membersRef);
+      const snapshot = await getDocs(membersRef);
 
+      const members = [];
 
-                const members = [];
+      snapshot.forEach((item) => {
+        members.push(item.data());
+      });
 
 
-                snapshot.forEach((item) => {
+      // SERIAL অনুযায়ী SORT
 
-                    members.push(
-                        item.data()
-                    );
+      members.sort((a, b) =>
+        (Number(a.serial) || 0) -
+        (Number(b.serial) || 0)
+      );
 
-                });
 
+      if (!members.length) {
 
-                members.sort((a, b) =>
+        alert("কোনো সদস্য নেই।");
 
-                    (Number(a.serial) || 0)
+        return;
 
-                    -
+      }
 
-                    (Number(b.serial) || 0)
 
-                );
+      if (!window.jspdf?.jsPDF) {
 
+        alert("PDF Library Load হয়নি।");
 
-                if (!members.length) {
+        return;
 
-                    alert(
-                        "কোনো সদস্য নেই।"
-                    );
+      }
 
-                    return;
-                }
 
+      const { jsPDF } = window.jspdf;
 
-                if (
-                    !window.jspdf?.jsPDF
-                ) {
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "mm",
+        format: "a4"
+      });
 
-                    alert(
-                        "PDF Library Load হয়নি।"
-                    );
 
-                    return;
-                }
+      // ==============================
+      // TITLE
+      // ==============================
 
+      pdf.setFont("helvetica", "bold");
 
-                const {
-                    jsPDF
-                } = window.jspdf;
+      pdf.setFontSize(20);
 
+      pdf.text(
+        "KANAKPUR TARUN SANGHA",
+        148,
+        16,
+        { align: "center" }
+      );
 
-                const pdf =
-                    new jsPDF();
 
+      pdf.setFontSize(14);
 
-                // CLUB NAME
+      pdf.text(
+        "MEMBER LIST",
+        148,
+        25,
+        { align: "center" }
+      );
 
-                pdf.setFont(
-                    "helvetica",
-                    "bold"
-                );
 
+      pdf.setFontSize(9);
 
-                pdf.setFontSize(18);
+      pdf.setFont(
+        "helvetica",
+        "normal"
+      );
 
+      pdf.text(
+        "ESTD: 1965",
+        148,
+        31,
+        { align: "center" }
+      );
 
-                pdf.text(
 
-                    "Kanakpur Tarun Sangha",
+      // ==============================
+      // TABLE SETTINGS
+      // ==============================
 
-                    105,
+      const startX = 10;
 
-                    18,
+      let y = 40;
 
-                    {
-                        align:"center"
-                    }
+      const rowHeight = 10;
 
-                );
 
+      // COLUMN WIDTH
 
-                // TITLE
+      const col = {
 
-                pdf.setFontSize(13);
+        serial: 18,
 
+        name: 72,
 
-                pdf.text(
+        mobile: 52,
 
-                    "Member List",
+        blood: 35,
 
-                    105,
+        position: 100
 
-                    27,
+      };
 
-                    {
-                        align:"center"
-                    }
 
-                );
+      const tableWidth =
 
+        col.serial +
+        col.name +
+        col.mobile +
+        col.blood +
+        col.position;
 
-                pdf.setFont(
-                    "helvetica",
-                    "normal"
-                );
 
+      // ==============================
+      // TABLE HEADER FUNCTION
+      // ==============================
 
-                pdf.setFontSize(10);
+      function drawHeader() {
 
+        let x = startX;
 
-                let y = 40;
 
+        pdf.setFont(
+          "helvetica",
+          "bold"
+        );
 
-                members.forEach(
-                    (member, index) => {
 
+        pdf.setFontSize(10);
 
-                        if (y > 275) {
 
-                            pdf.addPage();
+        // HEADER BOXES
 
-                            y = 20;
+        pdf.rect(
+          x,
+          y,
+          col.serial,
+          rowHeight
+        );
 
-                        }
+        pdf.text(
+          "S/N",
+          x + col.serial / 2,
+          y + 6.5,
+          { align: "center" }
+        );
 
+        x += col.serial;
 
-                        const line =
 
-                            `${String(index + 1)
-                                .padStart(3, "0")} | `
+        pdf.rect(
+          x,
+          y,
+          col.name,
+          rowHeight
+        );
 
-                            +
+        pdf.text(
+          "Name",
+          x + 3,
+          y + 6.5
+        );
 
-                            `${String(
-                                member.name || ""
-                            )} | `
+        x += col.name;
 
-                            +
 
-                            `${String(
-                                member.mobile || ""
-                            )} | `
+        pdf.rect(
+          x,
+          y,
+          col.mobile,
+          rowHeight
+        );
 
-                            +
+        pdf.text(
+          "Mobile Number",
+          x + 3,
+          y + 6.5
+        );
 
-                            `${String(
-                                member.bloodGroup || ""
-                            )} | `
+        x += col.mobile;
 
-                            +
 
-                            `${String(
-                                member.position || ""
-                            )}`;
+        pdf.rect(
+          x,
+          y,
+          col.blood,
+          rowHeight
+        );
 
+        pdf.text(
+          "Blood Group",
+          x + 3,
+          y + 6.5
+        );
 
-                        const wrapped =
+        x += col.blood;
 
-                            pdf.splitTextToSize(
 
-                                line,
+        pdf.rect(
+          x,
+          y,
+          col.position,
+          rowHeight
+        );
 
-                                185
+        pdf.text(
+          "Member Position",
+          x + 3,
+          y + 6.5
+        );
 
-                            );
 
+        y += rowHeight;
 
-                        pdf.text(
+      }
 
-                            wrapped,
 
-                            12,
+      // FIRST PAGE HEADER
 
-                            y
+      drawHeader();
 
-                        );
 
+      // ==============================
+      // MEMBER ROWS
+      // ==============================
 
-                        y +=
+      pdf.setFont(
+        "helvetica",
+        "normal"
+      );
 
-                            (wrapped.length * 6)
 
-                            + 3;
+      pdf.setFontSize(10);
 
 
-                        pdf.line(
+      members.forEach(
+        (member, index) => {
 
-                            12,
 
-                            y - 2,
+          // NEW PAGE
 
-                            198,
+          if (y + rowHeight > 195) {
 
-                            y - 2
+            pdf.addPage();
 
-                        );
+            y = 15;
 
-                    }
+            drawHeader();
 
-                );
+            pdf.setFont(
+              "helvetica",
+              "normal"
+            );
 
+          }
 
-                pdf.save(
-                    "KTS-Member-List.pdf"
-                );
 
+          let x = startX;
 
+
+          // SERIAL
+
+          pdf.rect(
+            x,
+            y,
+            col.serial,
+            rowHeight
+          );
+
+          pdf.text(
+
+            String(index + 1)
+              .padStart(3, "0"),
+
+            x + col.serial / 2,
+
+            y + 6.5,
+
+            {
+              align: "center"
             }
 
-            catch (error) {
+          );
 
-                console.error(
-                    "PDF ERROR:",
-                    error
-                );
+          x += col.serial;
 
 
-                alert(
+          // NAME
 
-                    "PDF তৈরি হয়নি: "
+          pdf.rect(
+            x,
+            y,
+            col.name,
+            rowHeight
+          );
 
-                    +
+          pdf.text(
 
-                    error.message
+            String(
+              member.name || ""
+            ).substring(0, 35),
 
-                );
+            x + 3,
 
+            y + 6.5
+
+          );
+
+          x += col.name;
+
+
+          // MOBILE
+
+          pdf.rect(
+            x,
+            y,
+            col.mobile,
+            rowHeight
+          );
+
+          pdf.text(
+
+            String(
+              member.mobile || ""
+            ),
+
+            x + 3,
+
+            y + 6.5
+
+          );
+
+          x += col.mobile;
+
+
+          // BLOOD GROUP
+
+          pdf.rect(
+            x,
+            y,
+            col.blood,
+            rowHeight
+          );
+
+          pdf.text(
+
+            String(
+              member.bloodGroup || ""
+            ),
+
+            x + col.blood / 2,
+
+            y + 6.5,
+
+            {
+              align: "center"
             }
+
+          );
+
+          x += col.blood;
+
+
+          // POSITION
+
+          pdf.rect(
+            x,
+            y,
+            col.position,
+            rowHeight
+          );
+
+          pdf.text(
+
+            String(
+              member.position || ""
+            ).substring(0, 45),
+
+            x + 3,
+
+            y + 6.5
+
+          );
+
+
+          y += rowHeight;
 
         }
 
-    );
+      );
+
+
+      // ==============================
+      // FOOTER
+      // ==============================
+
+      const totalPages =
+        pdf.internal.getNumberOfPages();
+
+
+      for (
+        let page = 1;
+        page <= totalPages;
+        page++
+      ) {
+
+        pdf.setPage(page);
+
+        pdf.setFontSize(8);
+
+        pdf.setFont(
+          "helvetica",
+          "normal"
+        );
+
+
+        pdf.text(
+
+          `Total Members: ${members.length}`,
+
+          10,
+
+          205
+
+        );
+
+
+        pdf.text(
+
+          `Page ${page} of ${totalPages}`,
+
+          287,
+
+          205,
+
+          {
+            align: "right"
+          }
+
+        );
+
+      }
+
+
+      // DOWNLOAD
+
+      pdf.save(
+        "KTS-Member-List.pdf"
+      );
+
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "PDF ERROR:",
+        error
+      );
+
+
+      alert(
+        "PDF তৈরি হয়নি: " +
+        error.message
+      );
+
+    }
+
+  });
