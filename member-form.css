@@ -1,239 +1,586 @@
+/* ==========================================
+   MEMBER REGISTRATION FORM — PREMIUM DESIGN
+========================================== */
+
 *{
-
-margin:0;
-padding:0;
-box-sizing:border-box;
-
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
 }
 
+html{
+    scroll-behavior:smooth;
+}
 
 body{
+    min-height:100vh;
 
-font-family:Arial, sans-serif;
+    font-family:
+        Arial,
+        "Noto Sans Bengali",
+        sans-serif;
 
-background:#f4f6f9;
+    background:
+        linear-gradient(
+            135deg,
+            #fff5f5 0%,
+            #f4f6f9 45%,
+            #fff8e8 100%
+        );
 
-padding:20px;
+    color:#222;
 
+    padding:30px 15px;
 }
 
+
+/* ==========================================
+   MAIN FORM BOX
+========================================== */
 
 .member-form-box{
 
-max-width:650px;
+    position:relative;
 
-margin:auto;
+    max-width:720px;
 
-background:white;
+    margin:20px auto;
 
-padding:30px;
+    background:
+        rgba(255,255,255,.96);
 
-border-radius:20px;
+    padding:38px 42px;
 
-box-shadow:
-0 10px 30px rgba(0,0,0,.15);
+    border-radius:24px;
 
+    border:1px solid
+        rgba(180,0,0,.12);
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.12);
+
+    overflow:hidden;
 }
 
+
+/* TOP DECORATION LINE */
+
+.member-form-box::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+    left:0;
+
+    width:100%;
+    height:7px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #8b0000,
+            #d50000,
+            #ff9800,
+            #d50000,
+            #8b0000
+        );
+}
+
+
+/* ==========================================
+   CLUB LOGO
+========================================== */
 
 .club-logo{
 
-display:block;
+    display:block;
 
-width:90px;
-height:90px;
+    width:105px;
+    height:105px;
 
-object-fit:cover;
+    object-fit:cover;
 
-border-radius:50%;
+    border-radius:50%;
 
-margin:auto;
+    margin:
+        5px auto
+        14px;
 
-border:3px solid #b40000;
+    background:#fff;
 
+    border:4px solid #b40000;
+
+    box-shadow:
+        0 8px 25px
+        rgba(180,0,0,.22);
 }
 
 
-h1{
+/* ==========================================
+   HEADINGS
+========================================== */
 
-text-align:center;
+.member-form-box h1{
 
-color:#b40000;
+    text-align:center;
 
-margin-top:10px;
+    color:#9d0000;
 
+    font-size:34px;
+
+    font-weight:800;
+
+    margin-bottom:5px;
+
+    letter-spacing:.2px;
 }
 
 
-h2{
+.member-form-box h2{
 
-text-align:center;
+    text-align:center;
 
-margin:10px 0;
+    color:#222;
 
+    font-size:24px;
+
+    margin-bottom:18px;
 }
 
+
+/* ==========================================
+   INFO MESSAGE
+========================================== */
 
 .form-info{
 
-text-align:center;
+    position:relative;
 
-background:#fff3cd;
+    text-align:center;
 
-padding:12px;
+    background:
+        linear-gradient(
+            135deg,
+            #fff8dc,
+            #fff2c7
+        );
 
-border-radius:8px;
+    color:#5f4700;
 
-margin:20px 0;
+    padding:16px 18px;
 
-line-height:1.6;
+    border-radius:12px;
 
+    border-left:
+        5px solid #ff9800;
+
+    margin:22px 0 28px;
+
+    line-height:1.7;
+
+    font-size:15px;
+
+    box-shadow:
+        0 5px 15px
+        rgba(0,0,0,.05);
 }
 
+
+/* ==========================================
+   LABEL
+========================================== */
 
 label{
 
-display:block;
+    display:block;
 
-font-weight:bold;
+    font-size:16px;
 
-margin-top:18px;
+    font-weight:700;
 
-margin-bottom:7px;
+    color:#333;
 
+    margin-top:20px;
+
+    margin-bottom:8px;
 }
 
+
+/* ==========================================
+   INPUT + SELECT
+========================================== */
 
 input,
 select{
 
-width:100%;
+    width:100%;
 
-padding:14px;
+    padding:
+        15px 16px;
 
-border:1px solid #ccc;
+    background:#fafafa;
 
-border-radius:8px;
+    border:
+        1.5px solid #ddd;
 
-font-size:16px;
+    border-radius:11px;
 
+    font-size:16px;
+
+    color:#222;
+
+    outline:none;
+
+    transition:
+        border-color .25s,
+        box-shadow .25s,
+        background .25s;
 }
 
+
+input:hover,
+select:hover{
+
+    border-color:#c4c4c4;
+
+    background:#fff;
+}
+
+
+input:focus,
+select:focus{
+
+    background:#fff;
+
+    border-color:#b40000;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(180,0,0,.09);
+}
+
+
+/* ==========================================
+   PHOTO SELECT BUTTON
+========================================== */
 
 .photo-btn{
 
-width:100%;
+    width:100%;
 
-padding:15px;
+    min-height:58px;
 
-border:2px dashed #b40000;
+    padding:15px 18px;
 
-background:#fff5f5;
+    background:
+        linear-gradient(
+            135deg,
+            #fffafa,
+            #fff0f0
+        );
 
-color:#900000;
+    color:#950000;
 
-font-size:16px;
+    border:
+        2px dashed #c40000;
 
-font-weight:bold;
+    border-radius:12px;
 
-border-radius:8px;
+    font-size:17px;
 
-cursor:pointer;
+    font-weight:700;
 
+    cursor:pointer;
+
+    transition:
+        transform .2s,
+        background .2s,
+        box-shadow .2s;
+
+    touch-action:manipulation;
 }
 
+
+.photo-btn:hover{
+
+    background:#ffeaea;
+
+    box-shadow:
+        0 7px 18px
+        rgba(180,0,0,.10);
+}
+
+
+.photo-btn:active{
+
+    transform:scale(.99);
+}
+
+
+/* ==========================================
+   FILE NAME
+========================================== */
 
 #photoName{
 
-font-size:14px;
+    display:block;
 
-color:#666;
+    margin-top:9px;
 
-margin-top:7px;
+    padding:7px 10px;
 
-word-break:break-word;
+    background:#f5f5f5;
 
+    border-radius:7px;
+
+    color:#666;
+
+    font-size:13px;
+
+    word-break:break-word;
 }
 
 
+/* ==========================================
+   PHOTO PREVIEW
+========================================== */
+
 .preview-box{
 
-text-align:center;
+    text-align:center;
 
-margin-top:15px;
+    margin-top:18px;
 
+    padding:15px;
+
+    background:#fafafa;
+
+    border-radius:15px;
 }
 
 
 #photoPreview{
 
-width:120px;
-height:120px;
+    display:block;
 
-object-fit:cover;
+    width:135px;
+    height:135px;
 
-border-radius:50%;
+    margin:auto;
 
-border:3px solid #b40000;
+    object-fit:cover;
 
+    border-radius:50%;
+
+    border:
+        4px solid #b40000;
+
+    box-shadow:
+        0 8px 22px
+        rgba(0,0,0,.15);
 }
 
 
+/* ==========================================
+   SUBMIT BUTTON
+========================================== */
+
 .submit-btn{
 
-width:100%;
+    position:relative;
 
-margin-top:25px;
+    width:100%;
 
-padding:16px;
+    min-height:58px;
 
-background:#c40000;
+    margin-top:30px;
 
-color:white;
+    padding:16px 20px;
 
-border:none;
+    background:
+        linear-gradient(
+            135deg,
+            #a80000,
+            #d00000
+        );
 
-border-radius:8px;
+    color:#fff;
 
-font-size:18px;
+    border:none;
 
-font-weight:bold;
+    border-radius:12px;
 
-cursor:pointer;
+    font-size:18px;
 
+    font-weight:800;
+
+    letter-spacing:.2px;
+
+    cursor:pointer;
+
+    box-shadow:
+        0 9px 22px
+        rgba(180,0,0,.25);
+
+    transition:
+        transform .2s,
+        box-shadow .2s,
+        opacity .2s;
+}
+
+
+.submit-btn:hover{
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 13px 28px
+        rgba(180,0,0,.30);
+}
+
+
+.submit-btn:active{
+
+    transform:
+        translateY(0);
 }
 
 
 .submit-btn:disabled{
 
-opacity:.6;
+    opacity:.6;
 
+    cursor:not-allowed;
+
+    transform:none;
 }
 
+
+/* ==========================================
+   FORM MESSAGE
+========================================== */
 
 #requestMessage{
 
-text-align:center;
+    text-align:center;
 
-font-weight:bold;
+    font-weight:700;
 
-margin-top:15px;
+    margin-top:18px;
 
+    padding:0 10px;
+
+    line-height:1.6;
 }
 
+
+/* ==========================================
+   MOBILE DESIGN
+========================================== */
 
 @media(max-width:600px){
 
-.member-form-box{
+    body{
 
-padding:20px 15px;
+        padding:12px 8px;
 
-}
+        background:#f4f6f9;
+    }
 
-h1{
 
-font-size:25px;
+    .member-form-box{
 
-}
+        margin:5px auto;
+
+        padding:
+            28px 17px
+            25px;
+
+        border-radius:17px;
+
+        box-shadow:
+            0 8px 25px
+            rgba(0,0,0,.10);
+    }
+
+
+    .club-logo{
+
+        width:85px;
+        height:85px;
+    }
+
+
+    .member-form-box h1{
+
+        font-size:26px;
+    }
+
+
+    .member-form-box h2{
+
+        font-size:20px;
+
+        margin-top:6px;
+    }
+
+
+    .form-info{
+
+        padding:13px;
+
+        font-size:14px;
+
+        margin:
+            18px 0
+            22px;
+    }
+
+
+    label{
+
+        font-size:15px;
+
+        margin-top:17px;
+    }
+
+
+    input,
+    select{
+
+        padding:14px;
+
+        font-size:16px;
+
+        border-radius:10px;
+    }
+
+
+    .photo-btn{
+
+        min-height:54px;
+
+        font-size:16px;
+    }
+
+
+    #photoPreview{
+
+        width:115px;
+        height:115px;
+    }
+
+
+    .submit-btn{
+
+        min-height:55px;
+
+        font-size:17px;
+
+        margin-top:25px;
+    }
 
 }
