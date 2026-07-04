@@ -82,11 +82,9 @@ onSnapshot(
                 </h3>
 
 
-                <p>
-
-                    ${safe(data.text)}
-
-                </p>
+              <p>
+    ${linkify(data.text)}
+</p>
 
             `;
 
@@ -166,4 +164,17 @@ function safe(value = "") {
 
         .replaceAll("'", "&#039;");
 
+}
+
+
+function linkify(value = "") {
+
+    const safeText = safe(value);
+
+    const urlRegex = /(https?:\/\/[^\s<]+)/g;
+
+    return safeText.replace(
+        urlRegex,
+        '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>'
+    );
 }
