@@ -2010,3 +2010,102 @@ EXECUTIVE MEMBER BOX
     }
     #bloodFilter{ font-size:16px; }
 }
+
+
+       /* =========================================
+   PUBLIC NOTICE PAGE
+========================================= */
+
+.public-notice-section{
+    max-width:1000px;
+    margin:30px auto 50px;
+    padding:10px;
+}
+
+#publicNoticeList{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.public-notice-card{
+    position:relative;
+    background:#fff;
+    border:1px solid #e4e4e4;
+    border-left:6px solid #b40000;
+    border-radius:14px;
+    padding:22px 24px;
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+    transition:.25s;
+}
+
+.public-notice-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 30px rgba(0,0,0,.12);
+}
+
+.notice-date{
+    display:inline-block;
+    background:#fff1f1;
+    color:#a00000;
+    border-radius:20px;
+    padding:6px 12px;
+    font-size:14px;
+    font-weight:700;
+    margin-bottom:12px;
+}
+
+.public-notice-card h3{
+    margin:0 0 10px;
+    color:#8b0000;
+    font-size:22px;
+}
+
+.public-notice-card p{
+    margin:0;
+    color:#333;
+    line-height:1.8;
+    white-space:pre-line;
+}
+
+.public-notice-empty,
+.notice-loading{
+    text-align:center;
+    background:#fff;
+    padding:30px 15px;
+    border-radius:14px;
+    box-shadow:0 5px 18px rgba(0,0,0,.07);
+}
+
+body.dark-mode .public-notice-card,
+body.dark-mode .public-notice-empty{
+    background:#242424;
+    border-color:#444;
+    color:#eee;
+}
+
+body.dark-mode .public-notice-card p{
+    color:#ddd;
+}
+
+@media(max-width:600px){
+
+    .public-notice-section{
+        margin:20px auto 35px;
+        padding:6px;
+    }
+
+    .public-notice-card{
+        padding:17px 15px;
+        border-radius:11px;
+    }
+
+    .public-notice-card h3{
+        font-size:19px;
+    }
+
+    .public-notice-card p{
+        font-size:15px;
+    }
+
+}
