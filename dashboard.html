@@ -255,7 +255,94 @@ MEMBER PHOTO FILE
             </p>
 </div>
 </div>
-</section><section class="page" id="noticePage"><h2>📢 Notice</h2></section>
+<section class="page" id="noticePage">
+
+    <div class="admin-page-header">
+
+        <h2>📢 Notice Management</h2>
+
+        <p>
+            নোটিশ যোগ, সম্পাদনা ও মুছে ফেলুন।
+        </p>
+
+    </div>
+
+
+    <div class="admin-box">
+
+        <h3>➕ নতুন Notice যোগ করুন</h3>
+
+
+        <div class="admin-form-group">
+
+            <label for="noticeTitle">
+                📌 Notice Title
+            </label>
+
+            <input
+                type="text"
+                id="noticeTitle"
+                placeholder="নোটিশের শিরোনাম লিখুন"
+            >
+
+        </div>
+
+
+        <div class="admin-form-group">
+
+            <label for="noticeDate">
+                📅 Notice Date
+            </label>
+
+            <input
+                type="date"
+                id="noticeDate"
+            >
+
+        </div>
+
+
+        <div class="admin-form-group">
+
+            <label for="noticeText">
+                📝 Notice Details
+            </label>
+
+            <textarea
+                id="noticeText"
+                rows="7"
+                placeholder="সম্পূর্ণ নোটিশ লিখুন..."
+            ></textarea>
+
+        </div>
+
+
+        <button
+            type="button"
+            id="saveNoticeBtn"
+            class="save-member-btn"
+        >
+            💾 Notice Save করুন
+        </button>
+
+    </div>
+
+
+    <div class="admin-box">
+
+        <h3>
+            📋 সকল Notice
+        </h3>
+
+        <div id="adminNoticeList">
+
+            Notice Loading...
+
+        </div>
+
+    </div>
+
+</section>
 <section class="page" id="galleryPage"><h2>🖼 Gallery</h2></section>
 <section class="page" id="settingsPage"><h2>⚙ Settings</h2></section>
 </div>
