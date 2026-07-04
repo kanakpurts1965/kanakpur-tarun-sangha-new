@@ -926,7 +926,7 @@ function safe(value = "") {
 }
 
 // =====================================================
-// MEMBER LIST PDF DOWNLOAD — TABLE FORMAT
+// MEMBER LIST PDF / PRINT — BANGLA SUPPORTED
 // =====================================================
 
 document
@@ -943,456 +943,354 @@ document
         members.push(item.data());
       });
 
-
-      // SERIAL অনুযায়ী SORT
-
       members.sort((a, b) =>
         (Number(a.serial) || 0) -
         (Number(b.serial) || 0)
       );
 
-
       if (!members.length) {
-
         alert("কোনো সদস্য নেই।");
+        return;
+      }
+
+
+      // SAFE HTML
+      function escapeHTML(value = "") {
+
+        return String(value)
+
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+
+      // TABLE ROWS
+
+      const rows = members.map((member, index) => {
+
+        return `
+          <tr>
+
+            <td>
+              ${String(index + 1).padStart(3, "0")}
+            </td>
+
+            <td>
+              ${escapeHTML(member.name || "")}
+            </td>
+
+            <td>
+              ${escapeHTML(member.mobile || "")}
+            </td>
+
+            <td>
+              ${escapeHTML(member.bloodGroup || "")}
+            </td>
+
+            <td>
+              ${escapeHTML(member.position || "")}
+            </td>
+
+          </tr>
+        `;
+
+      }).join("");
+
+
+      // PRINT WINDOW
+
+      const printWindow = window.open(
+        "",
+        "_blank",
+        "width=1200,height=800"
+      );
+
+
+      if (!printWindow) {
+
+        alert(
+          "Popup blocked হয়েছে। Browser থেকে popup allow করুন।"
+        );
 
         return;
-
       }
 
 
-      if (!window.jspdf?.jsPDF) {
+      printWindow.document.open();
 
-        alert("PDF Library Load হয়নি।");
 
-        return;
+      printWindow.document.write(`
 
-      }
+<!DOCTYPE html>
 
+<html lang="bn">
 
-      const { jsPDF } = window.jspdf;
+<head>
 
-      const pdf = new jsPDF({
-        orientation: "landscape",
-        unit: "mm",
-        format: "a4"
-      });
+<meta charset="UTF-8">
 
+<title>
+কনকপুর তরুণ সংঘ - সদস্য তালিকা
+</title>
 
-      // ==============================
-      // TITLE
-      // ==============================
 
-      pdf.setFont("helvetica", "bold");
+<style>
 
-      pdf.setFontSize(20);
+@page {
 
-      pdf.text(
-        "KANAKPUR TARUN SANGHA",
-        148,
-        16,
-        { align: "center" }
-      );
+  size: A4 portrait;
 
+  margin: 10mm;
 
-      pdf.setFontSize(14);
+}
 
-      pdf.text(
-        "MEMBER LIST",
-        148,
-        25,
-        { align: "center" }
-      );
 
+* {
 
-      pdf.setFontSize(9);
+  box-sizing: border-box;
 
-      pdf.setFont(
-        "helvetica",
-        "normal"
-      );
+}
 
-      pdf.text(
-        "ESTD: 1965",
-        148,
-        31,
-        { align: "center" }
-      );
 
+body {
 
-      // ==============================
-      // TABLE SETTINGS
-      // ==============================
+  margin: 0;
 
-      const startX = 10;
+  color: #111;
 
-      let y = 40;
+  font-family:
+    "Noto Sans Bengali",
+    "Hind Siliguri",
+    "SolaimanLipi",
+    "Kalpurush",
+    Arial,
+    sans-serif;
 
-      const rowHeight = 10;
+}
 
 
-      // COLUMN WIDTH
+.header {
 
-      const col = {
+  text-align: center;
 
-        serial: 18,
+  margin-bottom: 20px;
 
-        name: 72,
+}
 
-        mobile: 52,
 
-        blood: 35,
+.header h1 {
 
-        position: 100
+  margin: 0;
 
-      };
+  font-size: 28px;
 
+  color: #8b0000;
 
-      const tableWidth =
+}
 
-        col.serial +
-        col.name +
-        col.mobile +
-        col.blood +
-        col.position;
 
+.header h2 {
 
-      // ==============================
-      // TABLE HEADER FUNCTION
-      // ==============================
+  margin: 8px 0 4px;
 
-      function drawHeader() {
+  font-size: 21px;
 
-        let x = startX;
+}
 
 
-        pdf.setFont(
-          "helvetica",
-          "bold"
-        );
+.header p {
 
+  margin: 0;
 
-        pdf.setFontSize(10);
+  font-size: 13px;
 
+}
 
-        // HEADER BOXES
 
-        pdf.rect(
-          x,
-          y,
-          col.serial,
-          rowHeight
-        );
+table {
 
-        pdf.text(
-          "S/N",
-          x + col.serial / 2,
-          y + 6.5,
-          { align: "center" }
-        );
+  width: 100%;
 
-        x += col.serial;
+  border-collapse: collapse;
 
+  table-layout: fixed;
 
-        pdf.rect(
-          x,
-          y,
-          col.name,
-          rowHeight
-        );
+}
 
-        pdf.text(
-          "Name",
-          x + 3,
-          y + 6.5
-        );
 
-        x += col.name;
+thead {
 
+  display: table-header-group;
 
-        pdf.rect(
-          x,
-          y,
-          col.mobile,
-          rowHeight
-        );
+}
 
-        pdf.text(
-          "Mobile Number",
-          x + 3,
-          y + 6.5
-        );
 
-        x += col.mobile;
+tr {
 
+  page-break-inside: avoid;
 
-        pdf.rect(
-          x,
-          y,
-          col.blood,
-          rowHeight
-        );
+}
 
-        pdf.text(
-          "Blood Group",
-          x + 3,
-          y + 6.5
-        );
 
-        x += col.blood;
+th,
+td {
+  border: 1px solid #222;
+  padding: 6px 4px;
+  font-size: 10px;
+  vertical-align: middle;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
 
+th:nth-child(1),
+td:nth-child(1) {
+  width: 9%;
+  text-align: center;
+}
 
-        pdf.rect(
-          x,
-          y,
-          col.position,
-          rowHeight
-        );
+th:nth-child(2),
+td:nth-child(2) {
+  width: 25%;
+}
 
-        pdf.text(
-          "Member Position",
-          x + 3,
-          y + 6.5
-        );
+th:nth-child(3),
+td:nth-child(3) {
+  width: 22%;
+}
 
+th:nth-child(4),
+td:nth-child(4) {
+  width: 14%;
+  text-align: center;
+}
 
-        y += rowHeight;
+th:nth-child(5),
+td:nth-child(5) {
+  width: 30%;
+}
 
-      }
 
+.total {
 
-      // FIRST PAGE HEADER
+  margin-top: 12px;
 
-      drawHeader();
+  font-size: 14px;
 
+  font-weight: 700;
 
-      // ==============================
-      // MEMBER ROWS
-      // ==============================
+}
 
-      pdf.setFont(
-        "helvetica",
-        "normal"
-      );
 
+@media print {
 
-      pdf.setFontSize(10);
+  body {
 
+    -webkit-print-color-adjust: exact;
 
-      members.forEach(
-        (member, index) => {
+    print-color-adjust: exact;
 
+  }
 
-          // NEW PAGE
+}
 
-          if (y + rowHeight > 195) {
+</style>
 
-            pdf.addPage();
+</head>
 
-            y = 15;
 
-            drawHeader();
+<body>
 
-            pdf.setFont(
-              "helvetica",
-              "normal"
-            );
 
-          }
+<div class="header">
 
+  <h1>
+    কনকপুর তরুণ সংঘ
+  </h1>
 
-          let x = startX;
+  <h2>
+    সদস্য তালিকা
+  </h2>
 
+  <p>
+    প্রতিষ্ঠিত: ১৯৬৫
+  </p>
 
-          // SERIAL
+</div>
 
-          pdf.rect(
-            x,
-            y,
-            col.serial,
-            rowHeight
-          );
 
-          pdf.text(
+<table>
 
-            String(index + 1)
-              .padStart(3, "0"),
+<thead>
 
-            x + col.serial / 2,
+<tr>
 
-            y + 6.5,
+  <th>
+    ক্রমিক নং
+  </th>
 
-            {
-              align: "center"
-            }
+  <th>
+    সদস্যের নাম
+  </th>
 
-          );
+  <th>
+    মোবাইল নম্বর
+  </th>
 
-          x += col.serial;
+  <th>
+    রক্তের গ্রুপ
+  </th>
 
+  <th>
+    সদস্যের পদ
+  </th>
 
-          // NAME
+</tr>
 
-          pdf.rect(
-            x,
-            y,
-            col.name,
-            rowHeight
-          );
+</thead>
 
-          pdf.text(
 
-            String(
-              member.name || ""
-            ).substring(0, 35),
+<tbody>
 
-            x + 3,
+${rows}
 
-            y + 6.5
+</tbody>
 
-          );
+</table>
 
-          x += col.name;
 
+<div class="total">
 
-          // MOBILE
+মোট সদস্য: ${members.length}
 
-          pdf.rect(
-            x,
-            y,
-            col.mobile,
-            rowHeight
-          );
+</div>
 
-          pdf.text(
 
-            String(
-              member.mobile || ""
-            ),
+<script>
 
-            x + 3,
+window.onload = function() {
 
-            y + 6.5
+  setTimeout(function() {
 
-          );
+    window.print();
 
-          x += col.mobile;
+  }, 500);
 
+};
 
-          // BLOOD GROUP
+<\/script>
 
-          pdf.rect(
-            x,
-            y,
-            col.blood,
-            rowHeight
-          );
 
-          pdf.text(
+</body>
 
-            String(
-              member.bloodGroup || ""
-            ),
+</html>
 
-            x + col.blood / 2,
+      `);
 
-            y + 6.5,
 
-            {
-              align: "center"
-            }
-
-          );
-
-          x += col.blood;
-
-
-          // POSITION
-
-          pdf.rect(
-            x,
-            y,
-            col.position,
-            rowHeight
-          );
-
-          pdf.text(
-
-            String(
-              member.position || ""
-            ).substring(0, 45),
-
-            x + 3,
-
-            y + 6.5
-
-          );
-
-
-          y += rowHeight;
-
-        }
-
-      );
-
-
-      // ==============================
-      // FOOTER
-      // ==============================
-
-      const totalPages =
-        pdf.internal.getNumberOfPages();
-
-
-      for (
-        let page = 1;
-        page <= totalPages;
-        page++
-      ) {
-
-        pdf.setPage(page);
-
-        pdf.setFontSize(8);
-
-        pdf.setFont(
-          "helvetica",
-          "normal"
-        );
-
-
-        pdf.text(
-
-          `Total Members: ${members.length}`,
-
-          10,
-
-          205
-
-        );
-
-
-        pdf.text(
-
-          `Page ${page} of ${totalPages}`,
-
-          287,
-
-          205,
-
-          {
-            align: "right"
-          }
-
-        );
-
-      }
-
-
-      // DOWNLOAD
-
-      pdf.save(
-        "KTS-Member-List.pdf"
-      );
+      printWindow.document.close();
 
 
     }
@@ -1400,10 +1298,9 @@ document
     catch (error) {
 
       console.error(
-        "PDF ERROR:",
+        "MEMBER PDF ERROR:",
         error
       );
-
 
       alert(
         "PDF তৈরি হয়নি: " +
