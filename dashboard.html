@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="dashboard">
-<aside class="sidebar">
+<nav class="topbar">
 <h2>👑 KTS Admin</h2>
 <ul>
 <li id="menuDashboard">🏠 Dashboard</li>
@@ -21,7 +21,7 @@
 <li id="menuSettings">⚙ Settings</li>
 <li id="logoutBtn">🚪 Logout</li>
 </ul>
-</aside>
+</nav>
 <main class="content">
 <h1>👑 Kanakpur Tarun Sangha</h1>
 <p>Welcome Admin</p>
@@ -244,7 +244,7 @@ MEMBER PHOTO FILE
                     যোগ করা সকল সদস্য এখানে দেখা যাবে।
                 </p>
 </div>
-<input id="adminMemberSearch" placeholder="🔍 সদস্য খুঁজুন..." type="search"/>
+<div class="member-list-tools"><button type="button" id="downloadMemberPdf" class="pdf-download-btn">📄 Download PDF</button><input id="adminMemberSearch" placeholder="🔍 সদস্য খুঁজুন..." type="search"/></div>
 </div>
 <!-- Dynamic Member List -->
 <div id="adminMemberList">
@@ -265,6 +265,7 @@ MEMBER PHOTO FILE
 MEMBER MANAGEMENT PAGE
 ========================================== -->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="dashboard.js" type="module"></script>
 <script src="replies-admin.js" type="module"></script>
 <script src="comments-admin.js" type="module"></script>
