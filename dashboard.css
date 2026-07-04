@@ -845,3 +845,5 @@ flex-wrap:wrap;
 }
 
 }
+
+.dashboard{display:block;min-height:100vh}.topbar{position:sticky;top:0;z-index:1000;width:100%;background:#8B0000;color:#fff;padding:10px 18px;display:flex;align-items:center;gap:22px;box-shadow:0 3px 12px rgba(0,0,0,.18)}.topbar h2{margin:0;white-space:nowrap;font-size:20px}.topbar ul{list-style:none;display:flex;align-items:center;gap:5px;margin:0;padding:0;overflow-x:auto;flex:1}.topbar li{padding:10px 13px;border-radius:8px;cursor:pointer;white-space:nowrap}.topbar li:hover{background:#a50000}.content{width:100%;padding:30px}.member-list-tools{display:flex;align-items:center;gap:10px}.pdf-download-btn{border:none;border-radius:9px;padding:12px 15px;background:#8B0000;color:#fff;font-weight:700;cursor:pointer;white-space:nowrap}@media(max-width:900px){.dashboard{display:block}.topbar{padding:9px 10px;gap:10px;align-items:flex-start;flex-direction:column}.topbar ul{width:100%}.content{padding:16px}}@media(max-width:600px){.member-list-tools{width:100%;flex-direction:column;align-items:stretch}.pdf-download-btn{width:100%}}
