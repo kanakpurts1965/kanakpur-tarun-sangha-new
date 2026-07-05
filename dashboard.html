@@ -18,6 +18,7 @@
 <li id="menuNotice">📢 Notice</li>
 <li id="menuGallery">🖼 Gallery</li>
 <li id="menuMembers">👥 Members</li>
+    <li id="menuContact">📞 Contact</li>
 <li id="menuSettings">⚙ Settings</li>
 <li id="logoutBtn">🚪 Logout</li>
 </ul>
@@ -363,6 +364,64 @@ photo uplod
 </div>
 <div class="admin-box"><h3>📋 Gallery Groups</h3><div id="adminGalleryList">Gallery Loading...</div></div>
 </section>
+   <section class="page" id="contactPage">
+
+    <div class="admin-page-header">
+        <h2>📞 Contact Management</h2>
+        <p>ক্লাবের যোগাযোগের তথ্য পরিবর্তন করুন।</p>
+    </div>
+
+    <div class="admin-box">
+
+        <div class="admin-form-group">
+            <label>📍 Club Address</label>
+            <textarea
+                id="contactAddress"
+                rows="3"
+                placeholder="ক্লাবের ঠিকানা লিখুন"
+            ></textarea>
+        </div>
+
+        <div class="admin-form-group">
+            <label>📞 Mobile Number</label>
+            <input
+                type="tel"
+                id="contactMobile"
+                placeholder="মোবাইল নম্বর"
+            >
+        </div>
+
+        <div class="admin-form-group">
+            <label>📧 Email Address</label>
+            <input
+                type="email"
+                id="contactEmail"
+                placeholder="Email Address"
+            >
+        </div>
+
+        <div class="admin-form-group">
+            <label>🗺️ Google Map Link</label>
+            <input
+                type="url"
+                id="contactMap"
+                placeholder="Google Map Link"
+            >
+        </div>
+
+        <button
+            type="button"
+            id="saveContactBtn"
+            class="save-member-btn"
+        >
+            💾 Contact Save করুন
+        </button>
+
+        <p id="contactSaveStatus"></p>
+
+    </div>
+
+</section> 
 <section class="page" id="settingsPage"><h2>⚙ Settings</h2></section>
 </div>
 </main>
@@ -387,6 +446,10 @@ src="member-request-admin.js">
     <script
     type="module"
     src="gallery-admin.js">
+</script>
+    <script
+    type="module"
+    src="contact-admin.js">
 </script>
 </body>
 </html>
