@@ -2115,4 +2115,165 @@ body.dark-mode .public-notice-card p{
  /* KTS GALLERY GROUP SYSTEM */
 .gallery-groups-page{max-width:1200px;margin:30px auto;padding:15px}.public-gallery-group{padding:25px 0 35px;border-bottom:2px solid #ddd}.public-gallery-group h2{text-align:center;margin:0 0 10px;color:#8b0000;font-size:30px}.group-caption{text-align:center;max-width:900px;margin:0 auto 22px;line-height:1.7;color:#555;white-space:pre-line}.group-photo-row{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}.group-photo{width:100%;height:150px;object-fit:cover;border-radius:10px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.14)}.gallery-lightbox{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.92);align-items:center;justify-content:center;padding:20px}.gallery-lightbox.show{display:flex}.gallery-lightbox img{max-width:95%;max-height:90vh;object-fit:contain}.gallery-lightbox-close{position:absolute;right:20px;top:15px;font-size:38px;background:none;border:0;color:#fff;cursor:pointer}.gallery-empty,.gallery-loading{text-align:center;padding:30px}.admin-gallery-thumbs,.gallery-admin-preview-grid{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.admin-gallery-thumb{width:110px;height:82px;object-fit:cover;border-radius:8px}.existing-photo-wrap{position:relative}.remove-existing-photo{position:absolute;right:-5px;top:-7px;border:0;border-radius:50%;width:25px;height:25px;cursor:pointer}.admin-gallery-actions{display:flex;gap:10px;margin:12px 0}
 @media(max-width:900px){.group-photo-row{grid-template-columns:repeat(3,minmax(0,1fr))}}@media(max-width:600px){.group-photo-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.group-photo{height:150px}.public-gallery-group h2{font-size:24px}}
+/* =====================================================
+   PUBLIC GALLERY GROUP DESIGN
+===================================================== */
 
+.gallery-groups-page {
+    max-width: 1200px;
+    margin: 30px auto 60px;
+    padding: 15px;
+}
+
+
+.public-gallery-group {
+    padding: 25px 0 35px;
+    border-bottom: 2px solid #d8d8d8;
+}
+
+
+.public-gallery-group:last-child {
+    border-bottom: none;
+}
+
+
+/* HEADING */
+
+.gallery-group-header {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+
+.gallery-group-header h2 {
+    margin: 0 0 10px;
+    font-size: 28px;
+    color: #b00000;
+}
+
+
+.gallery-group-header p {
+    margin: 0 auto;
+    max-width: 850px;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #555;
+}
+
+
+/* PHOTO ROW */
+
+.public-gallery-photo-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
+}
+
+
+.public-gallery-photo-btn {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+
+.public-gallery-photo-btn img {
+    display: block;
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.3s ease;
+}
+
+
+.public-gallery-photo-btn:hover img {
+    transform: scale(1.05);
+}
+
+
+/* LIGHTBOX */
+
+.gallery-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background: rgba(0, 0, 0, 0.92);
+}
+
+
+.gallery-lightbox.show {
+    display: flex;
+}
+
+
+.gallery-lightbox img {
+    max-width: 95%;
+    max-height: 90vh;
+    object-fit: contain;
+}
+
+
+.gallery-lightbox-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+
+    width: 45px;
+    height: 45px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+
+    font-size: 32px;
+    cursor: pointer;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    .gallery-groups-page {
+        padding: 8px;
+    }
+
+
+    .gallery-group-header h2 {
+        font-size: 23px;
+    }
+
+
+    .gallery-group-header p {
+        font-size: 14px;
+    }
+
+
+    .public-gallery-photo-grid {
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap: 7px;
+    }
+
+
+    .public-gallery-photo-btn img {
+        height: 105px;
+    }
+
+}
