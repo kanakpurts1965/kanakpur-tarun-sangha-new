@@ -56,6 +56,7 @@ const spaMenus = {
     menuMembers: "membersPage",
     menuNotice: "noticePage",
     menuGallery: "galleryPage",
+    menuContact: "contactPage",
     menuSettings: "settingsPage"
 };
 
