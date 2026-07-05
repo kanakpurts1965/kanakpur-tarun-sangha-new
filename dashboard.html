@@ -351,75 +351,17 @@ photo uplod
 
     
 <section class="page" id="galleryPage">
-
-    <div class="admin-page-header">
-        <h2>🖼 Gallery Management</h2>
-        <p>Gallery-তে নতুন ছবি যোগ করুন এবং পুরোনো ছবি Delete করুন।</p>
-    </div>
-
-    <div class="admin-box">
-
-        <h3>➕ নতুন ছবি যোগ করুন</h3>
-
-        <div class="admin-form-group">
-            <label>📷 ছবি নির্বাচন করুন</label>
-
-            <input
-                type="file"
-                id="galleryPhotoFile"
-                accept="image/*"
-                multiple
-            >
-        </div>
-
-        <div class="admin-form-group">
-            <label for="galleryCaption">📝 ছবির Caption</label>
-
-            <input
-        type="text"
-        id="galleryCaption"
-        placeholder="ছবির Caption লিখুন"
-    >
-        </div>
-
-        <div
-            id="galleryPreviewBox"
-            style="display:none; text-align:center; margin:15px 0;"
-        >
-            <img
-                id="galleryPreview"
-                src=""
-                alt="Gallery Preview"
-                style="
-                    width:220px;
-                    max-width:100%;
-                    height:150px;
-                    object-fit:cover;
-                    border-radius:12px;
-                "
-            >
-        </div>
-
-        <button
-            type="button"
-            id="saveGalleryBtn"
-            class="save-member-btn"
-        >
-            📤 ছবি Upload করুন
-        </button>
-
-    </div>
-
-    <div class="admin-box">
-
-        <h3>📋 Gallery Photos</h3>
-
-        <div id="adminGalleryList">
-            Gallery Loading...
-        </div>
-
-    </div>
-
+<div class="admin-page-header"><h2>🖼 Gallery Management</h2><p>Heading, Caption ও একাধিক ছবি দিয়ে Gallery Group তৈরি ও Edit করুন।</p></div>
+<div class="admin-box">
+<h3 id="galleryFormTitle">➕ নতুন Gallery Group তৈরি করুন</h3>
+<div class="admin-form-group"><label for="galleryHeading">🏷️ Heading</label><input type="text" id="galleryHeading" placeholder="যেমন: বস্ত্র বিতরণ কর্মসূচি ২০২৬"></div>
+<div class="admin-form-group"><label for="galleryCaption">📝 Caption / Description</label><textarea id="galleryCaption" rows="4" placeholder="সংক্ষিপ্ত বিবরণ লিখুন..."></textarea></div>
+<div class="admin-form-group"><label>📷 ছবি নির্বাচন করুন</label><input type="file" id="galleryPhotoFile" accept="image/*" multiple><p id="gallerySelectedCount">কোনো ছবি নির্বাচন করা হয়নি</p></div>
+<div id="galleryExistingPhotos"></div><div id="galleryPreviewBox" class="gallery-admin-preview-grid"></div>
+<button type="button" id="saveGalleryBtn" class="save-member-btn">📤 Gallery Group Upload করুন</button>
+<button type="button" id="cancelGalleryEditBtn" style="display:none;">❌ Edit Cancel</button>
+</div>
+<div class="admin-box"><h3>📋 Gallery Groups</h3><div id="adminGalleryList">Gallery Loading...</div></div>
 </section>
 <section class="page" id="settingsPage"><h2>⚙ Settings</h2></section>
 </div>
