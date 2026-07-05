@@ -71,20 +71,23 @@ galleryPhotoFile?.addEventListener(
     }
 );
 
+// =====================================================
+// CLOUDINARY CONFIG
+// =====================================================
 
-// CLOUDINARY UPLOAD
+const CLOUD_NAME = "wf6ocs3j";
+const UPLOAD_PRESET = "kts_members";
+
+
+// =====================================================
+// CLOUDINARY GALLERY PHOTO UPLOAD
+// =====================================================
 
 async function uploadGalleryPhoto(file) {
 
-    const formData =
-        new FormData();
+    const formData = new FormData();
 
-
-    formData.append(
-        "file",
-        file
-    );
-
+    formData.append("file", file);
 
     formData.append(
         "upload_preset",
@@ -92,28 +95,33 @@ async function uploadGalleryPhoto(file) {
     );
 
 
-    const response =
-        await fetch(
-
-            `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-
-            {
-                method: "POST",
-                body: formData
-            }
-
-        );
+    const uploadURL =
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
 
-    const data =
-        await response.json();
+    const response = await fetch(
+
+        uploadURL,
+
+        {
+            method: "POST",
+            body: formData
+        }
+
+    );
+
+
+    const data = await response.json();
 
 
     if (!response.ok) {
 
         throw new Error(
-            data.error?.message ||
-            "Photo upload failed"
+
+            data?.error?.message ||
+
+            "Gallery Photo Upload Failed"
+
         );
 
     }
@@ -121,11 +129,9 @@ async function uploadGalleryPhoto(file) {
 
     return {
 
-        photoURL:
-            data.secure_url,
+        photoURL: data.secure_url,
 
-        publicId:
-            data.public_id
+        publicId: data.public_id
 
     };
 
