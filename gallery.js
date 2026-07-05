@@ -1,7 +1,6 @@
 // =====================================================
-// KTS PUBLIC GALLERY
-// FIRESTORE REAL-TIME GALLERY
-// ===================================================== 
+// KTS PUBLIC GALLERY GROUP SYSTEM
+// =====================================================
 
 import { db } from "./firebase.js";
 
@@ -13,40 +12,62 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
-const publicGallery =
-    document.getElementById("publicGallery");
+// =====================================================
+// ELEMENTS
+// =====================================================
+
+const publicGalleryGroups =
+    document.getElementById("publicGalleryGroups");
+
+const galleryLightbox =
+    document.getElementById("galleryLightbox");
+
+const galleryLightboxImage =
+    document.getElementById("galleryLightboxImage");
+
+const galleryLightboxClose =
+    document.getElementById("galleryLightboxClose");
 
 
-const galleryRef =
-    collection(db, "gallery");
+// =====================================================
+// FIRESTORE
+// =====================================================
 
+const galleryGroupsRef =
+    collection(db, "galleryGroups");
 
-const galleryQuery =
+const galleryGroupsQuery =
     query(
-        galleryRef,
+        galleryGroupsRef,
         orderBy("createdAt", "desc")
     );
 
 
 // =====================================================
-// LOAD GALLERY
+// LOAD PUBLIC GALLERY GROUPS
 // =====================================================
 
 onSnapshot(
 
-    galleryQuery,
+    galleryGroupsQuery,
 
     (snapshot) => {
 
-        if (!publicGallery) return;
+        if (!publicGalleryGroups) {
+            console.error(
+                "publicGalleryGroups container পাওয়া যায়নি"
+            );
+
+            return;
+        }
 
 
-        publicGallery.innerHTML = "";
+        publicGalleryGroups.innerHTML = "";
 
 
         if (snapshot.empty) {
 
-            publicGallery.innerHTML = `
+            publicGalleryGroups.innerHTML = `
 
                 <div class="gallery-empty">
 
@@ -66,74 +87,92 @@ onSnapshot(
                 item.data();
 
 
-            const card =
-                document.createElement("div");
+            const photos =
+                Array.isArray(data.photos)
+                    ? data.photos
+                    : [];
 
 
-            card.className =
-                "public-gallery-card";
+            const group =
+                document.createElement("section");
 
 
-            card.innerHTML = `
-
-                <img
-
-                    src="${data.photo || ""}"
-
-                    alt="${safe(
-                        data.caption ||
-                        "Gallery Photo"
-                    )}"
-
-                    loading="lazy"
-
-                    class="public-gallery-photo"
-
-                >
+            group.className =
+                "public-gallery-group";
 
 
-                ${
-                    data.caption
+            const photosHTML =
+                photos
 
-                    ? `
+                    .map((photo) => {
 
-                    <div class="gallery-caption">
+                        const photoURL =
+                            typeof photo === "string"
+                                ? photo
+                                : photo.url || "";
 
-                        ${safe(data.caption)}
 
-                    </div>
+                        return `
 
-                    `
+                            <button
+                                type="button"
+                                class="public-gallery-photo-btn"
+                                data-photo="${safeAttribute(photoURL)}"
+                            >
 
-                    : ""
-                }
+                                <img
+                                    src="${safeAttribute(photoURL)}"
+                                    alt="${safeAttribute(
+                                        data.heading ||
+                                        "Gallery Photo"
+                                    )}"
+                                    loading="lazy"
+                                >
+
+                            </button>
+
+                        `;
+
+                    })
+
+                    .join("");
+
+
+            group.innerHTML = `
+
+                <div class="gallery-group-header">
+
+                    <h2>
+                        ${safe(data.heading || "")}
+                    </h2>
+
+                    ${
+                        data.caption
+
+                            ? `
+
+                                <p>
+                                    ${safe(data.caption)}
+                                </p>
+
+                              `
+
+                            : ""
+                    }
+
+                </div>
+
+
+                <div class="public-gallery-photo-grid">
+
+                    ${photosHTML}
+
+                </div>
 
             `;
 
 
-            const image =
-                card.querySelector(
-                    ".public-gallery-photo"
-                );
-
-
-            image.addEventListener(
-                "click",
-                () => {
-
-                    openGalleryLightbox(
-
-                        data.photo,
-
-                        data.caption || ""
-
-                    );
-
-                }
-            );
-
-
-            publicGallery.appendChild(card);
+            publicGalleryGroups.appendChild(group);
 
         });
 
@@ -147,9 +186,9 @@ onSnapshot(
         );
 
 
-        if (publicGallery) {
+        if (publicGalleryGroups) {
 
-            publicGallery.innerHTML = `
+            publicGalleryGroups.innerHTML = `
 
                 <div class="gallery-empty">
 
@@ -167,84 +206,69 @@ onSnapshot(
 
 
 // =====================================================
-// LIGHTBOX OPEN
+// PHOTO CLICK
 // =====================================================
 
-function openGalleryLightbox(
-    photoURL,
-    caption
-) {
+document.addEventListener(
+    "click",
+    (event) => {
 
-    const lightbox =
-        document.getElementById(
-            "galleryLightbox"
+        const button =
+            event.target.closest(
+                ".public-gallery-photo-btn"
+            );
+
+
+        if (!button) return;
+
+
+        const photoURL =
+            button.dataset.photo;
+
+
+        if (!photoURL) return;
+
+
+        galleryLightboxImage.src =
+            photoURL;
+
+
+        galleryLightbox.classList.add(
+            "show"
         );
 
 
-    const lightboxImage =
-        document.getElementById(
-            "galleryLightboxImage"
-        );
+        document.body.style.overflow =
+            "hidden";
 
-
-    const lightboxCaption =
-        document.getElementById(
-            "galleryLightboxCaption"
-        );
-
-
-    lightboxImage.src =
-        photoURL;
-
-
-    lightboxCaption.textContent =
-        caption;
-
-
-    lightbox.classList.add(
-        "show"
-    );
-
-
-    document.body.style.overflow =
-        "hidden";
-
-}
+    }
+);
 
 
 // =====================================================
-// LIGHTBOX CLOSE
+// CLOSE LIGHTBOX
 // =====================================================
 
-document
-    .getElementById(
-        "galleryLightboxClose"
-    )
-    ?.addEventListener(
-        "click",
-        closeGalleryLightbox
-    );
+galleryLightboxClose?.addEventListener(
+    "click",
+    closeLightbox
+);
 
 
-document
-    .getElementById(
-        "galleryLightbox"
-    )
-    ?.addEventListener(
-        "click",
-        (event) => {
+galleryLightbox?.addEventListener(
+    "click",
+    (event) => {
 
-            if (
-                event.target.id ===
-                "galleryLightbox"
-            ) {
+        if (
+            event.target === galleryLightbox
+        ) {
 
-                closeGalleryLightbox();
-
-            }
+            closeLightbox();
 
         }
-    );
+
+    }
+);
 
 
 document.addEventListener(
@@ -253,7 +277,7 @@ document.addEventListener(
 
         if (event.key === "Escape") {
 
-            closeGalleryLightbox();
+            closeLightbox();
 
         }
 
@@ -261,24 +285,20 @@ document.addEventListener(
 );
 
 
-function closeGalleryLightbox() {
+function closeLightbox() {
 
-    const lightbox =
-        document.getElementById(
-            "galleryLightbox"
-        );
+    if (!galleryLightbox) return;
 
 
-    if (!lightbox) return;
-
-
-    lightbox.classList.remove(
+    galleryLightbox.classList.remove(
         "show"
     );
 
 
-    document.body.style.overflow =
-        "";
+    galleryLightboxImage.src = "";
+
+
+    document.body.style.overflow = "";
 
 }
 
@@ -300,5 +320,12 @@ function safe(value = "") {
         .replaceAll('"', "&quot;")
 
         .replaceAll("'", "&#039;");
+
+}
+
+
+function safeAttribute(value = "") {
+
+    return safe(value);
 
 }
