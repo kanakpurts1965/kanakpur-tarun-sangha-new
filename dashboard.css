@@ -854,3 +854,89 @@ ADMIN MEMBER CARD NEW LAYOUT
     flex-wrap: wrap !important;
     gap: 8px !important;
 }
+/* =========================================
+   EVENT PHOTO SIZE STRONG FIX
+========================================= */
+
+/* SELECTED BANNER PREVIEW BOX */
+
+#eventBannerPreviewBox {
+    width: 100% !important;
+    max-width: 500px !important;
+    height: 220px !important;
+    margin: 15px auto 20px !important;
+    overflow: hidden !important;
+    border-radius: 12px !important;
+}
+
+
+/* SELECTED BANNER IMAGE */
+
+#eventBannerPreview {
+    display: block !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    max-width: 500px !important;
+    max-height: 220px !important;
+
+    object-fit: cover !important;
+
+    margin: 0 !important;
+}
+
+
+/* UPLOADED EVENT CARD */
+
+.admin-event-card {
+    width: 100% !important;
+    max-width: 100% !important;
+
+    overflow: hidden !important;
+}
+
+
+/* UPLOADED EVENT BANNER */
+
+#adminEventList .admin-event-banner,
+.admin-event-card .admin-event-banner,
+#adminEventList img {
+    display: block !important;
+
+    width: 100% !important;
+    max-width: 500px !important;
+
+    height: 220px !important;
+    max-height: 220px !important;
+
+    object-fit: cover !important;
+
+    margin: 15px auto !important;
+
+    border-radius: 12px !important;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+    #eventBannerPreviewBox {
+        max-width: 100% !important;
+        height: 180px !important;
+    }
+
+    #eventBannerPreview {
+        max-width: 100% !important;
+        max-height: 180px !important;
+    }
+
+    #adminEventList .admin-event-banner,
+    .admin-event-card .admin-event-banner,
+    #adminEventList img {
+        max-width: 100% !important;
+        height: 180px !important;
+        max-height: 180px !important;
+    }
+}
