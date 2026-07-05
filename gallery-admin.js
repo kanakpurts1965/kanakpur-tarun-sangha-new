@@ -1,18 +1,37 @@
+// =====================================================
+// KTS GALLERY ADMIN SYSTEM
+// MULTIPLE PHOTO + CLOUDINARY + FIRESTORE
+// =====================================================
+
 import { db } from "./firebase.js";
 
 import {
-    collection, 
+    collection,
     addDoc,
     deleteDoc,
     doc,
     onSnapshot,
-    serverTimestamp
+    serverTimestamp,
+    query,
+    orderBy
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
+
+// =====================================================
+// CONFIG
+// =====================================================
+
+const CLOUD_NAME = "wf6ocs3j";
+
+const UPLOAD_PRESET = "kts_members";
 
 const galleryRef =
     collection(db, "gallery");
 
+
+// =====================================================
+// ELEMENTS
+// =====================================================
 
 const galleryPhotoFile =
     document.getElementById("galleryPhotoFile");
@@ -33,61 +52,74 @@ const adminGalleryList =
     document.getElementById("adminGalleryList");
 
 
-const CLOUD_NAME = "wf6ocs3j";
+// =====================================================
+// SELECTED PHOTOS
+// =====================================================
 
-/*
-IMPORTANT:
-এখানে Member System-এর একই Cloudinary Upload Preset Name বসাবে
-*/
-
-const UPLOAD_PRESET = "YOUR_UPLOAD_PRESET";
+let selectedGalleryPhotos = [];
 
 
-let selectedGalleryPhoto = null;
-
-
-// PHOTO SELECT
+// =====================================================
+// MULTIPLE PHOTO SELECT + PREVIEW
+// =====================================================
 
 galleryPhotoFile?.addEventListener(
     "change",
     () => {
 
-        const file =
-            galleryPhotoFile.files[0];
+        selectedGalleryPhotos =
+            Array.from(
+                galleryPhotoFile.files
+            );
 
-        if (!file) return;
+
+        if (!selectedGalleryPhotos.length) {
+
+            galleryPreviewBox.style.display =
+                "none";
+
+            galleryPreview.src = "";
+
+            return;
+        }
 
 
-        selectedGalleryPhoto = file;
-
+        // প্রথম ছবির Preview
 
         galleryPreview.src =
-            URL.createObjectURL(file);
+            URL.createObjectURL(
+                selectedGalleryPhotos[0]
+            );
 
 
         galleryPreviewBox.style.display =
             "block";
 
+
+        console.log(
+            "Selected Photos:",
+            selectedGalleryPhotos.length
+        );
+
     }
 );
 
-// =====================================================
-// CLOUDINARY CONFIG
-// =====================================================
-
-const CLOUD_NAME = "wf6ocs3j";
-const UPLOAD_PRESET = "kts_members";
-
 
 // =====================================================
-// CLOUDINARY GALLERY PHOTO UPLOAD
+// CLOUDINARY UPLOAD
 // =====================================================
 
 async function uploadGalleryPhoto(file) {
 
-    const formData = new FormData();
+    const formData =
+        new FormData();
 
-    formData.append("file", file);
+
+    formData.append(
+        "file",
+        file
+    );
+
 
     formData.append(
         "upload_preset",
@@ -96,49 +128,85 @@ async function uploadGalleryPhoto(file) {
 
 
     const uploadURL =
+
         `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
 
-    const response = await fetch(
+    const controller =
+        new AbortController();
 
-        uploadURL,
 
-        {
-            method: "POST",
-            body: formData
+    const timeout =
+        setTimeout(
+            () => {
+
+                controller.abort();
+
+            },
+            60000
+        );
+
+
+    try {
+
+        const response =
+            await fetch(
+
+                uploadURL,
+
+                {
+                    method: "POST",
+
+                    body: formData,
+
+                    signal:
+                        controller.signal
+                }
+
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (!response.ok) {
+
+            throw new Error(
+
+                data?.error?.message ||
+
+                "Gallery Photo Upload Failed"
+
+            );
+
         }
 
-    );
 
+        return {
 
-    const data = await response.json();
+            photoURL:
+                data.secure_url,
 
+            publicId:
+                data.public_id
 
-    if (!response.ok) {
-
-        throw new Error(
-
-            data?.error?.message ||
-
-            "Gallery Photo Upload Failed"
-
-        );
+        };
 
     }
 
+    finally {
 
-    return {
+        clearTimeout(timeout);
 
-        photoURL: data.secure_url,
-
-        publicId: data.public_id
-
-    };
+    }
 
 }
 
 
-// SAVE GALLERY PHOTO
+// =====================================================
+// SAVE MULTIPLE PHOTOS
+// =====================================================
 
 saveGalleryBtn?.addEventListener(
     "click",
@@ -148,64 +216,99 @@ saveGalleryBtn?.addEventListener(
             galleryCaption.value.trim();
 
 
-        if (!selectedGalleryPhoto) {
+        if (!selectedGalleryPhotos.length) {
 
             alert(
-                "❌ আগে একটি ছবি নির্বাচন করুন"
+                "❌ আগে ছবি নির্বাচন করুন"
             );
 
             return;
+
         }
 
 
         try {
 
-            saveGalleryBtn.disabled = true;
-
-            saveGalleryBtn.textContent =
-                "📤 Photo Upload হচ্ছে...";
+            saveGalleryBtn.disabled =
+                true;
 
 
-            const uploaded =
-                await uploadGalleryPhoto(
-                    selectedGalleryPhoto
+            const total =
+                selectedGalleryPhotos.length;
+
+
+            let uploadedCount = 0;
+
+
+            // একটার পর একটা Upload
+
+            for (
+                let i = 0;
+                i < total;
+                i++
+            ) {
+
+                saveGalleryBtn.textContent =
+
+                    `📤 Upload হচ্ছে ${i + 1}/${total}`;
+
+
+                const uploaded =
+
+                    await uploadGalleryPhoto(
+
+                        selectedGalleryPhotos[i]
+
+                    );
+
+
+                saveGalleryBtn.textContent =
+
+                    `💾 Save হচ্ছে ${i + 1}/${total}`;
+
+
+                await addDoc(
+
+                    galleryRef,
+
+                    {
+
+                        caption:
+                            caption,
+
+                        photo:
+                            uploaded.photoURL,
+
+                        photoPublicId:
+                            uploaded.publicId,
+
+                        createdAt:
+                            serverTimestamp()
+
+                    }
+
                 );
 
 
-            saveGalleryBtn.textContent =
-                "💾 Save হচ্ছে...";
+                uploadedCount++;
 
-
-            await addDoc(
-
-                galleryRef,
-
-                {
-                    caption,
-
-                    photo:
-                        uploaded.photoURL,
-
-                    photoPublicId:
-                        uploaded.publicId,
-
-                    createdAt:
-                        serverTimestamp()
-                }
-
-            );
+            }
 
 
             alert(
-                "✅ Gallery Photo Save হয়েছে"
+
+                `✅ ${uploadedCount}টি ছবি Upload হয়েছে`
+
             );
 
+
+            // FORM CLEAR
 
             galleryCaption.value = "";
 
             galleryPhotoFile.value = "";
 
-            selectedGalleryPhoto = null;
+            selectedGalleryPhotos = [];
 
             galleryPreview.src = "";
 
@@ -217,21 +320,40 @@ saveGalleryBtn?.addEventListener(
         catch (error) {
 
             console.error(
-                "GALLERY ERROR:",
+                "GALLERY UPLOAD ERROR:",
                 error
             );
 
 
-            alert(
-                "❌ Upload হয়নি: " +
-                error.message
-            );
+            if (
+                error.name === "AbortError"
+            ) {
+
+                alert(
+                    "❌ Photo Upload Timeout হয়েছে"
+                );
+
+            }
+
+            else {
+
+                alert(
+
+                    "❌ Upload হয়নি: " +
+
+                    error.message
+
+                );
+
+            }
 
         }
 
         finally {
 
-            saveGalleryBtn.disabled = false;
+            saveGalleryBtn.disabled =
+                false;
+
 
             saveGalleryBtn.textContent =
                 "📤 ছবি Upload করুন";
@@ -242,13 +364,35 @@ saveGalleryBtn?.addEventListener(
 );
 
 
+// =====================================================
+// GALLERY QUERY
+// =====================================================
+
+const galleryQuery =
+    query(
+
+        galleryRef,
+
+        orderBy(
+            "createdAt",
+            "desc"
+        )
+
+    );
+
+
+// =====================================================
 // ADMIN GALLERY LIST
+// =====================================================
 
 onSnapshot(
 
-    galleryRef,
+    galleryQuery,
 
     (snapshot) => {
+
+        if (!adminGalleryList) return;
+
 
         adminGalleryList.innerHTML = "";
 
@@ -256,70 +400,114 @@ onSnapshot(
         if (snapshot.empty) {
 
             adminGalleryList.innerHTML =
+
                 "<p>Gallery-তে কোনো ছবি নেই।</p>";
 
             return;
+
         }
 
 
-        snapshot.forEach((item) => {
+        snapshot.forEach(
+            (item) => {
 
-            const data =
-                item.data();
-
-
-            const card =
-                document.createElement("div");
+                const data =
+                    item.data();
 
 
-            card.className =
-                "admin-gallery-card";
+                const card =
+                    document.createElement(
+                        "div"
+                    );
 
 
-            card.innerHTML = `
+                card.className =
+                    "admin-gallery-card";
 
-                <img
-                    src="${data.photo || ""}"
-                    alt="Gallery Photo"
-                    style="
-                        width:150px;
-                        height:100px;
-                        object-fit:cover;
-                        border-radius:10px;
-                    "
-                >
 
-                <div>
+                card.innerHTML = `
 
-                    <p>
-                        ${safe(data.caption || "No Caption")}
-                    </p>
+                    <img
 
-                    <button
-                        type="button"
-                        class="delete-gallery-btn"
-                        data-id="${item.id}"
+                        src="${data.photo || ""}"
+
+                        alt="Gallery Photo"
+
+                        loading="lazy"
+
+                        style="
+                            width:150px;
+                            height:100px;
+                            object-fit:cover;
+                            border-radius:10px;
+                        "
+
                     >
-                        🗑️ Delete
-                    </button>
-
-                </div>
-
-            `;
 
 
-            adminGalleryList.appendChild(
-                card
-            );
+                    <div>
 
-        });
+                        <p>
+
+                            ${safe(
+                                data.caption ||
+                                "No Caption"
+                            )}
+
+                        </p>
+
+
+                        <button
+
+                            type="button"
+
+                            class="delete-gallery-btn"
+
+                            data-id="${item.id}"
+
+                        >
+
+                            🗑️ Delete
+
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                adminGalleryList
+                    .appendChild(card);
+
+            }
+        );
+
+    },
+
+    (error) => {
+
+        console.error(
+            "GALLERY LIST ERROR:",
+            error
+        );
+
+
+        if (adminGalleryList) {
+
+            adminGalleryList.innerHTML =
+
+                "<p>❌ Gallery Load হয়নি।</p>";
+
+        }
 
     }
 
 );
 
 
-// DELETE
+// =====================================================
+// DELETE GALLERY PHOTO
+// =====================================================
 
 document.addEventListener(
     "click",
@@ -334,19 +522,25 @@ document.addEventListener(
         if (!button) return;
 
 
-        if (
-            !confirm(
-                "এই Gallery Photo Delete করবেন?"
-            )
-        ) {
+        const photoId =
+            button.dataset.id;
 
-            return;
-        }
+
+        const confirmDelete =
+            confirm(
+                "এই Gallery Photo Delete করবেন?"
+            );
+
+
+        if (!confirmDelete) return;
 
 
         try {
 
             button.disabled = true;
+
+            button.textContent =
+                "⏳ Deleting...";
 
 
             await deleteDoc(
@@ -354,7 +548,7 @@ document.addEventListener(
                 doc(
                     db,
                     "gallery",
-                    button.dataset.id
+                    photoId
                 )
 
             );
@@ -368,12 +562,24 @@ document.addEventListener(
 
         catch (error) {
 
-            console.error(error);
+            console.error(
+                "GALLERY DELETE ERROR:",
+                error
+            );
+
 
             button.disabled = false;
 
+            button.textContent =
+                "🗑️ Delete";
+
+
             alert(
-                "❌ Delete হয়নি"
+
+                "❌ Delete হয়নি: " +
+
+                error.message
+
             );
 
         }
@@ -382,18 +588,37 @@ document.addEventListener(
 );
 
 
+// =====================================================
+// SAFE TEXT
+// =====================================================
+
 function safe(value = "") {
 
     return String(value)
 
-        .replaceAll("&", "&amp;")
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
 
-        .replaceAll("<", "&lt;")
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
 
-        .replaceAll(">", "&gt;")
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
 
-        .replaceAll('"', "&quot;")
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
 
-        .replaceAll("'", "&#039;");
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
 
 }
