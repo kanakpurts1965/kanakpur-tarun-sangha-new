@@ -110,17 +110,28 @@ onSnapshot(
             }
 
         }
-        if (publicContactFacebook) {
+    if (publicContactFacebook) {
 
-    if (data.facebook) {
+    const facebookLink =
+        (data.facebook || "").trim();
+
+    if (facebookLink) {
+
+        const finalFacebookLink =
+            facebookLink.startsWith("http://") ||
+            facebookLink.startsWith("https://")
+                ? facebookLink
+                : "https://" + facebookLink;
 
         publicContactFacebook.href =
-            data.facebook;
+            finalFacebookLink;
 
         publicContactFacebook.style.display =
             "inline-flex";
 
     } else {
+
+        publicContactFacebook.removeAttribute("href");
 
         publicContactFacebook.style.display =
             "none";
