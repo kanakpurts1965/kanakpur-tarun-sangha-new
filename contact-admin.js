@@ -23,6 +23,8 @@ const contactEmail =
 
 const contactMap =
     document.getElementById("contactMap");
+const contactFacebook =
+    document.getElementById("contactFacebook");
 
 const saveContactBtn =
     document.getElementById("saveContactBtn");
@@ -59,6 +61,8 @@ async function loadContactData() {
 
         contactMap.value =
             data.map || "";
+        contactFacebook.value =
+    data.facebook || "";
 
     }
 
@@ -94,6 +98,8 @@ saveContactBtn?.addEventListener(
 
         const map =
             contactMap.value.trim();
+        const facebook =
+    contactFacebook.value.trim();
 
 
         if (!address) {
@@ -121,6 +127,7 @@ saveContactBtn?.addEventListener(
                     mobile,
                     email,
                     map,
+                     facebook,
                     updatedAt:
                         serverTimestamp()
                 },
