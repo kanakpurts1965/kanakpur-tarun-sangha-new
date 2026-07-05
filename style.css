@@ -2424,7 +2424,23 @@ body.dark-mode
         grid-template-columns: 1fr;
         gap: 14px;
     }
+.contact-facebook-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
+    padding: 11px 18px;
+
+    background: #1877f2;
+
+    color: #fff !important;
+
+    border-radius: 25px;
+
+    font-weight: 700;
+
+    text-decoration: none;
+}
 
     .contact-info-card {
         padding: 20px 15px;
