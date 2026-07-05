@@ -29,7 +29,10 @@ const publicContactMap =
     document.getElementById(
         "publicContactMap"
     );
-
+const publicContactFacebook =
+    document.getElementById(
+        "publicContactFacebook"
+    );
 
 const contactDocRef =
     doc(db, "siteSettings", "contact");
@@ -107,6 +110,22 @@ onSnapshot(
             }
 
         }
+        if (publicContactFacebook) {
+
+    if (data.facebook) {
+
+        publicContactFacebook.href =
+            data.facebook;
+
+        publicContactFacebook.style.display =
+            "inline-flex";
+
+    } else {
+
+        publicContactFacebook.style.display =
+            "none";
+    }
+}
 
     },
 
