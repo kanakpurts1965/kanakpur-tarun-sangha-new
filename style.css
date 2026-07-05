@@ -2295,3 +2295,139 @@ body.dark-mode .public-notice-card p{
         font-size: 26px;
     }
 }
+
+
+
+       /* =====================================================
+   PUBLIC CONTACT PAGE
+===================================================== */
+
+.contact-page-section {
+    max-width: 1100px;
+    margin: 25px auto 60px;
+    padding: 20px;
+}
+
+
+.contact-page-heading {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+
+.contact-page-heading h1 {
+    margin: 0 0 10px;
+    color: #a00000;
+    font-size: 32px;
+}
+
+
+.contact-page-heading p {
+    margin: 0 auto;
+    max-width: 700px;
+    color: #666;
+    line-height: 1.7;
+}
+
+
+.contact-info-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 20px;
+}
+
+
+.contact-info-card {
+    background: #fff;
+
+    padding: 25px 20px;
+
+    text-align: center;
+
+    border-radius: 16px;
+
+    box-shadow:
+        0 6px 22px rgba(0, 0, 0, 0.10);
+
+    border-top:
+        4px solid #a00000;
+}
+
+
+.contact-info-icon {
+    font-size: 38px;
+    margin-bottom: 10px;
+}
+
+
+.contact-info-card h3 {
+    margin: 0 0 12px;
+    color: #a00000;
+}
+
+
+.contact-info-card p,
+.contact-info-card a {
+    color: #333;
+    line-height: 1.7;
+    text-decoration: none;
+    word-break: break-word;
+}
+
+
+.contact-map-btn {
+    display: inline-flex;
+
+    padding: 11px 18px;
+
+    background: #a00000;
+
+    color: #fff !important;
+
+    border-radius: 25px;
+
+    font-weight: 700;
+}
+
+
+body.dark-mode
+.contact-info-card {
+    background: #242424;
+}
+
+
+body.dark-mode
+.contact-info-card p,
+
+body.dark-mode
+.contact-info-card a {
+    color: #eee;
+}
+
+
+@media (max-width: 650px) {
+
+    .contact-page-section {
+        padding: 10px;
+    }
+
+
+    .contact-page-heading h1 {
+        font-size: 26px;
+    }
+
+
+    .contact-info-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+
+    .contact-info-card {
+        padding: 20px 15px;
+    }
+
+}
