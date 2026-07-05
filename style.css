@@ -2277,3 +2277,21 @@ body.dark-mode .public-notice-card p{
     }
 
 }
+.gallery-main-title {
+    width: 100%;
+    text-align: center;
+    padding: 25px 10px 10px;
+}
+
+.gallery-main-title h1 {
+    margin: 0;
+    color: #a00000;
+    font-size: 32px;
+    font-weight: 700;
+}
+
+@media (max-width: 600px) {
+    .gallery-main-title h1 {
+        font-size: 26px;
+    }
+}
