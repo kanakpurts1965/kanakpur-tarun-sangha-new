@@ -18,6 +18,7 @@
 <li id="menuNotice">📢 Notice</li>
 <li id="menuGallery">🖼 Gallery</li>
 <li id="menuMembers">👥 Members</li>
+    <li id="menuEvent">🎉 Events</li>
     <li id="menuContact">📞 Contact</li>
 <li id="menuSettings">⚙ Settings</li>
 <li id="logoutBtn">🚪 Logout</li>
@@ -363,6 +364,202 @@ photo uplod
 <button type="button" id="cancelGalleryEditBtn" style="display:none;">❌ Edit Cancel</button>
 </div>
 <div class="admin-box"><h3>📋 Gallery Groups</h3><div id="adminGalleryList">Gallery Loading...</div></div>
+</section>
+    <!-- =====================================================
+     EVENT MANAGEMENT PAGE
+===================================================== -->
+
+<section class="page" id="eventPage">
+
+    <div class="admin-page-header">
+        <h2>🎉 Event Management</h2>
+        <p>নতুন Event তৈরি, Edit এবং Delete করুন।</p>
+    </div>
+
+
+    <div class="admin-box">
+
+        <h3 id="eventFormTitle">
+            ➕ নতুন Event তৈরি করুন
+        </h3>
+
+
+        <!-- EVENT NAME -->
+
+        <div class="admin-form-group">
+
+            <label for="eventName">
+                🎉 Event Name
+            </label>
+
+            <input
+                type="text"
+                id="eventName"
+                placeholder="Event-এর নাম লিখুন"
+            >
+
+        </div>
+
+
+        <!-- EVENT BANNER -->
+
+        <div class="admin-form-group">
+
+            <label for="eventBannerFile">
+                🖼️ Event Banner
+            </label>
+
+            <input
+                type="file"
+                id="eventBannerFile"
+                accept="image/*"
+            >
+
+        </div>
+
+
+        <!-- BANNER PREVIEW -->
+
+        <div
+            id="eventBannerPreviewBox"
+            class="event-banner-preview-box"
+            style="display:none;"
+        >
+
+            <img
+                id="eventBannerPreview"
+                src=""
+                alt="Event Banner Preview"
+            >
+
+        </div>
+
+
+        <!-- DATE + TIME -->
+
+        <div class="event-date-time-row">
+
+            <div class="admin-form-group">
+
+                <label for="eventDate">
+                    📅 Date
+                </label>
+
+                <input
+                    type="date"
+                    id="eventDate"
+                >
+
+            </div>
+
+
+            <div class="admin-form-group">
+
+                <label for="eventTime">
+                    ⏰ Time
+                </label>
+
+                <input
+                    type="time"
+                    id="eventTime"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- PLACE -->
+
+        <div class="admin-form-group">
+
+            <label for="eventPlace">
+                📍 Place
+            </label>
+
+            <input
+                type="text"
+                id="eventPlace"
+                placeholder="অনুষ্ঠানের স্থান লিখুন"
+            >
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="admin-form-group">
+
+            <label>
+                📝 Description Points
+            </label>
+
+            <div id="eventDescriptionList">
+
+                <div class="event-description-row">
+
+                    <span>1.</span>
+
+                    <input
+                        type="text"
+                        class="event-description-input"
+                        placeholder="প্রথম বিবরণ লিখুন"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="addEventDescriptionBtn"
+                class="event-add-point-btn"
+            >
+                ➕ আরেকটি Description যোগ করুন
+            </button>
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <button
+            type="button"
+            id="saveEventBtn"
+            class="save-member-btn"
+        >
+            💾 Event Save করুন
+        </button>
+
+
+        <!-- CANCEL EDIT -->
+
+        <button
+            type="button"
+            id="cancelEventEditBtn"
+            style="display:none;"
+        >
+            ❌ Edit Cancel
+        </button>
+
+    </div>
+
+
+    <!-- EVENT LIST -->
+
+    <div class="admin-box">
+
+        <h3>📋 Event List</h3>
+
+        <div id="adminEventList">
+
+            Event Loading...
+
+        </div>
+
+    </div>
+
 </section>
    <section class="page" id="contactPage">
 
