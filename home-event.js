@@ -2,7 +2,7 @@
 // KTS HOME UPCOMING EVENT COUNTDOWN BAR
 // =====================================================
 
-import { db } from "./firebase.js";
+import { db } from "./firebase.js"; 
 
 import {
     collection,
