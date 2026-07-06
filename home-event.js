@@ -1,47 +1,40 @@
-// =====================================================
-// KTS HOME UPCOMING EVENT COUNTDOWN BAR
-// ===================================================== 
- 
-import { db } from "./firebase.js"; 
- 
-import { 
+import { db } from "./firebase.js";
+
+import {
     collection,
     onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
 const countdownBar =
-    document.getElementById(
-        "homeEventCountdownBar"
-    );
+    document.getElementById("homeEventCountdownBar");
 
 const eventName =
-    document.getElementById(
-        "homeEventBarName"
-    );
+    document.getElementById("homeEventBarName");
 
 const eventDate =
-    document.getElementById(
-        "homeEventBarDate"
-    );
+    document.getElementById("homeEventBarDate");
 
 const daysLeft =
-    document.getElementById(
-        "homeEventDaysLeft"
-    );
+    document.getElementById("homeEventDaysLeft");
 
 const liveCountdown =
-    document.getElementById(
-        "homeEventLiveCountdown"
-    );
+    document.getElementById("homeEventLiveCountdown");
 
 
 let countdownTimer = null;
 
 
-// =====================================================
-// LOAD EVENTS
-// =====================================================
+if (
+    !countdownBar ||
+    !eventName ||
+    !eventDate ||
+    !daysLeft ||
+    !liveCountdown
+) {
+    console.error("Home Event HTML elements পাওয়া যায়নি");
+}
+
 
 onSnapshot(
 
@@ -49,42 +42,118 @@ onSnapshot(
 
     (snapshot) => {
 
-        const now =
-            new Date();
+        console.log(
+            "Total Events:",
+            snapshot.size
+        );
 
 
-        const upcomingEvents = [];
+        const now = new Date();
+
+        const events = [];
 
 
-        snapshot.forEach((item) => {
+        snapshot.forEach((docItem) => {
 
             const data =
-                item.data();
+                docItem.data();
+
+
+            console.log(
+                "EVENT DATA:",
+                data
+            );
 
 
             if (!data.date) return;
 
 
-            const eventDateTime =
+            const dateParts =
+                String(data.date).split("-");
+
+
+            if (dateParts.length !== 3) {
+
+                console.error(
+                    "Wrong Event Date:",
+                    data.date
+                );
+
+                return;
+            }
+
+
+            const year =
+                Number(dateParts[0]);
+
+            const month =
+                Number(dateParts[1]) - 1;
+
+            const day =
+                Number(dateParts[2]);
+
+
+            let hour = 0;
+            let minute = 0;
+
+
+            if (data.time) {
+
+                const timeParts =
+                    String(data.time).split(":");
+
+
+                hour =
+                    Number(timeParts[0]) || 0;
+
+                minute =
+                    Number(timeParts[1]) || 0;
+
+            }
+
+
+            const targetDate =
                 new Date(
-
-                    `${data.date}T${data.time || "00:00"}:00`
-
+                    year,
+                    month,
+                    day,
+                    hour,
+                    minute,
+                    0
                 );
 
 
             if (
-                eventDateTime.getTime() >
+                Number.isNaN(
+                    targetDate.getTime()
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                targetDate.getTime() >
                 now.getTime()
             ) {
 
-                upcomingEvents.push({
+                events.push({
 
-                    ...data,
+                    id: docItem.id,
 
-                    id: item.id,
+                    name:
+                        data.name ||
+                        "Upcoming Event",
 
-                    eventDateTime
+                    date:
+                        data.date,
+
+                    time:
+                        data.time || "",
+
+                    targetDate
 
                 });
 
@@ -93,30 +162,56 @@ onSnapshot(
         });
 
 
-        // NEAREST EVENT FIRST
-
-        upcomingEvents.sort(
+        events.sort(
 
             (a, b) =>
-
-                a.eventDateTime -
-                b.eventDateTime
+                a.targetDate -
+                b.targetDate
 
         );
 
 
-        if (!upcomingEvents.length) {
+        if (events.length === 0) {
 
             countdownBar.style.display =
                 "none";
+
+            console.log(
+                "No upcoming event found"
+            );
 
             return;
 
         }
 
 
-        showUpcomingEvent(
-            upcomingEvents[0]
+        const nextEvent =
+            events[0];
+
+
+        countdownBar.style.display =
+            "block";
+
+
+        eventName.textContent =
+            "🎉 " + nextEvent.name;
+
+
+        eventDate.textContent =
+            "📅 " +
+            nextEvent.targetDate
+                .toLocaleDateString(
+                    "bn-IN",
+                    {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+
+
+        startCountdown(
+            nextEvent.targetDate
         );
 
     },
@@ -124,7 +219,7 @@ onSnapshot(
     (error) => {
 
         console.error(
-            "HOME EVENT ERROR:",
+            "HOME EVENT FIRESTORE ERROR:",
             error
         );
 
@@ -132,47 +227,6 @@ onSnapshot(
 
 );
 
-
-// =====================================================
-// SHOW EVENT
-// =====================================================
-
-function showUpcomingEvent(event) {
-
-    countdownBar.style.display =
-        "block";
-
-
-    eventName.textContent =
-        `🎉 ${event.name || "Upcoming Event"}`;
-
-
-    eventDate.textContent =
-        "📅 " +
-        event.eventDateTime
-            .toLocaleDateString(
-
-                "bn-IN",
-
-                {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric"
-                }
-
-            );
-
-
-    startCountdown(
-        event.eventDateTime
-    );
-
-}
-
-
-// =====================================================
-// LIVE REVERSE COUNTDOWN
-// =====================================================
 
 function startCountdown(targetDate) {
 
@@ -185,15 +239,11 @@ function startCountdown(targetDate) {
     }
 
 
-    function updateCountdown() {
-
-        const now =
-            new Date();
-
+    function update() {
 
         const difference =
             targetDate.getTime() -
-            now.getTime();
+            Date.now();
 
 
         if (difference <= 0) {
@@ -201,75 +251,50 @@ function startCountdown(targetDate) {
             daysLeft.textContent =
                 "🎉 অনুষ্ঠান শুরু হয়েছে";
 
-
             liveCountdown.textContent =
                 "LIVE";
-
 
             clearInterval(
                 countdownTimer
             );
-
 
             return;
 
         }
 
 
-        const totalDays =
-            Math.ceil(
-
-                difference /
-                (1000 * 60 * 60 * 24)
-
-            );
-
-
         const days =
             Math.floor(
-
                 difference /
-                (1000 * 60 * 60 * 24)
-
+                86400000
             );
 
 
         const hours =
             Math.floor(
-
-                (
-                    difference %
-                    (1000 * 60 * 60 * 24)
-                ) /
-
-                (1000 * 60 * 60)
-
+                (difference % 86400000) /
+                3600000
             );
 
 
         const minutes =
             Math.floor(
-
-                (
-                    difference %
-                    (1000 * 60 * 60)
-                ) /
-
-                (1000 * 60)
-
+                (difference % 3600000) /
+                60000
             );
 
 
         const seconds =
             Math.floor(
-
-                (
-                    difference %
-                    (1000 * 60)
-                ) /
-
+                (difference % 60000) /
                 1000
+            );
 
+
+        const totalDays =
+            Math.ceil(
+                difference /
+                86400000
             );
 
 
@@ -280,34 +305,24 @@ function startCountdown(targetDate) {
         liveCountdown.textContent =
 
             `${pad(days)}d : ` +
-
             `${pad(hours)}h : ` +
-
             `${pad(minutes)}m : ` +
-
             `${pad(seconds)}s`;
 
     }
 
 
-    updateCountdown();
+    update();
 
 
     countdownTimer =
         setInterval(
-
-            updateCountdown,
-
+            update,
             1000
-
         );
 
 }
 
-
-// =====================================================
-// PAD NUMBER
-// =====================================================
 
 function pad(number) {
 
