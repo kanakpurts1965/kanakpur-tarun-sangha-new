@@ -3088,3 +3088,75 @@ main.content > .hero{
         padding-top:0 !important;
     }
 }
+/* ===== FINAL HOME LAYOUT FIX ===== */
+
+body{
+    padding-top:70px !important;
+}
+
+/* NOTICE */
+.notice-bar{
+    position:sticky !important;
+    top:0 !important;
+
+    margin:0 !important;
+    padding:0 !important;
+
+    width:100% !important;
+}
+
+/* COUNTDOWN */
+#homeEventCountdownBar{
+    position:relative !important;
+
+    top:0 !important;
+
+    margin:0 !important;
+    padding:0 !important;
+
+    width:100% !important;
+}
+
+/* NOTICE + COUNTDOWN section gap remove */
+.notice-bar,
+#homeEventCountdownBar{
+    margin-bottom:0 !important;
+}
+
+/* MAIN */
+main.content{
+    margin:0 auto !important;
+
+    padding:
+        0 20px
+        40px !important;
+}
+
+/* HERO */
+main.content .hero{
+    margin-top:0 !important;
+    padding-top:0 !important;
+}
+
+/* MOBILE */
+@media(max-width:700px){
+
+    body{
+        padding-top:70px !important;
+    }
+
+    .notice-bar{
+        top:0 !important;
+    }
+
+    main.content{
+        padding:
+            0 10px
+            30px !important;
+    }
+
+    main.content .hero{
+        margin-top:0 !important;
+        padding-top:0 !important;
+    }
+}
