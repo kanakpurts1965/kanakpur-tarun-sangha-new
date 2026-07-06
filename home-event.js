@@ -189,9 +189,9 @@ onSnapshot(
             events[0];
 
 
-        countdownBar.style.display =
-            "block";
-
+      
+countdownBar.style.display = "";
+countdownBar.hidden = false;
 
         eventName.textContent =
             "🎉 " + nextEvent.name;
