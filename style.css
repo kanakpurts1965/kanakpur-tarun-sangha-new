@@ -2845,3 +2845,64 @@ body.dark-mode
     }
 
 }
+
+/* HOME EVENT BAR FINAL FIX */
+
+#homeEventCountdownBar {
+    display: block;
+    width: 100%;
+    min-height: 65px;
+    height: auto;
+    position: relative;
+    visibility: visible;
+    opacity: 1;
+    overflow: visible;
+    z-index: 999;
+    background: linear-gradient(
+        90deg,
+        #7a0000,
+        #c40000,
+        #7a0000
+    );
+    color: white;
+}
+
+#homeEventCountdownBar .home-event-bar-inner {
+    width: 100%;
+    min-height: 65px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    padding: 10px 15px;
+}
+
+#homeEventCountdownBar .home-event-bar-name,
+#homeEventCountdownBar .home-event-bar-item,
+#homeEventCountdownBar .home-event-live-countdown {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+    color: white;
+}
+
+#homeEventCountdownBar .home-event-bar-btn {
+    display: inline-block;
+    background: white;
+    color: #a00000;
+    padding: 9px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+@media (max-width: 700px) {
+
+    #homeEventCountdownBar .home-event-bar-inner {
+        justify-content: center;
+        gap: 8px 14px;
+    }
+
+}
+       
