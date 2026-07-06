@@ -3005,79 +3005,86 @@ main.content {
     }
 
 }
-/* =====================================================
-   FINAL TOPBAR + NOTICE BAR + MAIN PAGE POSITION FIX
-===================================================== */
 
-/* Fixed Top Bar-এর নিচে Notice Bar */
+
+/* =========================================
+   FINAL ORDER:
+   TOPBAR → NOTICE → COUNTDOWN → HERO
+========================================= */
+
+/* NOTICE BAR */
 .notice-bar{
     position:sticky !important;
     top:70px !important;
 
+    width:100% !important;
+
     margin:0 !important;
     padding:0 !important;
 
-    z-index:999;
+    z-index:999 !important;
 }
 
 
-/* Notice Bar এবং Event Bar-এ global section gap বন্ধ */
-section.notice-bar,
-section.home-event-countdown-bar{
-    margin-top:0 !important;
-    margin-bottom:0 !important;
-}
-
-
-/* Event Countdown Bar */
+/* COUNTDOWN NOTICE-এর ঠিক নিচে */
 #homeEventCountdownBar{
+    position:relative !important;
+
+    width:100% !important;
+
+    margin:0 !important;
+    padding:0 !important;
+
+    top:auto !important;
+
+    z-index:100 !important;
+}
+
+
+/* Global section margin বন্ধ */
+section.notice-bar,
+section#homeEventCountdownBar{
     margin-top:0 !important;
     margin-bottom:0 !important;
 }
 
 
-/* Main content Notice/Event bar-এর পরে স্বাভাবিকভাবে শুরু হবে */
+/* MAIN CONTENT */
 main.content{
-    max-width:1200px;
+    max-width:1200px !important;
 
     margin:0 auto !important;
 
-    padding:
-        0 20px
-        40px !important;
-
-    position:relative;
+    padding:0 20px 40px !important;
 }
 
 
-/* Hero একদম main content-এর শুরু থেকে */
+/* HERO — COUNTDOWN-এর ঠিক নিচে */
 main.content > .hero{
     margin-top:0 !important;
-    padding-top:20px;
+    padding-top:0 !important;
 }
 
 
-/* =========================
-   MOBILE
-========================= */
-
+/* MOBILE */
 @media(max-width:700px){
 
     .notice-bar{
         top:70px !important;
     }
 
+    #homeEventCountdownBar{
+        margin:0 !important;
+        padding:0 !important;
+    }
+
     main.content{
         margin:0 auto !important;
-
-        padding:
-            0 10px
-            30px !important;
+        padding:0 10px 30px !important;
     }
 
     main.content > .hero{
         margin-top:0 !important;
-        padding-top:12px;
+        padding-top:0 !important;
     }
-
 }
