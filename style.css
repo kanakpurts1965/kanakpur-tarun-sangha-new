@@ -3005,3 +3005,79 @@ main.content {
     }
 
 }
+/* =====================================================
+   FINAL TOPBAR + NOTICE BAR + MAIN PAGE POSITION FIX
+===================================================== */
+
+/* Fixed Top Bar-এর নিচে Notice Bar */
+.notice-bar{
+    position:sticky !important;
+    top:70px !important;
+
+    margin:0 !important;
+    padding:0 !important;
+
+    z-index:999;
+}
+
+
+/* Notice Bar এবং Event Bar-এ global section gap বন্ধ */
+section.notice-bar,
+section.home-event-countdown-bar{
+    margin-top:0 !important;
+    margin-bottom:0 !important;
+}
+
+
+/* Event Countdown Bar */
+#homeEventCountdownBar{
+    margin-top:0 !important;
+    margin-bottom:0 !important;
+}
+
+
+/* Main content Notice/Event bar-এর পরে স্বাভাবিকভাবে শুরু হবে */
+main.content{
+    max-width:1200px;
+
+    margin:0 auto !important;
+
+    padding:
+        0 20px
+        40px !important;
+
+    position:relative;
+}
+
+
+/* Hero একদম main content-এর শুরু থেকে */
+main.content > .hero{
+    margin-top:0 !important;
+    padding-top:20px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:700px){
+
+    .notice-bar{
+        top:70px !important;
+    }
+
+    main.content{
+        margin:0 auto !important;
+
+        padding:
+            0 10px
+            30px !important;
+    }
+
+    main.content > .hero{
+        margin-top:0 !important;
+        padding-top:12px;
+    }
+
+}
