@@ -2795,3 +2795,71 @@ body.dark-mode
         font-size: 14px !important;
     }
 }
+
+/* =========================================
+   NOTICE FIX + REMOVE BIG GAP
+========================================= */
+
+/* NOTICE BAR আগের মতো FIXED / STICKY */
+
+.notice-bar {
+    position: sticky !important;
+    top: 84px !important;
+    z-index: 1000 !important;
+
+    margin: 0 !important;
+}
+
+
+/* EVENT BAR */
+
+#homeEventCountdownBar {
+    position: relative !important;
+    z-index: 10 !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
+/* EVENT BAR INNER */
+
+#homeEventCountdownBar .home-event-bar-inner {
+    min-height: 55px !important;
+
+    padding: 7px 12px !important;
+
+    margin: 0 !important;
+}
+
+
+/* MAIN CONTENT GAP REMOVE */
+
+main.content {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+
+/* HERO GAP REMOVE */
+
+.hero {
+    margin-top: 10px !important;
+    padding-top: 15px !important;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+
+    .notice-bar {
+        top: 84px !important;
+    }
+
+    .hero {
+        margin-top: 5px !important;
+        padding-top: 10px !important;
+    }
+}
+       
