@@ -628,7 +628,67 @@ photo uplod
     </div>
 
 </section> 
-<section class="page" id="settingsPage"><h2>⚙ Settings</h2></section>
+<!-- ==========================================
+admin pasword setting
+========================================== -->
+    
+<section class="page" id="settingsPage">
+
+    <div class="admin-page-header">
+        <h2>⚙ Admin Settings</h2>
+        <p>Admin Account-এর Password পরিবর্তন করুন।</p>
+    </div>
+
+    <div class="admin-box">
+
+        <h3>🔐 Change Password</h3>
+
+        <div class="admin-form-group">
+            <label>বর্তমান Password</label>
+
+            <input
+                type="password"
+                id="currentAdminPassword"
+                placeholder="Current Password"
+            >
+        </div>
+
+        <div class="admin-form-group">
+            <label>নতুন Password</label>
+
+            <input
+                type="password"
+                id="newAdminPassword"
+                placeholder="New Password"
+            >
+        </div>
+
+        <div class="admin-form-group">
+            <label>নতুন Password আবার লিখুন</label>
+
+            <input
+                type="password"
+                id="confirmAdminPassword"
+                placeholder="Confirm New Password"
+            >
+        </div>
+
+        <button
+            type="button"
+            id="changeAdminPasswordBtn"
+            class="save-member-btn"
+        >
+            🔐 Change Password
+        </button>
+
+        <p id="passwordChangeMsg"></p>
+
+    </div>
+
+</section>
+
+
+    
 </div>
 </main>
 </div>
