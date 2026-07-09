@@ -940,3 +940,14 @@ ADMIN MEMBER CARD NEW LAYOUT
         max-height: 180px !important;
     }
 }
+/* ==========================================
+   ADMIN AUTH LOADING PROTECTION
+========================================== */
+
+body{
+    visibility:hidden;
+}
+
+body.admin-auth-ready{
+    visibility:visible;
+}
