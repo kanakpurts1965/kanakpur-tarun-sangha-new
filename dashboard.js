@@ -1,13 +1,75 @@
-import { db } from "./firebase.js";
+import { db, auth } from "./firebase.js";
 
 import {
-    collection, 
-    onSnapshot 
+    collection,
+    onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-// Security Check
-if(localStorage.getItem("adminLoggedIn")!=="true"){
-    window.location.href="admin.html";
+import {
+    onAuthStateChanged,
+    signOut
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+
+const ADMIN_EMAIL = "tanmoyadak112@gmail.com";
+
+
+/* ==========================================
+   SECURE ADMIN AUTH GUARD
+========================================== */
+
+onAuthStateChanged(auth, (user) => {
+
+    if (!user) {
+
+        window.location.replace("admin.html");
+        return;
+
+    }
+
+    if (user.email !== ADMIN_EMAIL) {
+
+        signOut(auth).then(() => {
+
+            window.location.replace("admin.html");
+
+        });
+
+        return;
+
+    }
+
+    document.body.classList.add("admin-auth-ready");
+
+});
+
+
+/* ==========================================
+   SECURE LOGOUT
+========================================== */
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+if (logoutBtn) {
+
+    logoutBtn.addEventListener("click", async () => {
+
+        try {
+
+            await signOut(auth);
+
+            window.location.replace("admin.html");
+
+        } catch (error) {
+
+            console.error("Logout Error:", error);
+
+            alert("Logout করা যায়নি। আবার চেষ্টা করুন।");
+
+        }
+
+    });
+
 }
 
 // Collections
