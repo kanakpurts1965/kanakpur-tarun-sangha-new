@@ -6,6 +6,10 @@ import {
     getFirestore
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
+import {
+    getAuth
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
 
 const firebaseConfig = {
 
@@ -32,4 +36,10 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
 
-export { db };
+const auth = getAuth(app);
+
+
+export {
+    db,
+    auth
+};
