@@ -1,63 +1,92 @@
-import { db } from "./firebase.js";
+import { auth } from "./firebase.js";
 
 import {
-    doc,
-    getDoc
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+    signInWithEmailAndPassword,
+    sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+
+const ADMIN_EMAIL = "tanmoyadak112@gmail.com";
 
 const form = document.getElementById("loginForm");
 const msg = document.getElementById("loginMsg");
+const forgotBtn = document.getElementById("forgotPasswordBtn");
+
+
+/* ==============================
+   ADMIN LOGIN
+============================== */
 
 form.addEventListener("submit", async (e) => {
 
     e.preventDefault();
 
-    const username = document.getElementById("username").value.trim();
-    const password = document.getElementById("password").value.trim();
+    const password =
+        document.getElementById("password").value;
 
-    msg.innerHTML = "⏳ লগইন হচ্ছে...";
+    msg.textContent = "⏳ লগইন হচ্ছে...";
 
     try {
 
-        const adminRef = doc(db, "admins", "admin1");
-        const adminSnap = await getDoc(adminRef);
+        await signInWithEmailAndPassword(
+            auth,
+            ADMIN_EMAIL,
+            password
+        );
 
-        if (!adminSnap.exists()) {
+        msg.textContent = "✅ Login Successful";
 
-            msg.innerHTML = "❌ Admin পাওয়া যায়নি";
-            return;
+        setTimeout(() => {
 
-        }
+            window.location.href = "dashboard.html";
 
-        const admin = adminSnap.data();
+        }, 700);
 
-        if (
-            admin.username === username &&
-            admin.password === password
-        ) {
+    } catch (error) {
 
-            msg.innerHTML = "✅ Login Successful";
+        console.error(error);
 
-            localStorage.setItem("adminLoggedIn", "true");
-
-            setTimeout(() => {
-
-                window.location.href = "dashboard.html";
-
-            }, 1000);
-
-        } else {
-
-            msg.innerHTML = "❌ Username অথবা Password ভুল";
-
-        }
-
-    } catch (err) {
-
-        console.error(err);
-
-        msg.innerHTML = "⚠️ Login Error";
+        msg.textContent =
+            "❌ Password ভুল অথবা Login করা যাচ্ছে না";
 
     }
 
 });
+
+
+/* ==============================
+   FORGOT PASSWORD
+============================== */
+
+if (forgotBtn) {
+
+    forgotBtn.addEventListener("click", async () => {
+
+        try {
+
+            forgotBtn.disabled = true;
+
+            await sendPasswordResetEmail(
+                auth,
+                ADMIN_EMAIL
+            );
+
+            msg.textContent =
+                "📧 Password Reset Link Email-এ পাঠানো হয়েছে";
+
+        } catch (error) {
+
+            console.error(error);
+
+            msg.textContent =
+                "⚠️ Reset Email পাঠানো যায়নি";
+
+        } finally {
+
+            forgotBtn.disabled = false;
+
+        }
+
+    });
+
+}
