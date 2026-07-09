@@ -2,12 +2,16 @@ import { auth } from "./firebase.js";
 
 import {
     signInWithEmailAndPassword,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
+    signOut
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
 
-const ADMIN_EMAIL = "tanmoyadak112@gmail.com";
+/* LOGIN PAGE OPEN হলে পুরোনো session logout */
+await signOut(auth);
 
+
+const ADMIN_EMAIL = "tanmoyadak112@gmail.com";
 const form = document.getElementById("loginForm");
 const msg = document.getElementById("loginMsg");
 const forgotBtn = document.getElementById("forgotPasswordBtn");
