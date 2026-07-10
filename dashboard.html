@@ -18,6 +18,7 @@
 <li id="menuNotice">📢 Notice</li>
 <li id="menuGallery">🖼 Gallery</li>
 <li id="menuMembers">👥 Members</li>
+<li id="menuPrograms">📅 Programs</li>
     <li id="menuEvent">🎉 Events</li>
     <li id="menuContact">📞 Contact</li>
 <li id="menuSettings">⚙ Settings</li>
@@ -258,6 +259,24 @@ MEMBER PHOTO FILE
 </div>
 </div>
     </section>
+
+<section class="page" id="programsPage">
+<div class="admin-page-header"><h2>📅 Program Management</h2><p>Program তৈরি, Edit, Delete এবং Publish/Unpublish করুন।</p></div>
+<div class="admin-box">
+<h3 id="programFormTitle">➕ নতুন Program তৈরি করুন</h3>
+<div class="program-admin-form">
+<div class="admin-form-group"><label>🎉 Program Name</label><input id="programName" type="text" placeholder="যেমন: কালীপূজা ২০২৬"></div>
+<div class="admin-form-group"><label>📆 Year</label><input id="programYear" type="number" min="2000" max="2100" placeholder="2026"></div>
+<div class="admin-form-group"><label>📅 Start Date</label><input id="programStartDate" type="date"></div>
+<div class="admin-form-group"><label>📅 End Date</label><input id="programEndDate" type="date"></div>
+<div class="admin-form-group full-width"><label>📝 Description</label><textarea id="programDescription" rows="4"></textarea></div>
+<div class="admin-form-group"><label>🌐 Viewer Status</label><select id="programStatus"><option value="unpublished">🔒 Unpublished</option><option value="published">🌐 Published</option></select></div>
+<div class="admin-form-group"><label><input type="checkbox" id="showContractToViewer"> 📋 Viewer-কে Contract & Payable দেখান</label></div>
+<div class="full-width program-form-actions"><button type="button" id="saveProgramBtn" class="save-member-btn">💾 Program Save করুন</button><button type="button" id="cancelProgramEditBtn" class="program-cancel-btn" style="display:none;">❌ Edit Cancel</button></div>
+</div><p id="programSaveStatus"></p></div>
+<div class="admin-box"><div class="program-list-heading"><div><h3>📋 Program List</h3><p>ভবিষ্যৎ Accounts modules-সহ Program তালিকা।</p></div><select id="programYearFilter"><option value="all">সব বছর</option></select></div><div id="adminProgramList">Program Loading...</div></div>
+</section>
+
 <section class="page" id="noticePage">
 
     <div class="admin-page-header">
@@ -721,5 +740,6 @@ src="member-request-admin.js">
     type="module"
     src="event-admin.js">
 </script>
+<script type="module" src="program-admin.js"></script>
 </body>
 </html>
