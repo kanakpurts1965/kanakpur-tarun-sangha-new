@@ -116,8 +116,7 @@ const spaMenus = {
     menuComments: "commentsPage",
     menuReplies: "repliesPage",
     menuMembers: "membersPage",
-    menuPrograms: "programsPage",
-    menuCredit: "creditPage",
+    menuAccounts: "accountsPage",
     menuNotice: "noticePage",
     menuGallery: "galleryPage",
     menuEvent: "eventPage",
@@ -339,3 +338,6 @@ if (changePasswordBtn) {
     );
 
 }
+
+document.querySelectorAll("[data-account-page]").forEach(btn=>btn.addEventListener("click",()=>showAdminPage(btn.dataset.accountPage)));
+document.querySelectorAll(".back-to-accounts").forEach(btn=>btn.addEventListener("click",()=>showAdminPage("accountsPage")));
