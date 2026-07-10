@@ -69,7 +69,12 @@ function render(){
   const pe=visible.filter(e=>e.programId===p.id),pcs=categories.filter(c=>c.programId===p.id&&(categoryFilter==="all"||c.id===categoryFilter)&&(pe.some(e=>e.categoryId===c.id)||!searchText));
   if(!pcs.length)return"";const pt=pe.reduce((s,e)=>s+Number(e.amount||0),0);
   return `<div class="debit-flat-program-title"><h3>🎉 ${esc(p.name)} — ${esc(p.year)}</h3><span class="debit-total">Total: ${money(pt)}</span></div>`+pcs.map(c=>{
-   const ce=pe.filter(e=>e.categoryId===c.id),ct=ce.reduce((s,e)=>s+Number(e.amount||0),0);if(searchText&&!ce.length)return"";
+   const ce=pe.filter(e=>e.categoryId===c.id).sort((a,b)=>{
+     const at=a.createdAt?.seconds ?? a.updatedAt?.seconds ?? 0;
+     const bt=b.createdAt?.seconds ?? b.updatedAt?.seconds ?? 0;
+     if(at!==bt) return at-bt;
+     return String(a.id||"").localeCompare(String(b.id||""));
+   }),ct=ce.reduce((s,e)=>s+Number(e.amount||0),0);if(searchText&&!ce.length)return"";
    const count=new Set(ce.map(e=>String(e.name||"").trim().toLowerCase()).filter(Boolean)).size;
    return `<section class="debit-flat-category-card"><div class="debit-flat-category-head"><strong>📂 ${esc(c.name)} <span class="debit-category-people-count">🧾 ${count} টি</span></strong><strong>${money(ct)}</strong></div>${ce.length?ce.map((e,i)=>`<div class="debit-flat-entry ${e.highlight?"highlighted":""}"><span class="debit-serial">${String(i+1).padStart(3,"0")}</span><span>${e.highlight?"⭐ ":""}${esc(e.name)}</span><span>${money(e.amount)}</span><span>${esc(e.date||"তারিখ নেই")}</span><span>${esc(e.note||"—")}</span><span class="debit-entry-actions"><button class="debit-edit-btn" data-a="edit" data-id="${e.id}">✏️</button><button class="debit-delete-btn" data-a="delete" data-id="${e.id}">🗑️</button></span></div>`).join(""):"<p>কোনো Expense Entry নেই।</p>"}</section>`
   }).join("")
@@ -87,3 +92,48 @@ onSnapshot(programsRef,s=>{programs=s.docs.map(d=>({id:d.id,...d.data()}));fillP
 onSnapshot(categoriesRef,s=>{categories=s.docs.map(d=>({id:d.id,...d.data()}));fillCategories();renderChips();render()});
 onSnapshot(entriesRef,s=>{entries=s.docs.map(d=>({id:d.id,...d.data()}));render();});
 resetEntry();
+
+/* FINAL DEPENDENT FILTER FIX: YEAR -> PROGRAM -> CATEGORY */
+function refreshDebitFilterChain(resetProgram=false){
+    const year=document.getElementById("debitYearFilter")?.value || "all";
+    const programSelect=document.getElementById("debitProgramFilter");
+    if(!programSelect) return;
+
+    const oldProgram=resetProgram ? "all" : programSelect.value;
+    const yearPrograms=programs.filter(p=>year==="all" || String(p.year)===String(year));
+
+    programSelect.innerHTML='<option value="all">সব Program</option>'+
+        yearPrograms.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("");
+
+    programSelect.value=yearPrograms.some(p=>p.id===oldProgram) ? oldProgram : "all";
+
+    const selectedProgram=programSelect.value;
+    const allowedIds=new Set(
+        yearPrograms
+          .filter(p=>selectedProgram==="all" || p.id===selectedProgram)
+          .map(p=>p.id)
+    );
+
+    const visibleCategories=categories.filter(c=>allowedIds.has(c.programId));
+    if(categoryFilter!=="all" && !visibleCategories.some(c=>c.id===categoryFilter)){
+        categoryFilter="all";
+    }
+
+    $("debitCategoryScroll").innerHTML=
+      `<button type="button" class="debit-category-chip ${categoryFilter==="all"?"active":""}" data-debit-category-filter="all">সব Category</button>`+
+      visibleCategories.map(c=>`<button type="button" class="debit-category-chip ${categoryFilter===c.id?"active":""}" data-debit-category-filter="${c.id}">${esc(c.name)}</button>`).join("");
+
+    render();
+}
+
+document.getElementById("debitYearFilter")?.addEventListener("change",()=>{
+    categoryFilter="all";
+    refreshDebitFilterChain(true);
+});
+
+document.getElementById("debitProgramFilter")?.addEventListener("change",()=>{
+    categoryFilter="all";
+    refreshDebitFilterChain(false);
+});
+
+setTimeout(()=>refreshDebitFilterChain(false),500);
