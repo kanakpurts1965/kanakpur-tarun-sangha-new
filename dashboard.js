@@ -116,6 +116,7 @@ const spaMenus = {
     menuComments: "commentsPage",
     menuReplies: "repliesPage",
     menuMembers: "membersPage",
+    menuPrograms: "programsPage",
     menuNotice: "noticePage",
     menuGallery: "galleryPage",
     menuEvent: "eventPage",
