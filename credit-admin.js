@@ -70,12 +70,20 @@ function resetEntry(){
 $("cancelCreditEditBtn")?.addEventListener("click",resetEntry);
 
 $("saveCreditEntryBtn")?.addEventListener("click",async()=>{
+ const saveButton=$("saveCreditEntryBtn");
+ if(saveButton.dataset.saving==="1") return;
+ saveButton.dataset.saving="1";
+ saveButton.disabled=true;
  const data={programId:$("entryProgramSelect").value,categoryId:$("entryCategorySelect").value,name:$("creditEntryName").value.trim(),amount:Number($("creditEntryAmount").value),date:$("creditEntryDate").value,note:$("creditEntryNote").value.trim(),highlight:$("creditEntryHighlight").checked,updatedAt:serverTimestamp()};
  if(!data.programId||!data.categoryId||!data.name||!(data.amount>0)){$("creditEntryStatus").textContent="⚠️ Program, Category, Name এবং সঠিক Amount দিন।";return}
  try{
   if(editingId) await updateDoc(doc(db,"creditEntries",editingId),data); else await addDoc(entriesRef,{...data,createdAt:serverTimestamp()});
   $("creditEntryStatus").textContent=editingId?"✅ Entry Update হয়েছে।":"✅ Entry Save হয়েছে।";resetEntry();
  }catch(e){$("creditEntryStatus").textContent="❌ "+e.message}
+ finally{
+   saveButton.dataset.saving="0";
+   saveButton.disabled=false;
+ }
 });
 
 function render(){
@@ -105,7 +113,7 @@ function render(){
    }),ct=ce.reduce((s,e)=>s+Number(e.amount||0),0);
      if(searchText&&!ce.length)return "";
      const peopleCount=new Set(ce.map(e=>String(e.name||"").trim().toLowerCase()).filter(Boolean)).size;
-     return `<section class="credit-flat-category-card"><div class="credit-flat-category-head"><strong>📂 ${esc(c.name)} <span class="category-people-count">👥 ${peopleCount} জন</span></strong><strong>${money(ct)}</strong></div>${ce.length?ce.map((e,index)=>`<div class="credit-flat-entry ${e.highlight?"highlighted":""}"><span class="credit-serial">${String(index+1).padStart(3,"0")}</span><span>${e.highlight?"⭐ ":""}${esc(e.name)}</span><span>${money(e.amount)}</span><span>${esc(e.date||"তারিখ নেই")}</span><span>${esc(e.note||"—")}</span><span class="credit-entry-actions"><button class="credit-edit-btn" data-a="edit" data-id="${e.id}">✏️</button><button class="credit-delete-btn" data-a="delete" data-id="${e.id}">🗑️</button></span></div>`).join(""):"<p>কোনো Entry নেই।</p>"}</section>`;
+     return `<section class="credit-flat-category-card"><div class="credit-flat-category-head"><strong>📂 ${esc(c.name)} <span class="category-people-count">👥 ${peopleCount} জন</span></strong><div class="category-head-right"><strong>${money(ct)}</strong><button class="category-rename-btn" data-credit-category-action="rename" data-id="${c.id}">✏️ Rename</button><button class="category-delete-btn" data-credit-category-action="delete" data-id="${c.id}">🗑️ Delete</button></div></div>${ce.length?ce.map((e,index)=>`<div class="credit-flat-entry ${e.highlight?"highlighted":""}"><span class="credit-serial">${String(index+1).padStart(3,"0")}</span><span>${e.highlight?"⭐ ":""}${esc(e.name)}</span><span>${money(e.amount)}</span><span>${esc(e.date||"তারিখ নেই")}</span><span>${esc(e.note||"—")}</span><span class="credit-entry-actions"><button class="credit-edit-btn" data-a="edit" data-id="${e.id}">✏️</button><button class="credit-delete-btn" data-a="delete" data-id="${e.id}">🗑️</button></span></div>`).join(""):"<p>কোনো Entry নেই।</p>"}</section>`;
    }).join("");
  }).join("") || "<p>কোনো matching Credit Entry পাওয়া যায়নি।</p>";
 }
@@ -167,3 +175,37 @@ document.getElementById("creditProgramFilter")?.addEventListener("change",()=>{
 });
 
 setTimeout(()=>refreshCreditFilterChain(false),500);
+
+/* CREDIT CATEGORY MANAGEMENT */
+document.getElementById("adminCreditList")?.addEventListener("click", async (event)=>{
+  const button=event.target.closest("[data-credit-category-action]");
+  if(!button) return;
+  const category=categories.find(c=>c.id===button.dataset.id);
+  if(!category) return;
+
+  if(button.dataset.creditCategoryAction==="rename"){
+    const nextName=prompt("নতুন Category Name লিখুন:", category.name || "");
+    if(nextName===null) return;
+    const cleanName=nextName.trim();
+    if(!cleanName) return alert("Category Name খালি রাখা যাবে না।");
+    await updateDoc(doc(db,"creditCategories",category.id),{
+      name:cleanName,
+      updatedAt:serverTimestamp()
+    });
+    return;
+  }
+
+  if(button.dataset.creditCategoryAction==="delete"){
+    const related=entries.filter(e=>e.categoryId===category.id);
+    const message=related.length
+      ? `"${category.name}" Category-তে ${related.length}টি Entry আছে। OK করলে Category এবং সব Entry Delete হবে।`
+      : `"${category.name}" Category Delete করবেন?`;
+    if(!confirm(message)) return;
+
+    for(const entry of related){
+      await deleteDoc(doc(db,"creditEntries",entry.id));
+    }
+    await deleteDoc(doc(db,"creditCategories",category.id));
+    if(categoryFilter===category.id) categoryFilter="all";
+  }
+});
