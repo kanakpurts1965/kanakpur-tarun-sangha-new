@@ -1,355 +1,852 @@
-import { db, auth } from "./firebase.js";
-
-import {
-    collection,
-    onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-
-import {
-    onAuthStateChanged,
-    signOut
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-
-const ADMIN_EMAIL = "tanmoyadak112@gmail.com";
-
-
-/* ==========================================
-   SECURE ADMIN AUTH GUARD
-========================================== */
-
-onAuthStateChanged(auth, (user) => {
-
-    if (!user) {
-
-        window.location.replace("admin.html");
-        return;
-
-    }
-
-    if (user.email !== ADMIN_EMAIL) {
-
-        signOut(auth).then(() => {
-
-            window.location.replace("admin.html");
-
-        });
-
-        return;
-
-    }
-
-    document.body.classList.add("admin-auth-ready");
-
-});
-
-
-/* ==========================================
-   SECURE LOGOUT
-========================================== */
-
-const logoutBtn = document.getElementById("logoutBtn");
-
-if (logoutBtn) {
-
-    logoutBtn.addEventListener("click", async () => {
-
-        try {
-
-            await signOut(auth);
-
-            window.location.replace("admin.html");
-
-        } catch (error) {
-
-            console.error("Logout Error:", error);
-
-            alert("Logout করা যায়নি। আবার চেষ্টা করুন।");
-
-        }
-
-    });
-
-}
-
-// Collections
-const commentsRef=collection(db,"comments");
-const repliesRef=collection(db,"replies");
-
-// Total Comments
-onSnapshot(commentsRef,(snap)=>{
-
-    document.getElementById("totalComments").innerHTML=snap.size;
-
-});
-
-// Total Replies
-onSnapshot(repliesRef,(snap)=>{
-
-    document.getElementById("totalReplies").innerHTML=snap.size;
-
-});
-
-// Total Likes
-onSnapshot(commentsRef,(snap)=>{
-
-    let total=0;
-
-    snap.forEach(doc=>{
- 
-        total+=doc.data().likes||0;
-
-    });
-
-    document.getElementById("totalLikes").innerHTML=total;
-
-});
-// ==========================================
-// KTS ADMIN DASHBOARD SPA MENU
-// Phase 1 - Part 3
-// ==========================================
-
-const spaPages = document.querySelectorAll(".page");
-
-const spaMenus = {
-    menuDashboard: "dashboardPage",
-    menuComments: "commentsPage",
-    menuReplies: "repliesPage",
-    menuMembers: "membersPage",
-    menuAccounts: "accountsPage",
-    menuNotice: "noticePage",
-    menuGallery: "galleryPage",
-    menuEvent: "eventPage",
-    menuContact: "contactPage",
-    menuSettings: "settingsPage"
-};
-
-
-// ==========================================
-// SHOW PAGE
-// ==========================================
-
-function showAdminPage(pageId) {
-
-    spaPages.forEach((page) => {
-
-        page.classList.remove("active");
-
-    });
-
-
-    const selectedPage = document.getElementById(pageId);
-
-    if (selectedPage) {
-
-        selectedPage.classList.add("active");
-
-    }
-
-    const accountPages = [
-        "accountsPage",
-        "programsPage",
-        "creditPage",
-        "debitPage"
-    ];
-
-    document.body.classList.toggle(
-        "accounts-mode",
-        accountPages.includes(pageId)
-    );
-
-}
-
-
-// ==========================================
-// MENU CLICK SYSTEM
-// ==========================================
-
-Object.entries(spaMenus).forEach(([menuId, pageId]) => {
-
-    const menu = document.getElementById(menuId);
-
-    if (menu) {
-
-        menu.addEventListener("click", () => {
-
-            showAdminPage(pageId);
-
-        });
-
-    }
-
-});
-/* =====================================================
-   ADMIN CHANGE PASSWORD
-===================================================== */
-
-import {
-    EmailAuthProvider,
-    reauthenticateWithCredential,
-    updatePassword
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-
-const changePasswordBtn =
-    document.getElementById("changeAdminPasswordBtn");
-
-
-if (changePasswordBtn) {
-
-    changePasswordBtn.addEventListener(
-        "click",
-        async () => {
-
-            const currentPassword =
-                document
-                    .getElementById("currentAdminPassword")
-                    .value;
-
-            const newPassword =
-                document
-                    .getElementById("newAdminPassword")
-                    .value;
-
-            const confirmPassword =
-                document
-                    .getElementById("confirmAdminPassword")
-                    .value;
-
-            const message =
-                document.getElementById("passwordChangeMsg");
-
-
-            if (
-                !currentPassword ||
-                !newPassword ||
-                !confirmPassword
-            ) {
-
-                message.textContent =
-                    "⚠️ সব ঘর পূরণ করুন।";
-
-                return;
-            }
-
-
-            if (newPassword.length < 8) {
-
-                message.textContent =
-                    "⚠️ নতুন Password কমপক্ষে 8 অক্ষরের দিন।";
-
-                return;
-            }
-
-
-            if (newPassword !== confirmPassword) {
-
-                message.textContent =
-                    "❌ নতুন Password দুটি মিলছে না।";
-
-                return;
-            }
-
-
-            try {
-
-                changePasswordBtn.disabled = true;
-
-                message.textContent =
-                    "⏳ Password পরিবর্তন হচ্ছে...";
-
-
-                const user = auth.currentUser;
-
-
-                if (!user || !user.email) {
-
-                    message.textContent =
-                        "❌ Admin session পাওয়া যায়নি।";
-
-                    return;
-                }
-
-
-                const credential =
-                    EmailAuthProvider.credential(
-
-                        user.email,
-
-                        currentPassword
-
-                    );
-
-
-                await reauthenticateWithCredential(
-
-                    user,
-
-                    credential
-
-                );
-
-
-                await updatePassword(
-
-                    user,
-
-                    newPassword
-
-                );
-
-
-                document
-                    .getElementById("currentAdminPassword")
-                    .value = "";
-
-                document
-                    .getElementById("newAdminPassword")
-                    .value = "";
-
-                document
-                    .getElementById("confirmAdminPassword")
-                    .value = "";
-
-
-                message.textContent =
-                    "✅ Password সফলভাবে পরিবর্তন হয়েছে।";
-
-
-            } catch (error) {
-
-                console.error(
-                    "PASSWORD CHANGE ERROR:",
-                    error
-                );
-
-
-                if (
-                    error.code ===
-                    "auth/invalid-credential"
-                ) {
-
-                    message.textContent =
-                        "❌ বর্তমান Password ভুল।";
-
-                } else {
-
-                    message.textContent =
-                        "❌ Password পরিবর্তন করা যায়নি।";
-
-                }
-
-            } finally {
-
-                changePasswordBtn.disabled = false;
-
-            }
-
-        }
-
-    );
-
-}
-
-document.querySelectorAll("[data-account-page]").forEach(btn=>btn.addEventListener("click",()=>showAdminPage(btn.dataset.accountPage)));
-document.querySelectorAll(".back-to-accounts").forEach(btn=>btn.addEventListener("click",()=>showAdminPage("accountsPage")));
+<!DOCTYPE html> 
+    
+<html lang="bn"> 
+<head>   
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Dashboard</title>
+<link href="dashboard.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="dashboard">
+<nav class="topbar">
+<h2>👑 KTS Admin</h2>
+<ul>
+<li id="menuDashboard">🏠 Dashboard</li>
+<li id="menuComments">💬 Comments</li>
+<li id="menuReplies">↩ Replies</li>
+<li id="menuNotice">📢 Notice</li>
+<li id="menuGallery">🖼 Gallery</li>
+<li id="menuMembers">👥 Members</li>
+<li id="menuAccounts">💼 Accounts</li>
+    <li id="menuEvent">🎉 Events</li>
+    <li id="menuContact">📞 Contact</li>
+<li id="menuSettings">⚙ Settings</li>
+<li id="logoutBtn">🚪 Logout</li>
+</ul>
+</nav>
+<main class="content">
+<h1>👑 Kanakpur Tarun Sangha</h1>
+<p>Welcome Admin</p>
+<div class="cards">
+<div class="card">
+<h3 id="totalComments">0</h3>
+<p>Total Comments</p>
+</div>
+<div class="card">
+<h3 id="totalReplies">0</h3>
+<p>Total Replies</p>
+</div>
+<div class="card">
+<h3 id="totalLikes">0</h3>
+<p>Total Likes</p>
+</div>
+</div>
+<div id="pageContent">
+<section class="page active" id="dashboardPage"><h2>🏠 Dashboard</h2><p>Welcome to Kanakpur Tarun Sangha Admin Dashboard</p></section>
+<section
+    class="page"
+    id="commentsPage"
+>
+
+    <h2>
+        💬 Comment Management
+    </h2>
+
+    <div id="adminComments">
+
+        Loading...
+
+    </div>
+
+</section>
+<section class="page" id="repliesPage">
+<h2>💬 Reply Management</h2>
+<div id="adminReplies">
+        Loading...
+    </div>
+</section>
+<section class="page" id="membersPage">
+<div class="admin-page-header">
+<h2>👥 Member Management</h2>
+<p>
+            কনকপুর তরুণ সংঘের সদস্যদের যোগ, সম্পাদনা ও পরিচালনা করুন।
+        </p>
+</div>
+<!-- ======================================
+    ADD MEMBER FORM
+    ======================================= -->
+<div class="admin-box member-management-box">
+<h3>➕ নতুন সদস্য যোগ করুন</h3>
+<div class="member-admin-form">
+<!-- Member Name -->
+<div class="admin-form-group">
+<label for="memberName">
+                    👤 সদস্যের নাম
+                </label>
+<input autocomplete="off" id="memberName" placeholder="সদস্যের সম্পূর্ণ নাম লিখুন" type="text"/>
+</div>
+<!-- Mobile Number -->
+<div class="admin-form-group">
+<label for="memberMobile">
+                    📞 মোবাইল নম্বর
+                </label>
+<input autocomplete="off" id="memberMobile" placeholder="মোবাইল নম্বর লিখুন" type="tel"/>
+</div>
+<!-- Blood Group -->
+<div class="admin-form-group">
+<label for="memberBlood">
+                    🩸 রক্তের গ্রুপ
+                </label>
+<select id="memberBlood">
+<option value="">
+                        Blood Group নির্বাচন করুন
+                    </option>
+<option value="A+">A+</option>
+<option value="A-">A-</option>
+<option value="B+">B+</option>
+<option value="B-">B-</option>
+<option value="O+">O+</option>
+<option value="O-">O-</option>
+<option value="AB+">AB+</option>
+<option value="AB-">AB-</option>
+</select>
+</div>
+<!-- Position -->
+<div class="admin-form-group">
+<label for="memberPosition">
+                    👔 সদস্যের পদ
+                </label>
+<select id="memberPosition">
+<option value="">
+                        পদ নির্বাচন করুন
+                    </option>
+<option value="President">
+                        President
+                    </option>
+<option value="Vice President">
+                        Vice President
+                    </option>
+<option value="Secretary">
+                        Secretary
+                    </option>
+<option value="Assistant Secretary">
+                        Assistant Secretary
+                    </option>
+<option value="Treasurer">
+                        Treasurer
+                    </option>
+<option value="Executive">
+                        Executive Member
+                    </option>
+<option value="General">
+                        General Member
+                    </option>
+</select>
+</div>
+<!-- ======================================
+MEMBER CATEGORY
+======================================= -->
+
+<div class="admin-form-group">
+
+    <label for="memberCategory">
+        👥 সদস্যের তালিকা
+    </label>
+
+    <select id="memberCategory">
+
+        <option value="">
+            তালিকা নির্বাচন করুন
+        </option>
+
+        <option value="executive">
+            কার্যকরী সদস্য
+        </option>
+
+        <option value="general">
+            সকল সদস্য
+        </option>
+
+    </select>
+
+</div>
+
+
+<!-- ======================================
+MEMBER PHOTO FILE
+======================================= -->
+
+<div class="admin-form-group full-width photo-picker-group">
+
+    <label>📷 সদস্যের ছবি নির্বাচন করুন</label>
+
+    <input
+        type="file"
+        id="memberPhotoFile"
+        accept="image/*"
+        hidden
+    >
+
+    <button type="button" id="chooseMemberPhotoBtn" class="choose-photo-btn">
+        📷 ছবি নির্বাচন করুন
+    </button>
+
+    <div id="memberPhotoFileName" class="photo-file-name">
+        কোনো ছবি নির্বাচন করা হয়নি
+    </div>
+
+</div>
+
+
+<!-- PHOTO PREVIEW -->
+
+<div class="admin-form-group full-width">
+
+    <div
+        id="memberPhotoPreviewBox"
+        style="display:none; text-align:center;"
+    >
+
+        <img
+            id="memberPhotoPreview"
+            src=""
+            alt="Photo Preview"
+            style="
+                width:120px;
+                height:120px;
+                object-fit:cover;
+                border-radius:50%;
+                border:3px solid #c40000;
+            "
+        >
+
+        <p>
+            নির্বাচিত ছবি
+        </p>
+
+    </div>
+
+</div>
+<!-- Save Button -->
+<div class="admin-form-group full-width">
+<button class="save-member-btn" id="addMemberBtn" type="button">
+                    💾 সদস্য Save করুন
+                </button>
+</div>
+</div>
+</div>
+<!-- ======================================
+    MEMBER LIST
+    ======================================= -->
+<div class="admin-box member-list-box">
+<div class="member-list-header">
+<div>
+<h3>📋 সদস্য তালিকা</h3>
+<p>
+                    যোগ করা সকল সদস্য এখানে দেখা যাবে।
+                </p>
+</div>
+<div class="member-list-tools"><button type="button" id="downloadMemberPdf" class="pdf-download-btn">📄 Download PDF</button><input id="adminMemberSearch" placeholder="🔍 সদস্য খুঁজুন..." type="search"/></div>
+</div>
+<!-- Dynamic Member List -->
+<div id="adminMemberList">
+<p class="member-loading">
+
+                সদস্য তালিকা Loading...
+
+            </p>
+</div>
+</div>
+    </section>
+
+<section class="page" id="accountsPage">
+<div class="admin-page-header"><h2>💼 Accounts Center</h2><p>সমস্ত Program ও Accounts Management এক জায়গা থেকে পরিচালনা করুন।</p></div>
+<div class="accounts-center-grid">
+<button class="accounts-center-card active-tool" data-account-page="programsPage"><span>📅</span><strong>Program Management</strong><small>Add, Edit, Publish/Unpublish</small></button>
+<button class="accounts-center-card active-tool" data-account-page="creditPage"><span>💰</span><strong>Credit / Income</strong><small>Category, Collection Entry ও Total Credit</small></button>
+<button class="accounts-center-card active-tool" data-account-page="debitPage"><span>💸</span><strong>Debit / Expense</strong><small>Category, Expense Entry ও Total Debit</small></button>
+<button class="accounts-center-card coming-tool"><span>📋</span><strong>Contract & Payable</strong><small>Contract, Paid ও Remaining Due</small></button>
+<button class="accounts-center-card coming-tool"><span>👥</span><strong>Member Contribution</strong><small>Program ও Year-wise সদস্য চাঁদা</small></button>
+<button class="accounts-center-card coming-tool"><span>📊</span><strong>Total Account Statement</strong><small>Credit, Debit, Balance ও Charts</small></button>
+<button class="accounts-center-card coming-tool"><span>📁</span><strong>Files / Documents</strong><small>Program Files ও Documents</small></button>
+<button class="accounts-center-card coming-tool"><span>📜</span><strong>Agreement Copies</strong><small>প্রতি Program/Year-এর Agreement Files</small></button>
+<button class="accounts-center-card coming-tool"><span>📄</span><strong>Reports / PDF</strong><small>বাংলা, English ও Bilingual</small></button>
+</div></section>
+<section class="page" id="programsPage"><button type="button" class="back-to-accounts">← 💼 Accounts Center</button>
+<div class="admin-page-header"><h2>📅 Program Management</h2><p>Program তৈরি, Edit, Delete এবং Publish/Unpublish করুন।</p></div>
+<div class="admin-box">
+<h3 id="programFormTitle">➕ নতুন Program তৈরি করুন</h3>
+<div class="program-admin-form">
+<div class="admin-form-group"><label>🎉 Program Name</label><input id="programName" type="text" placeholder="যেমন: কালীপূজা ২০২৬"></div>
+<div class="admin-form-group"><label>📆 Year</label><input id="programYear" type="number" min="2000" max="2100" placeholder="2026"></div>
+<div class="admin-form-group"><label>📅 Start Date</label><input id="programStartDate" type="date"></div>
+<div class="admin-form-group"><label>📅 End Date</label><input id="programEndDate" type="date"></div>
+<div class="admin-form-group full-width"><label>📝 Description</label><textarea id="programDescription" rows="4"></textarea></div>
+<div class="admin-form-group"><label>🌐 Viewer Status</label><select id="programStatus"><option value="unpublished">🔒 Unpublished</option><option value="published">🌐 Published</option></select></div>
+<div class="admin-form-group"><label><input type="checkbox" id="showContractToViewer"> 📋 Viewer-কে Contract & Payable দেখান</label></div>
+<div class="full-width program-form-actions"><button type="button" id="saveProgramBtn" class="save-member-btn">💾 Program Save করুন</button><button type="button" id="cancelProgramEditBtn" class="program-cancel-btn" style="display:none;">❌ Edit Cancel</button></div>
+</div><p id="programSaveStatus"></p></div>
+<div class="admin-box"><div class="program-list-heading"><div><h3>📋 Program List</h3><p>ভবিষ্যৎ Accounts modules-সহ Program তালিকা।</p></div><select id="programYearFilter"><option value="all">সব বছর</option></select></div><div id="adminProgramList">Program Loading...</div></div>
+</section>
+
+
+<section class="page" id="creditPage"><button type="button" class="back-to-accounts">← 💼 Accounts Center</button>
+<div class="admin-page-header">
+<h2>💰 Credit / Income Management</h2>
+<p>Program নির্বাচন করে Income Category এবং তার ভিতরে বিস্তারিত Collection Entry যোগ করুন।</p>
+</div>
+
+<div class="admin-box">
+<h3>➕ Income Category তৈরি করুন</h3>
+<div class="credit-form-grid">
+<div class="admin-form-group"><label>🎉 Program</label><select id="creditProgramSelect"><option value="">Program নির্বাচন করুন</option></select></div>
+<div class="admin-form-group"><label>📂 Category Name</label><input id="creditCategoryName" type="text" placeholder="যেমন: পাড়া কালেকশন / সদস্য চাঁদা"></div>
+</div>
+<button id="saveCreditCategoryBtn" type="button" class="save-member-btn">💾 Category Save করুন</button>
+<p id="creditCategoryStatus"></p>
+</div>
+
+<div class="admin-box">
+<h3>➕ Collection Entry যোগ করুন</h3>
+<div class="credit-form-grid">
+<div class="admin-form-group"><label>🎉 Program</label><select id="entryProgramSelect"><option value="">Program নির্বাচন করুন</option></select></div>
+<div class="admin-form-group"><label>📂 Income Category</label><select id="entryCategorySelect"><option value="">Category নির্বাচন করুন</option></select></div>
+<div class="admin-form-group"><label>👤 নাম / Source</label><input id="creditEntryName" type="text" placeholder="দাতা, সদস্য বা Source-এর নাম"></div>
+<div class="admin-form-group"><label>💵 Amount (₹)</label><input id="creditEntryAmount" type="number" min="0" step="0.01" placeholder="0"></div>
+<div class="admin-form-group"><label>📅 Date</label><input id="creditEntryDate" type="date"></div>
+<div class="admin-form-group"><label>📝 Note</label><input id="creditEntryNote" type="text" placeholder="ঐচ্ছিক Note"></div>
+<div class="admin-form-group full-width credit-highlight-box"><label><input id="creditEntryHighlight" type="checkbox"> ⭐ Viewer ও PDF-এ এই Entry Bold / Highlight দেখান</label></div>
+</div>
+<div class="credit-action-row">
+<button id="saveCreditEntryBtn" type="button" class="save-member-btn">💾 Entry Save করুন</button>
+<button id="cancelCreditEditBtn" type="button" class="credit-cancel-btn" style="display:none">❌ Edit Cancel</button>
+</div>
+<p id="creditEntryStatus"></p>
+</div>
+
+<div class="admin-box">
+<div class="credit-list-head"><div><h3>📊 Credit Details</h3><p>Category Total এবং Program Total Credit automatic হিসাব হবে।</p></div><div class="account-filter-pair"><select id="creditYearFilter"><option value="all">সব বছর</option></select><select id="creditProgramFilter"><option value="all">সব Program</option></select></div></div>
+<div class="credit-tools">
+<input id="creditSearchInput" type="search" placeholder="🔍 নাম, Category, Program বা Note খুঁজুন...">
+<div id="creditCategoryScroll" class="credit-category-scroll">
+<button type="button" class="credit-category-chip active" data-category-filter="all">সব Category</button>
+</div>
+</div>
+<div id="creditProgramSummary"></div>
+<div id="adminCreditList" class="credit-flat-list">Credit Loading...</div>
+</div>
+</section>
+
+
+<section class="page" id="debitPage">
+<button type="button" class="back-to-accounts">← 💼 Accounts Center</button>
+<div class="admin-page-header"><h2>💸 Debit / Expense Management</h2><p>Program অনুযায়ী খরচের Category এবং বিস্তারিত Expense Entry পরিচালনা করুন।</p></div>
+
+<div class="admin-box">
+<h3>➕ Expense Category তৈরি করুন</h3>
+<div class="debit-form-grid">
+<div class="admin-form-group"><label>🎉 Program</label><select id="debitProgramSelect"><option value="">Program নির্বাচন করুন</option></select></div>
+<div class="admin-form-group"><label>📂 Category Name</label><input id="debitCategoryName" type="text" placeholder="যেমন: Light / Pandal / Decoration"></div>
+</div>
+<button id="saveDebitCategoryBtn" type="button" class="save-member-btn">💾 Category Save করুন</button>
+<p id="debitCategoryStatus"></p>
+</div>
+
+<div class="admin-box">
+<h3>➕ Expense Entry যোগ করুন</h3>
+<div class="debit-form-grid">
+<div class="admin-form-group"><label>🎉 Program</label><select id="debitEntryProgramSelect"><option value="">Program নির্বাচন করুন</option></select></div>
+<div class="admin-form-group"><label>📂 Expense Category</label><select id="debitEntryCategorySelect"><option value="">Category নির্বাচন করুন</option></select></div>
+<div class="admin-form-group"><label>🧾 খরচের নাম / Payee</label><input id="debitEntryName" type="text" placeholder="খরচের নাম বা যাকে টাকা দেওয়া হয়েছে"></div>
+<div class="admin-form-group"><label>💵 Amount (₹)</label><input id="debitEntryAmount" type="number" min="0" step="0.01" placeholder="0"></div>
+<div class="admin-form-group"><label>📅 Date</label><input id="debitEntryDate" type="date"></div>
+<div class="admin-form-group"><label>📝 Note</label><input id="debitEntryNote" type="text" placeholder="ঐচ্ছিক Note"></div>
+<div class="admin-form-group full-width debit-highlight-box"><label><input id="debitEntryHighlight" type="checkbox"> ⭐ Viewer ও PDF-এ এই Entry Bold / Highlight দেখান</label></div>
+</div>
+<div class="debit-action-row">
+<button id="saveDebitEntryBtn" type="button" class="save-member-btn">💾 Expense Save করুন</button>
+<button id="cancelDebitEditBtn" type="button" class="debit-cancel-btn" style="display:none">❌ Edit Cancel</button>
+</div>
+<p id="debitEntryStatus"></p>
+</div>
+
+<div class="admin-box debit-details-box">
+<div class="debit-list-head"><div><h3>📊 Debit Details</h3><p>Category Total এবং Program Total Debit automatic হিসাব হবে।</p></div><div class="account-filter-pair"><select id="debitYearFilter"><option value="all">সব বছর</option></select><select id="debitProgramFilter"><option value="all">সব Program</option></select></div></div>
+<div class="debit-tools">
+<input id="debitSearchInput" type="search" placeholder="🔍 নাম, Category, Program বা Note খুঁজুন...">
+<div id="debitCategoryScroll" class="debit-category-scroll"><button type="button" class="debit-category-chip active" data-debit-category-filter="all">সব Category</button></div>
+</div>
+<div id="debitProgramSummary"></div>
+<div id="adminDebitList" class="debit-flat-list">Debit Loading...</div>
+</div>
+</section>
+
+<section class="page" id="noticePage">
+
+    <div class="admin-page-header">
+
+        <h2>📢 Notice Management</h2>
+
+        <p>
+            নোটিশ যোগ, সম্পাদনা ও মুছে ফেলুন।
+        </p>
+
+    </div>
+
+
+    <div class="admin-box">
+
+        <h3>➕ নতুন Notice যোগ করুন</h3>
+
+
+        <div class="admin-form-group">
+
+            <label for="noticeTitle">
+                📌 Notice Title
+            </label>
+
+            <input
+                type="text"
+                id="noticeTitle"
+                placeholder="নোটিশের শিরোনাম লিখুন"
+            >
+
+        </div>
+
+
+        <div class="admin-form-group">
+
+            <label for="noticeDate">
+                📅 Notice Date
+            </label>
+
+            <input
+                type="date"
+                id="noticeDate"
+            >
+
+        </div>
+
+
+        <div class="admin-form-group">
+
+            <label for="noticeText">
+                📝 Notice Details
+            </label>
+
+            <textarea
+                id="noticeText"
+                rows="7"
+                placeholder="সম্পূর্ণ নোটিশ লিখুন..."
+            ></textarea>
+
+        </div>
+
+
+        <button
+            type="button"
+            id="saveNoticeBtn"
+            class="save-member-btn"
+        >
+            💾 Notice Save করুন
+        </button>
+
+    </div>
+
+
+    <div class="admin-box">
+
+        <h3>
+            📋 সকল Notice
+        </h3>
+
+        <div id="adminNoticeList">
+
+            Notice Loading...
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+photo uplod
+========================================== -->
+
+    
+<section class="page" id="galleryPage">
+<div class="admin-page-header"><h2>🖼 Gallery Management</h2><p>Heading, Caption ও একাধিক ছবি দিয়ে Gallery Group তৈরি ও Edit করুন।</p></div>
+<div class="admin-box">
+<h3 id="galleryFormTitle">➕ নতুন Gallery Group তৈরি করুন</h3>
+<div class="admin-form-group"><label for="galleryHeading">🏷️ Heading</label><input type="text" id="galleryHeading" placeholder="যেমন: বস্ত্র বিতরণ কর্মসূচি ২০২৬"></div>
+<div class="admin-form-group"><label for="galleryCaption">📝 Caption / Description</label><textarea id="galleryCaption" rows="4" placeholder="সংক্ষিপ্ত বিবরণ লিখুন..."></textarea></div>
+<div class="admin-form-group"><label>📷 ছবি নির্বাচন করুন</label><input type="file" id="galleryPhotoFile" accept="image/*" multiple><p id="gallerySelectedCount">কোনো ছবি নির্বাচন করা হয়নি</p></div>
+<div id="galleryExistingPhotos"></div><div id="galleryPreviewBox" class="gallery-admin-preview-grid"></div>
+<button type="button" id="saveGalleryBtn" class="save-member-btn">📤 Gallery Group Upload করুন</button>
+<button type="button" id="cancelGalleryEditBtn" style="display:none;">❌ Edit Cancel</button>
+</div>
+<div class="admin-box"><h3>📋 Gallery Groups</h3><div id="adminGalleryList">Gallery Loading...</div></div>
+</section>
+    <!-- =====================================================
+     EVENT MANAGEMENT PAGE
+===================================================== -->
+
+<section class="page" id="eventPage">
+
+    <div class="admin-page-header">
+        <h2>🎉 Event Management</h2>
+        <p>নতুন Event তৈরি, Edit এবং Delete করুন।</p>
+    </div>
+
+
+    <div class="admin-box">
+
+        <h3 id="eventFormTitle">
+            ➕ নতুন Event তৈরি করুন
+        </h3>
+
+
+        <!-- EVENT NAME -->
+
+        <div class="admin-form-group">
+
+            <label for="eventName">
+                🎉 Event Name
+            </label>
+
+            <input
+                type="text"
+                id="eventName"
+                placeholder="Event-এর নাম লিখুন"
+            >
+
+        </div>
+
+
+        <!-- EVENT BANNER -->
+
+        <div class="admin-form-group">
+
+            <label for="eventBannerFile">
+                🖼️ Event Banner
+            </label>
+
+            <input
+                type="file"
+                id="eventBannerFile"
+                accept="image/*"
+            >
+
+        </div>
+
+
+        <!-- BANNER PREVIEW -->
+
+        <div
+            id="eventBannerPreviewBox"
+            class="event-banner-preview-box"
+            style="display:none;"
+        >
+
+            <img
+                id="eventBannerPreview"
+                src=""
+                alt="Event Banner Preview"
+            >
+
+        </div>
+
+
+        <!-- DATE + TIME -->
+
+        <div class="event-date-time-row">
+
+            <div class="admin-form-group">
+
+                <label for="eventDate">
+                    📅 Date
+                </label>
+
+                <input
+                    type="date"
+                    id="eventDate"
+                >
+
+            </div>
+
+
+            <div class="admin-form-group">
+
+                <label for="eventTime">
+                    ⏰ Time
+                </label>
+
+                <input
+                    type="time"
+                    id="eventTime"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- PLACE -->
+
+        <div class="admin-form-group">
+
+            <label for="eventPlace">
+                📍 Place
+            </label>
+
+            <input
+                type="text"
+                id="eventPlace"
+                placeholder="অনুষ্ঠানের স্থান লিখুন"
+            >
+
+        </div>
+
+
+        <!-- DESCRIPTION -->
+
+        <div class="admin-form-group">
+
+            <label>
+                📝 Description Points
+            </label>
+
+            <div id="eventDescriptionList">
+
+                <div class="event-description-row">
+
+                    <span>1.</span>
+
+                    <input
+                        type="text"
+                        class="event-description-input"
+                        placeholder="প্রথম বিবরণ লিখুন"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="addEventDescriptionBtn"
+                class="event-add-point-btn"
+            >
+                ➕ আরেকটি Description যোগ করুন
+            </button>
+
+        </div>
+
+
+        <!-- SAVE -->
+
+        <button
+            type="button"
+            id="saveEventBtn"
+            class="save-member-btn"
+        >
+            💾 Event Save করুন
+        </button>
+
+
+        <!-- CANCEL EDIT -->
+
+        <button
+            type="button"
+            id="cancelEventEditBtn"
+            style="display:none;"
+        >
+            ❌ Edit Cancel
+        </button>
+
+    </div>
+
+
+    <!-- EVENT LIST -->
+
+    <div class="admin-box">
+
+        <h3>📋 Event List</h3>
+
+        <div id="adminEventList">
+
+            Event Loading...
+
+        </div>
+
+    </div>
+
+</section>
+   <section class="page" id="contactPage">
+
+    <div class="admin-page-header">
+        <h2>📞 Contact Management</h2>
+        <p>ক্লাবের যোগাযোগের তথ্য পরিবর্তন করুন।</p>
+    </div>
+
+    <div class="admin-box">
+
+        <div class="admin-form-group">
+            <label>📍 Club Address</label>
+            <textarea
+                id="contactAddress"
+                rows="3"
+                placeholder="ক্লাবের ঠিকানা লিখুন"
+            ></textarea>
+        </div>
+
+        <div class="admin-form-group">
+            <label>📞 Mobile Number</label>
+            <input
+                type="tel"
+                id="contactMobile"
+                placeholder="মোবাইল নম্বর"
+            >
+        </div>
+
+        <div class="admin-form-group">
+            <label>📧 Email Address</label>
+            <input
+                type="email"
+                id="contactEmail"
+                placeholder="Email Address"
+            >
+        </div>
+
+        <div class="admin-form-group">
+            <label>🗺️ Google Map Link</label>
+            <input
+                type="url"
+                id="contactMap"
+                placeholder="Google Map Link"
+            >
+        </div>
+        <div class="admin-form-group">
+    <label>📘 Facebook Link</label>
+
+    <input
+        type="url"
+        id="contactFacebook"
+        placeholder="Facebook Page বা Profile Link"
+    >
+</div>
+
+        <button
+            type="button"
+            id="saveContactBtn"
+            class="save-member-btn"
+        >
+            💾 Contact Save করুন
+        </button>
+
+        <p id="contactSaveStatus"></p>
+
+    </div>
+
+</section> 
+<!-- ==========================================
+admin pasword setting
+========================================== -->
+    
+<section class="page" id="settingsPage">
+
+    <div class="admin-page-header">
+        <h2>⚙ Admin Settings</h2>
+        <p>Admin Account-এর Password পরিবর্তন করুন।</p>
+    </div>
+
+    <div class="admin-box">
+
+        <h3>🔐 Change Password</h3>
+
+        <div class="admin-form-group">
+            <label>বর্তমান Password</label>
+
+            <input
+                type="password"
+                id="currentAdminPassword"
+                placeholder="Current Password"
+            >
+        </div>
+
+        <div class="admin-form-group">
+            <label>নতুন Password</label>
+
+            <input
+                type="password"
+                id="newAdminPassword"
+                placeholder="New Password"
+            >
+        </div>
+
+        <div class="admin-form-group">
+            <label>নতুন Password আবার লিখুন</label>
+
+            <input
+                type="password"
+                id="confirmAdminPassword"
+                placeholder="Confirm New Password"
+            >
+        </div>
+
+        <button
+            type="button"
+            id="changeAdminPasswordBtn"
+            class="save-member-btn"
+        >
+            🔐 Change Password
+        </button>
+
+        <p id="passwordChangeMsg"></p>
+
+    </div>
+
+</section>
+
+
+    
+</div>
+</main>
+</div>
+<!-- ==========================================
+MEMBER MANAGEMENT PAGE
+========================================== -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="dashboard.js" type="module"></script>
+<script src="replies-admin.js" type="module"></script>
+<script src="comments-admin.js" type="module"></script>
+<script src="member-admin.js" type="module"></script>
+<script
+type="module"
+src="member-request-admin.js">
+</script>
+   <script
+    type="module"
+    src="notice-admin.js">
+</script>
+    <script
+    type="module"
+    src="gallery-admin.js">
+</script>
+    <script
+    type="module"
+    src="contact-admin.js">
+</script>
+    <script
+    type="module"
+    src="event-admin.js">
+</script>
+<script type="module" src="program-admin.js"></script>
+<script type="module" src="credit-admin.js"></script>
+<script type="module" src="debit-admin.js"></script>
+</body>
+</html>
