@@ -146,6 +146,17 @@ function showAdminPage(pageId) {
 
     }
 
+    const accountPages = [
+        "accountsPage",
+        "programsPage",
+        "creditPage"
+    ];
+
+    document.body.classList.toggle(
+        "accounts-mode",
+        accountPages.includes(pageId)
+    );
+
 }
 
 
