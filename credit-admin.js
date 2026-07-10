@@ -27,12 +27,23 @@ $("entryProgramSelect")?.addEventListener("change",fillCategories);
 
 function renderCategoryChips(){
  const current=categoryFilter;
- const allTotal=entries.reduce((s,e)=>s+Number(e.amount||0),0);
+
+ function uniquePeopleCount(list){
+   const names=new Set(
+     list
+       .map(e=>String(e.name||"").trim().toLowerCase())
+       .filter(Boolean)
+   );
+   return names.size;
+ }
+
+ const allCount=uniquePeopleCount(entries);
+
  $("creditCategoryScroll").innerHTML=
-  `<button type="button" class="credit-category-chip ${current==="all"?"active":""}" data-category-filter="all">সব Category <span class="category-total-count">${money(allTotal)}</span></button>`+
+  `<button type="button" class="credit-category-chip ${current==="all"?"active":""}" data-category-filter="all">সব Category <span class="category-total-count">${allCount} জন</span></button>`+
   categories.map(c=>{
-    const total=entries.filter(e=>e.categoryId===c.id).reduce((s,e)=>s+Number(e.amount||0),0);
-    return `<button type="button" class="credit-category-chip ${current===c.id?"active":""}" data-category-filter="${c.id}">${esc(c.name)} <span class="category-total-count">${money(total)}</span></button>`;
+    const count=uniquePeopleCount(entries.filter(e=>e.categoryId===c.id));
+    return `<button type="button" class="credit-category-chip ${current===c.id?"active":""}" data-category-filter="${c.id}">${esc(c.name)} <span class="category-total-count">${count} জন</span></button>`;
   }).join("");
 }
 $("creditCategoryScroll")?.addEventListener("click",e=>{
