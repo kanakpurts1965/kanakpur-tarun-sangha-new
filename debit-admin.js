@@ -22,8 +22,14 @@ function fillCategories(){
 }
 function renderChips(){
  const current=categoryFilter;
- $("debitCategoryScroll").innerHTML=`<button type="button" class="debit-category-chip ${current==="all"?"active":""}" data-debit-category-filter="all">সব Category</button>`+
- categories.map(c=>`<button type="button" class="debit-category-chip ${current===c.id?"active":""}" data-debit-category-filter="${c.id}">${esc(c.name)}</button>`).join("");
+ const year=$("debitYearFilter").value;
+ const allowedProgramIds=new Set(
+   programs.filter(p=>year==="all"||String(p.year)===year).map(p=>p.id)
+ );
+ const visibleCategories=categories.filter(c=>allowedProgramIds.has(c.programId));
+ if(current!=="all"&&!visibleCategories.some(c=>c.id===current)) categoryFilter="all";
+ $("debitCategoryScroll").innerHTML=`<button type="button" class="debit-category-chip ${categoryFilter==="all"?"active":""}" data-debit-category-filter="all">সব Category</button>`+
+ visibleCategories.map(c=>`<button type="button" class="debit-category-chip ${categoryFilter===c.id?"active":""}" data-debit-category-filter="${c.id}">${esc(c.name)}</button>`).join("");
 }
 $("debitEntryProgramSelect")?.addEventListener("change",fillCategories);
 $("debitCategoryScroll")?.addEventListener("click",e=>{const b=e.target.closest("[data-debit-category-filter]");if(!b)return;categoryFilter=b.dataset.debitCategoryFilter;renderChips();render()});
@@ -66,7 +72,7 @@ $("adminDebitList")?.addEventListener("click",async ev=>{
  if(b.dataset.a==="delete"){if(confirm(`"${e.name}" Expense Delete করবেন?`))await deleteDoc(doc(db,"debitEntries",e.id));return}
  editingId=e.id;$("debitEntryProgramSelect").value=e.programId;fillCategories();$("debitEntryCategorySelect").value=e.categoryId;$("debitEntryName").value=e.name||"";$("debitEntryAmount").value=e.amount||"";$("debitEntryDate").value=e.date||"";$("debitEntryNote").value=e.note||"";$("debitEntryHighlight").checked=!!e.highlight;$("saveDebitEntryBtn").textContent="💾 Update Expense";$("cancelDebitEditBtn").style.display="block";
 });
-$("debitYearFilter")?.addEventListener("change",render);
+$("debitYearFilter")?.addEventListener("change",()=>{renderChips();render();});
 onSnapshot(programsRef,s=>{programs=s.docs.map(d=>({id:d.id,...d.data()}));fillPrograms();render()});
 onSnapshot(categoriesRef,s=>{categories=s.docs.map(d=>({id:d.id,...d.data()}));fillCategories();renderChips();render()});
 onSnapshot(entriesRef,s=>{entries=s.docs.map(d=>({id:d.id,...d.data()}));render();});
