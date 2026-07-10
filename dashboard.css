@@ -1146,3 +1146,18 @@ body.accounts-mode > .dashboard .cards{display:none!important}
 .debit-serial{font-weight:800;color:#a90000}.debit-entry-actions{display:flex;gap:6px}.debit-entry-actions button{border:0;border-radius:7px;padding:7px 9px;cursor:pointer}
 .debit-edit-btn{background:#e9f2ff;color:#0757a8}.debit-delete-btn{background:#ffe7e7;color:#a40000}
 @media(max-width:800px){.debit-form-grid{grid-template-columns:1fr}.debit-list-head,.debit-flat-program-title,.debit-flat-category-head{flex-direction:column;align-items:stretch}.debit-flat-entry{grid-template-columns:55px 1fr 1fr}.debit-entry-actions{grid-column:1/-1}.debit-action-row{flex-direction:column}}
+
+/* YEAR -> PROGRAM -> CATEGORY FILTER SYSTEM */
+.account-filter-pair{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+#creditProgramFilter,#debitProgramFilter{
+    min-width:220px;
+    padding:10px 12px;
+    border:1px solid #ddd;
+    border-radius:9px;
+    background:#fff;
+}
+@media(max-width:600px){
+    .account-filter-pair{width:100%}
+    #creditYearFilter,#debitYearFilter,
+    #creditProgramFilter,#debitProgramFilter{width:100%;min-width:0}
+}
