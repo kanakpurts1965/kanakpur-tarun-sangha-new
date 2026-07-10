@@ -1042,19 +1042,59 @@ body.accounts-mode > .dashboard .cards{display:none!important}
 .credit-flat-entry .credit-entry-actions{grid-column:1/-1}
 }
 
-/* REMOVE CREDIT BACKGROUND CONTAINER BOX */
-
-#creditPage .admin-box:last-child{
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-}
-
+/* CREDIT PAGE FINAL CLEAN + SCROLL */
+#creditPage .admin-box:last-child,
+#creditProgramSummary,
 #adminCreditList,
-.credit-flat-list{
-    background: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
+.credit-flat-list,
+.credit-program-block,
+.credit-category-block{
+    background:transparent!important;
+    box-shadow:none!important;
+    border:none!important;
+    padding-left:0!important;
+    padding-right:0!important;
+}
+.credit-flat-category-card{
+    background:#fff!important;
+    border:1px solid #e5e5e5!important;
+    box-shadow:none!important;
+    border-radius:10px!important;
+    margin-bottom:12px!important;
+}
+.credit-category-scroll{
+    width:100%!important;
+    max-width:100%!important;
+    display:flex!important;
+    flex-direction:row!important;
+    flex-wrap:nowrap!important;
+    gap:10px!important;
+    overflow-x:auto!important;
+    overflow-y:hidden!important;
+    white-space:nowrap!important;
+    padding:5px 3px 12px!important;
+    -webkit-overflow-scrolling:touch!important;
+    scrollbar-width:thin!important;
+}
+.credit-category-chip{
+    flex:0 0 auto!important;
+    width:auto!important;
+    min-width:max-content!important;
+    white-space:nowrap!important;
+}
+.credit-category-scroll::-webkit-scrollbar{height:7px!important}
+.credit-category-scroll::-webkit-scrollbar-track{background:#eee!important;border-radius:20px!important}
+.credit-category-scroll::-webkit-scrollbar-thumb{background:#a90000!important;border-radius:20px!important}
+.category-total-count{
+    display:inline-block;
+    margin-left:5px;
+    padding:2px 7px;
+    border-radius:999px;
+    background:rgba(0,0,0,.08);
+    font-size:12px;
+    font-weight:800;
+}
+.credit-category-chip.active .category-total-count{background:rgba(255,255,255,.22)}
+@media(max-width:600px){
+    .credit-category-scroll{overflow-x:scroll!important}
 }
