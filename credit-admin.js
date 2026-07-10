@@ -19,6 +19,14 @@ function fillPrograms(){
  if(old==="all"||ys.includes(Number(old))) $("creditYearFilter").value=old;
 }
 
+function fillCreditProgramFilter(){
+ const year=$("creditYearFilter").value;
+ const old=$("creditProgramFilter").value;
+ const visible=programs.filter(p=>year==="all"||String(p.year)===year);
+ $("creditProgramFilter").innerHTML='<option value="all">সব Program</option>'+
+ visible.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("");
+ $("creditProgramFilter").value=visible.some(p=>p.id===old)?old:"all";
+}
 function fillCategories(){
  const pid=$("entryProgramSelect").value;
  $("entryCategorySelect").innerHTML='<option value="">Category নির্বাচন করুন</option>'+categories.filter(c=>c.programId===pid).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
@@ -28,8 +36,9 @@ $("entryProgramSelect")?.addEventListener("change",fillCategories);
 function renderCategoryChips(){
  const current=categoryFilter;
  const year=$("creditYearFilter").value;
+ const selectedProgram=$("creditProgramFilter").value;
  const allowedProgramIds=new Set(
-   programs.filter(p=>year==="all"||String(p.year)===year).map(p=>p.id)
+   programs.filter(p=>(year==="all"||String(p.year)===year)&&(selectedProgram==="all"||p.id===selectedProgram)).map(p=>p.id)
  );
  const visibleCategories=categories.filter(c=>allowedProgramIds.has(c.programId));
  if(current!=="all"&&!visibleCategories.some(c=>c.id===current)) categoryFilter="all";
@@ -71,7 +80,8 @@ $("saveCreditEntryBtn")?.addEventListener("click",async()=>{
 
 function render(){
  const year=$("creditYearFilter").value;
- const ps=programs.filter(p=>year==="all"||String(p.year)===year).sort((a,b)=>Number(b.year)-Number(a.year));
+ const selectedProgram=$("creditProgramFilter").value;
+ const ps=programs.filter(p=>(year==="all"||String(p.year)===year)&&(selectedProgram==="all"||p.id===selectedProgram)).sort((a,b)=>Number(b.year)-Number(a.year));
  const visibleEntries=entries.filter(e=>{
    const c=categories.find(x=>x.id===e.categoryId);
    const p=programs.find(x=>x.id===e.programId);
@@ -100,9 +110,10 @@ $("adminCreditList")?.addEventListener("click",async ev=>{
  if(b.dataset.a==="delete"){if(confirm(`"${e.name}" Entry Delete করবেন?`))await deleteDoc(doc(db,"creditEntries",e.id));return}
  editingId=e.id;$("entryProgramSelect").value=e.programId;fillCategories();$("entryCategorySelect").value=e.categoryId;$("creditEntryName").value=e.name||"";$("creditEntryAmount").value=e.amount||"";$("creditEntryDate").value=e.date||"";$("creditEntryNote").value=e.note||"";$("creditEntryHighlight").checked=!!e.highlight;$("saveCreditEntryBtn").textContent="💾 Update Entry";$("cancelCreditEditBtn").style.display="block";
 });
-$("creditYearFilter")?.addEventListener("change",()=>{renderCategoryChips();render();});
+$("creditYearFilter")?.addEventListener("change",()=>{fillCreditProgramFilter();categoryFilter="all";renderCategoryChips();render();});
+$("creditProgramFilter")?.addEventListener("change",()=>{categoryFilter="all";renderCategoryChips();render();});
 
-onSnapshot(programsRef,s=>{programs=s.docs.map(d=>({id:d.id,...d.data()}));fillPrograms();render()});
+onSnapshot(programsRef,s=>{programs=s.docs.map(d=>({id:d.id,...d.data()}));fillPrograms();fillCreditProgramFilter();renderCategoryChips();render()});
 onSnapshot(categoriesRef,s=>{categories=s.docs.map(d=>({id:d.id,...d.data()}));fillCategories();renderCategoryChips();render()});
 onSnapshot(entriesRef,s=>{entries=s.docs.map(d=>({id:d.id,...d.data()}));renderCategoryChips();render()});
 resetEntry();
