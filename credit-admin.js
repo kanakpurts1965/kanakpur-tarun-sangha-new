@@ -97,7 +97,12 @@ function render(){
    const pt=pe.reduce((s,e)=>s+Number(e.amount||0),0);
    return `<div class="credit-flat-program-title"><h3>🎉 ${esc(p.name)} — ${esc(p.year)}</h3><span class="credit-total">Total: ${money(pt)}</span></div>`+
    pcs.map(c=>{
-     const ce=pe.filter(e=>e.categoryId===c.id),ct=ce.reduce((s,e)=>s+Number(e.amount||0),0);
+     const ce=pe.filter(e=>e.categoryId===c.id).sort((a,b)=>{
+     const at=a.createdAt?.seconds ?? a.updatedAt?.seconds ?? 0;
+     const bt=b.createdAt?.seconds ?? b.updatedAt?.seconds ?? 0;
+     if(at!==bt) return at-bt;
+     return String(a.id||"").localeCompare(String(b.id||""));
+   }),ct=ce.reduce((s,e)=>s+Number(e.amount||0),0);
      if(searchText&&!ce.length)return "";
      const peopleCount=new Set(ce.map(e=>String(e.name||"").trim().toLowerCase()).filter(Boolean)).size;
      return `<section class="credit-flat-category-card"><div class="credit-flat-category-head"><strong>📂 ${esc(c.name)} <span class="category-people-count">👥 ${peopleCount} জন</span></strong><strong>${money(ct)}</strong></div>${ce.length?ce.map((e,index)=>`<div class="credit-flat-entry ${e.highlight?"highlighted":""}"><span class="credit-serial">${String(index+1).padStart(3,"0")}</span><span>${e.highlight?"⭐ ":""}${esc(e.name)}</span><span>${money(e.amount)}</span><span>${esc(e.date||"তারিখ নেই")}</span><span>${esc(e.note||"—")}</span><span class="credit-entry-actions"><button class="credit-edit-btn" data-a="edit" data-id="${e.id}">✏️</button><button class="credit-delete-btn" data-a="delete" data-id="${e.id}">🗑️</button></span></div>`).join(""):"<p>কোনো Entry নেই।</p>"}</section>`;
@@ -117,3 +122,48 @@ onSnapshot(programsRef,s=>{programs=s.docs.map(d=>({id:d.id,...d.data()}));fillP
 onSnapshot(categoriesRef,s=>{categories=s.docs.map(d=>({id:d.id,...d.data()}));fillCategories();renderCategoryChips();render()});
 onSnapshot(entriesRef,s=>{entries=s.docs.map(d=>({id:d.id,...d.data()}));renderCategoryChips();render()});
 resetEntry();
+
+/* FINAL DEPENDENT FILTER FIX: YEAR -> PROGRAM -> CATEGORY */
+function refreshCreditFilterChain(resetProgram=false){
+    const year=document.getElementById("creditYearFilter")?.value || "all";
+    const programSelect=document.getElementById("creditProgramFilter");
+    if(!programSelect) return;
+
+    const oldProgram=resetProgram ? "all" : programSelect.value;
+    const yearPrograms=programs.filter(p=>year==="all" || String(p.year)===String(year));
+
+    programSelect.innerHTML='<option value="all">সব Program</option>'+
+        yearPrograms.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("");
+
+    programSelect.value=yearPrograms.some(p=>p.id===oldProgram) ? oldProgram : "all";
+
+    const selectedProgram=programSelect.value;
+    const allowedIds=new Set(
+        yearPrograms
+          .filter(p=>selectedProgram==="all" || p.id===selectedProgram)
+          .map(p=>p.id)
+    );
+
+    const visibleCategories=categories.filter(c=>allowedIds.has(c.programId));
+    if(categoryFilter!=="all" && !visibleCategories.some(c=>c.id===categoryFilter)){
+        categoryFilter="all";
+    }
+
+    $("creditCategoryScroll").innerHTML=
+      `<button type="button" class="credit-category-chip ${categoryFilter==="all"?"active":""}" data-category-filter="all">সব Category</button>`+
+      visibleCategories.map(c=>`<button type="button" class="credit-category-chip ${categoryFilter===c.id?"active":""}" data-category-filter="${c.id}">${esc(c.name)}</button>`).join("");
+
+    render();
+}
+
+document.getElementById("creditYearFilter")?.addEventListener("change",()=>{
+    categoryFilter="all";
+    refreshCreditFilterChain(true);
+});
+
+document.getElementById("creditProgramFilter")?.addEventListener("change",()=>{
+    categoryFilter="all";
+    refreshCreditFilterChain(false);
+});
+
+setTimeout(()=>refreshCreditFilterChain(false),500);
