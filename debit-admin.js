@@ -16,6 +16,14 @@ function fillPrograms(){
  $("debitYearFilter").innerHTML='<option value="all">সব বছর</option>'+ys.map(y=>`<option value="${y}">${y}</option>`).join("");
  if(old==="all"||ys.includes(Number(old)))$("debitYearFilter").value=old;
 }
+function fillDebitProgramFilter(){
+ const year=$("debitYearFilter").value;
+ const old=$("debitProgramFilter").value;
+ const visible=programs.filter(p=>year==="all"||String(p.year)===year);
+ $("debitProgramFilter").innerHTML='<option value="all">সব Program</option>'+
+ visible.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("");
+ $("debitProgramFilter").value=visible.some(p=>p.id===old)?old:"all";
+}
 function fillCategories(){
  const pid=$("debitEntryProgramSelect").value;
  $("debitEntryCategorySelect").innerHTML='<option value="">Category নির্বাচন করুন</option>'+categories.filter(c=>c.programId===pid).map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
@@ -23,8 +31,9 @@ function fillCategories(){
 function renderChips(){
  const current=categoryFilter;
  const year=$("debitYearFilter").value;
+ const selectedProgram=$("debitProgramFilter").value;
  const allowedProgramIds=new Set(
-   programs.filter(p=>year==="all"||String(p.year)===year).map(p=>p.id)
+   programs.filter(p=>(year==="all"||String(p.year)===year)&&(selectedProgram==="all"||p.id===selectedProgram)).map(p=>p.id)
  );
  const visibleCategories=categories.filter(c=>allowedProgramIds.has(c.programId));
  if(current!=="all"&&!visibleCategories.some(c=>c.id===current)) categoryFilter="all";
@@ -52,7 +61,7 @@ $("saveDebitEntryBtn")?.addEventListener("click",async()=>{
 });
 
 function render(){
- const year=$("debitYearFilter").value,ps=programs.filter(p=>year==="all"||String(p.year)===year).sort((a,b)=>Number(b.year)-Number(a.year));
+ const year=$("debitYearFilter").value,selectedProgram=$("debitProgramFilter").value,ps=programs.filter(p=>(year==="all"||String(p.year)===year)&&(selectedProgram==="all"||p.id===selectedProgram)).sort((a,b)=>Number(b.year)-Number(a.year));
  const visible=entries.filter(e=>{const c=categories.find(x=>x.id===e.categoryId),p=programs.find(x=>x.id===e.programId),text=`${e.name||""} ${e.note||""} ${c?.name||""} ${p?.name||""}`.toLowerCase();return(categoryFilter==="all"||e.categoryId===categoryFilter)&&(!searchText||text.includes(searchText))});
  const grand=visible.filter(e=>ps.some(p=>p.id===e.programId)).reduce((s,e)=>s+Number(e.amount||0),0);
  $("debitProgramSummary").innerHTML=`<div class="debit-summary-card">💸 Filtered Total Debit: ${money(grand)}</div>`;
@@ -72,8 +81,9 @@ $("adminDebitList")?.addEventListener("click",async ev=>{
  if(b.dataset.a==="delete"){if(confirm(`"${e.name}" Expense Delete করবেন?`))await deleteDoc(doc(db,"debitEntries",e.id));return}
  editingId=e.id;$("debitEntryProgramSelect").value=e.programId;fillCategories();$("debitEntryCategorySelect").value=e.categoryId;$("debitEntryName").value=e.name||"";$("debitEntryAmount").value=e.amount||"";$("debitEntryDate").value=e.date||"";$("debitEntryNote").value=e.note||"";$("debitEntryHighlight").checked=!!e.highlight;$("saveDebitEntryBtn").textContent="💾 Update Expense";$("cancelDebitEditBtn").style.display="block";
 });
-$("debitYearFilter")?.addEventListener("change",()=>{renderChips();render();});
-onSnapshot(programsRef,s=>{programs=s.docs.map(d=>({id:d.id,...d.data()}));fillPrograms();render()});
+$("debitYearFilter")?.addEventListener("change",()=>{fillDebitProgramFilter();categoryFilter="all";renderChips();render();});
+$("debitProgramFilter")?.addEventListener("change",()=>{categoryFilter="all";renderChips();render();});
+onSnapshot(programsRef,s=>{programs=s.docs.map(d=>({id:d.id,...d.data()}));fillPrograms();fillDebitProgramFilter();renderChips();render()});
 onSnapshot(categoriesRef,s=>{categories=s.docs.map(d=>({id:d.id,...d.data()}));fillCategories();renderChips();render()});
 onSnapshot(entriesRef,s=>{entries=s.docs.map(d=>({id:d.id,...d.data()}));render();});
 resetEntry();
