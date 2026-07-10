@@ -27,9 +27,15 @@ $("entryProgramSelect")?.addEventListener("change",fillCategories);
 
 function renderCategoryChips(){
  const current=categoryFilter;
+ const year=$("creditYearFilter").value;
+ const allowedProgramIds=new Set(
+   programs.filter(p=>year==="all"||String(p.year)===year).map(p=>p.id)
+ );
+ const visibleCategories=categories.filter(c=>allowedProgramIds.has(c.programId));
+ if(current!=="all"&&!visibleCategories.some(c=>c.id===current)) categoryFilter="all";
  $("creditCategoryScroll").innerHTML=
-  `<button type="button" class="credit-category-chip ${current==="all"?"active":""}" data-category-filter="all">সব Category</button>`+
-  categories.map(c=>`<button type="button" class="credit-category-chip ${current===c.id?"active":""}" data-category-filter="${c.id}">${esc(c.name)}</button>`).join("");
+  `<button type="button" class="credit-category-chip ${categoryFilter==="all"?"active":""}" data-category-filter="all">সব Category</button>`+
+  visibleCategories.map(c=>`<button type="button" class="credit-category-chip ${categoryFilter===c.id?"active":""}" data-category-filter="${c.id}">${esc(c.name)}</button>`).join("");
 }
 $("creditCategoryScroll")?.addEventListener("click",e=>{
  const b=e.target.closest("[data-category-filter]"); if(!b)return;
@@ -94,7 +100,7 @@ $("adminCreditList")?.addEventListener("click",async ev=>{
  if(b.dataset.a==="delete"){if(confirm(`"${e.name}" Entry Delete করবেন?`))await deleteDoc(doc(db,"creditEntries",e.id));return}
  editingId=e.id;$("entryProgramSelect").value=e.programId;fillCategories();$("entryCategorySelect").value=e.categoryId;$("creditEntryName").value=e.name||"";$("creditEntryAmount").value=e.amount||"";$("creditEntryDate").value=e.date||"";$("creditEntryNote").value=e.note||"";$("creditEntryHighlight").checked=!!e.highlight;$("saveCreditEntryBtn").textContent="💾 Update Entry";$("cancelCreditEditBtn").style.display="block";
 });
-$("creditYearFilter")?.addEventListener("change",render);
+$("creditYearFilter")?.addEventListener("change",()=>{renderCategoryChips();render();});
 
 onSnapshot(programsRef,s=>{programs=s.docs.map(d=>({id:d.id,...d.data()}));fillPrograms();render()});
 onSnapshot(categoriesRef,s=>{categories=s.docs.map(d=>({id:d.id,...d.data()}));fillCategories();renderCategoryChips();render()});
