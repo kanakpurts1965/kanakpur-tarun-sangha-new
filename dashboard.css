@@ -1161,3 +1161,25 @@ body.accounts-mode > .dashboard .cards{display:none!important}
     #creditYearFilter,#debitYearFilter,
     #creditProgramFilter,#debitProgramFilter{width:100%;min-width:0}
 }
+
+/* CATEGORY RENAME / DELETE ACTIONS */
+.category-head-right{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:8px;
+    flex-wrap:wrap;
+}
+.category-rename-btn,
+.category-delete-btn{
+    border:0;
+    border-radius:8px;
+    padding:7px 10px;
+    font-weight:700;
+    cursor:pointer;
+}
+.category-rename-btn{background:#e9f2ff;color:#0757a8}
+.category-delete-btn{background:#ffe7e7;color:#a40000}
+@media(max-width:800px){
+    .category-head-right{justify-content:flex-start}
+}
