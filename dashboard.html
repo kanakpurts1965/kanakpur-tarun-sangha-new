@@ -18,8 +18,7 @@
 <li id="menuNotice">📢 Notice</li>
 <li id="menuGallery">🖼 Gallery</li>
 <li id="menuMembers">👥 Members</li>
-<li id="menuPrograms">📅 Programs</li>
-<li id="menuCredit">💰 Credit</li>
+<li id="menuAccounts">💼 Accounts</li>
     <li id="menuEvent">🎉 Events</li>
     <li id="menuContact">📞 Contact</li>
 <li id="menuSettings">⚙ Settings</li>
@@ -261,7 +260,20 @@ MEMBER PHOTO FILE
 </div>
     </section>
 
-<section class="page" id="programsPage">
+<section class="page" id="accountsPage">
+<div class="admin-page-header"><h2>💼 Accounts Center</h2><p>সমস্ত Program ও Accounts Management এক জায়গা থেকে পরিচালনা করুন।</p></div>
+<div class="accounts-center-grid">
+<button class="accounts-center-card active-tool" data-account-page="programsPage"><span>📅</span><strong>Program Management</strong><small>Add, Edit, Publish/Unpublish</small></button>
+<button class="accounts-center-card active-tool" data-account-page="creditPage"><span>💰</span><strong>Credit / Income</strong><small>Category, Collection Entry ও Total Credit</small></button>
+<button class="accounts-center-card coming-tool"><span>💸</span><strong>Debit / Expense</strong><small>পরবর্তী ধাপে যুক্ত হবে</small></button>
+<button class="accounts-center-card coming-tool"><span>📋</span><strong>Contract & Payable</strong><small>Contract, Paid ও Remaining Due</small></button>
+<button class="accounts-center-card coming-tool"><span>👥</span><strong>Member Contribution</strong><small>Program ও Year-wise সদস্য চাঁদা</small></button>
+<button class="accounts-center-card coming-tool"><span>📊</span><strong>Total Account Statement</strong><small>Credit, Debit, Balance ও Charts</small></button>
+<button class="accounts-center-card coming-tool"><span>📁</span><strong>Files / Documents</strong><small>Program Files ও Documents</small></button>
+<button class="accounts-center-card coming-tool"><span>📜</span><strong>Agreement Copies</strong><small>প্রতি Program/Year-এর Agreement Files</small></button>
+<button class="accounts-center-card coming-tool"><span>📄</span><strong>Reports / PDF</strong><small>বাংলা, English ও Bilingual</small></button>
+</div></section>
+<section class="page" id="programsPage"><button type="button" class="back-to-accounts">← 💼 Accounts Center</button>
 <div class="admin-page-header"><h2>📅 Program Management</h2><p>Program তৈরি, Edit, Delete এবং Publish/Unpublish করুন।</p></div>
 <div class="admin-box">
 <h3 id="programFormTitle">➕ নতুন Program তৈরি করুন</h3>
@@ -279,7 +291,7 @@ MEMBER PHOTO FILE
 </section>
 
 
-<section class="page" id="creditPage">
+<section class="page" id="creditPage"><button type="button" class="back-to-accounts">← 💼 Accounts Center</button>
 <div class="admin-page-header">
 <h2>💰 Credit / Income Management</h2>
 <p>Program নির্বাচন করে Income Category এবং তার ভিতরে বিস্তারিত Collection Entry যোগ করুন।</p>
