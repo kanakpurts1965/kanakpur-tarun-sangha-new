@@ -1,5 +1,5 @@
 import { db } from "./firebase.js";
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { collection, addDoc, setDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const $=id=>document.getElementById(id);
 const programsRef=collection(db,"programs"), categoriesRef=collection(db,"creditCategories"), entriesRef=collection(db,"creditEntries");
@@ -75,9 +75,24 @@ $("saveCreditEntryBtn")?.addEventListener("click",async()=>{
  saveButton.dataset.saving="1";
  saveButton.disabled=true;
  const data={programId:$("entryProgramSelect").value,categoryId:$("entryCategorySelect").value,name:$("creditEntryName").value.trim(),amount:Number($("creditEntryAmount").value),date:$("creditEntryDate").value,note:$("creditEntryNote").value.trim(),highlight:$("creditEntryHighlight").checked,updatedAt:serverTimestamp()};
- if(!data.programId||!data.categoryId||!data.name||!(data.amount>0)){$("creditEntryStatus").textContent="⚠️ Program, Category, Name এবং সঠিক Amount দিন।";return}
+ if(!data.programId||!data.categoryId||!data.name||!(data.amount>0)){
+   $("creditEntryStatus").textContent="⚠️ Program, Category, Name এবং সঠিক Amount দিন।";
+   saveButton.dataset.saving="0";
+   saveButton.disabled=false;
+   return;
+ }
  try{
-  if(editingId) await updateDoc(doc(db,"creditEntries",editingId),data); else await addDoc(entriesRef,{...data,createdAt:serverTimestamp()});
+  if(editingId){
+    await updateDoc(doc(db,"creditEntries",editingId),data);
+  }else{
+    const bucket=Math.floor(Date.now()/5000);
+    const rawKey=[data.programId,data.categoryId,data.name.toLowerCase(),data.amount,data.date||"",data.note.toLowerCase(),bucket].join("|");
+    let hash=0;
+    for(let i=0;i<rawKey.length;i++) hash=((hash<<5)-hash+rawKey.charCodeAt(i))|0;
+    const safeHash=Math.abs(hash).toString(36);
+    const entryId=`credit_${bucket}_${safeHash}`;
+    await setDoc(doc(db,"creditEntries",entryId),{...data,createdAt:serverTimestamp()});
+  }
   $("creditEntryStatus").textContent=editingId?"✅ Entry Update হয়েছে।":"✅ Entry Save হয়েছে।";resetEntry();
  }catch(e){$("creditEntryStatus").textContent="❌ "+e.message}
  finally{
