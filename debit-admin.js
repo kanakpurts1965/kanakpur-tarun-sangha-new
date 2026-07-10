@@ -55,9 +55,17 @@ function resetEntry(){editingId=null;$("debitEntryName").value="";$("debitEntryA
 $("cancelDebitEditBtn")?.addEventListener("click",resetEntry);
 
 $("saveDebitEntryBtn")?.addEventListener("click",async()=>{
+ const saveButton=$("saveDebitEntryBtn");
+ if(saveButton.dataset.saving==="1") return;
+ saveButton.dataset.saving="1";
+ saveButton.disabled=true;
  const d={programId:$("debitEntryProgramSelect").value,categoryId:$("debitEntryCategorySelect").value,name:$("debitEntryName").value.trim(),amount:Number($("debitEntryAmount").value),date:$("debitEntryDate").value,note:$("debitEntryNote").value.trim(),highlight:$("debitEntryHighlight").checked,updatedAt:serverTimestamp()};
  if(!d.programId||!d.categoryId||!d.name||!(d.amount>0)){$("debitEntryStatus").textContent="⚠️ Program, Category, Name এবং Amount দিন।";return}
  try{if(editingId)await updateDoc(doc(db,"debitEntries",editingId),d);else await addDoc(entriesRef,{...d,createdAt:serverTimestamp()});$("debitEntryStatus").textContent=editingId?"✅ Expense Update হয়েছে।":"✅ Expense Save হয়েছে।";resetEntry()}catch(e){$("debitEntryStatus").textContent="❌ "+e.message}
+ finally{
+   saveButton.dataset.saving="0";
+   saveButton.disabled=false;
+ }
 });
 
 function render(){
@@ -76,7 +84,7 @@ function render(){
      return String(a.id||"").localeCompare(String(b.id||""));
    }),ct=ce.reduce((s,e)=>s+Number(e.amount||0),0);if(searchText&&!ce.length)return"";
    const count=new Set(ce.map(e=>String(e.name||"").trim().toLowerCase()).filter(Boolean)).size;
-   return `<section class="debit-flat-category-card"><div class="debit-flat-category-head"><strong>📂 ${esc(c.name)} <span class="debit-category-people-count">🧾 ${count} টি</span></strong><strong>${money(ct)}</strong></div>${ce.length?ce.map((e,i)=>`<div class="debit-flat-entry ${e.highlight?"highlighted":""}"><span class="debit-serial">${String(i+1).padStart(3,"0")}</span><span>${e.highlight?"⭐ ":""}${esc(e.name)}</span><span>${money(e.amount)}</span><span>${esc(e.date||"তারিখ নেই")}</span><span>${esc(e.note||"—")}</span><span class="debit-entry-actions"><button class="debit-edit-btn" data-a="edit" data-id="${e.id}">✏️</button><button class="debit-delete-btn" data-a="delete" data-id="${e.id}">🗑️</button></span></div>`).join(""):"<p>কোনো Expense Entry নেই।</p>"}</section>`
+   return `<section class="debit-flat-category-card"><div class="debit-flat-category-head"><strong>📂 ${esc(c.name)} <span class="debit-category-people-count">🧾 ${count} টি</span></strong><div class="category-head-right"><strong>${money(ct)}</strong><button class="category-rename-btn" data-debit-category-action="rename" data-id="${c.id}">✏️ Rename</button><button class="category-delete-btn" data-debit-category-action="delete" data-id="${c.id}">🗑️ Delete</button></div></div>${ce.length?ce.map((e,i)=>`<div class="debit-flat-entry ${e.highlight?"highlighted":""}"><span class="debit-serial">${String(i+1).padStart(3,"0")}</span><span>${e.highlight?"⭐ ":""}${esc(e.name)}</span><span>${money(e.amount)}</span><span>${esc(e.date||"তারিখ নেই")}</span><span>${esc(e.note||"—")}</span><span class="debit-entry-actions"><button class="debit-edit-btn" data-a="edit" data-id="${e.id}">✏️</button><button class="debit-delete-btn" data-a="delete" data-id="${e.id}">🗑️</button></span></div>`).join(""):"<p>কোনো Expense Entry নেই।</p>"}</section>`
   }).join("")
  }).join("")||"<p>কোনো matching Expense পাওয়া যায়নি।</p>";
 }
@@ -137,3 +145,37 @@ document.getElementById("debitProgramFilter")?.addEventListener("change",()=>{
 });
 
 setTimeout(()=>refreshDebitFilterChain(false),500);
+
+/* DEBIT CATEGORY MANAGEMENT */
+document.getElementById("adminDebitList")?.addEventListener("click", async (event)=>{
+  const button=event.target.closest("[data-debit-category-action]");
+  if(!button) return;
+  const category=categories.find(c=>c.id===button.dataset.id);
+  if(!category) return;
+
+  if(button.dataset.debitCategoryAction==="rename"){
+    const nextName=prompt("নতুন Category Name লিখুন:", category.name || "");
+    if(nextName===null) return;
+    const cleanName=nextName.trim();
+    if(!cleanName) return alert("Category Name খালি রাখা যাবে না।");
+    await updateDoc(doc(db,"debitCategories",category.id),{
+      name:cleanName,
+      updatedAt:serverTimestamp()
+    });
+    return;
+  }
+
+  if(button.dataset.debitCategoryAction==="delete"){
+    const related=entries.filter(e=>e.categoryId===category.id);
+    const message=related.length
+      ? `"${category.name}" Category-তে ${related.length}টি Entry আছে। OK করলে Category এবং সব Entry Delete হবে।`
+      : `"${category.name}" Category Delete করবেন?`;
+    if(!confirm(message)) return;
+
+    for(const entry of related){
+      await deleteDoc(doc(db,"debitEntries",entry.id));
+    }
+    await deleteDoc(doc(db,"debitCategories",category.id));
+    if(categoryFilter===category.id) categoryFilter="all";
+  }
+});
