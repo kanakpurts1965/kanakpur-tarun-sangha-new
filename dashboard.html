@@ -265,7 +265,7 @@ MEMBER PHOTO FILE
 <div class="accounts-center-grid">
 <button class="accounts-center-card active-tool" data-account-page="programsPage"><span>📅</span><strong>Program Management</strong><small>Add, Edit, Publish/Unpublish</small></button>
 <button class="accounts-center-card active-tool" data-account-page="creditPage"><span>💰</span><strong>Credit / Income</strong><small>Category, Collection Entry ও Total Credit</small></button>
-<button class="accounts-center-card coming-tool"><span>💸</span><strong>Debit / Expense</strong><small>পরবর্তী ধাপে যুক্ত হবে</small></button>
+<button class="accounts-center-card active-tool" data-account-page="debitPage"><span>💸</span><strong>Debit / Expense</strong><small>Category, Expense Entry ও Total Debit</small></button>
 <button class="accounts-center-card coming-tool"><span>📋</span><strong>Contract & Payable</strong><small>Contract, Paid ও Remaining Due</small></button>
 <button class="accounts-center-card coming-tool"><span>👥</span><strong>Member Contribution</strong><small>Program ও Year-wise সদস্য চাঁদা</small></button>
 <button class="accounts-center-card coming-tool"><span>📊</span><strong>Total Account Statement</strong><small>Credit, Debit, Balance ও Charts</small></button>
@@ -335,6 +335,50 @@ MEMBER PHOTO FILE
 </div>
 <div id="creditProgramSummary"></div>
 <div id="adminCreditList" class="credit-flat-list">Credit Loading...</div>
+</div>
+</section>
+
+
+<section class="page" id="debitPage">
+<button type="button" class="back-to-accounts">← 💼 Accounts Center</button>
+<div class="admin-page-header"><h2>💸 Debit / Expense Management</h2><p>Program অনুযায়ী খরচের Category এবং বিস্তারিত Expense Entry পরিচালনা করুন।</p></div>
+
+<div class="admin-box">
+<h3>➕ Expense Category তৈরি করুন</h3>
+<div class="debit-form-grid">
+<div class="admin-form-group"><label>🎉 Program</label><select id="debitProgramSelect"><option value="">Program নির্বাচন করুন</option></select></div>
+<div class="admin-form-group"><label>📂 Category Name</label><input id="debitCategoryName" type="text" placeholder="যেমন: Light / Pandal / Decoration"></div>
+</div>
+<button id="saveDebitCategoryBtn" type="button" class="save-member-btn">💾 Category Save করুন</button>
+<p id="debitCategoryStatus"></p>
+</div>
+
+<div class="admin-box">
+<h3>➕ Expense Entry যোগ করুন</h3>
+<div class="debit-form-grid">
+<div class="admin-form-group"><label>🎉 Program</label><select id="debitEntryProgramSelect"><option value="">Program নির্বাচন করুন</option></select></div>
+<div class="admin-form-group"><label>📂 Expense Category</label><select id="debitEntryCategorySelect"><option value="">Category নির্বাচন করুন</option></select></div>
+<div class="admin-form-group"><label>🧾 খরচের নাম / Payee</label><input id="debitEntryName" type="text" placeholder="খরচের নাম বা যাকে টাকা দেওয়া হয়েছে"></div>
+<div class="admin-form-group"><label>💵 Amount (₹)</label><input id="debitEntryAmount" type="number" min="0" step="0.01" placeholder="0"></div>
+<div class="admin-form-group"><label>📅 Date</label><input id="debitEntryDate" type="date"></div>
+<div class="admin-form-group"><label>📝 Note</label><input id="debitEntryNote" type="text" placeholder="ঐচ্ছিক Note"></div>
+<div class="admin-form-group full-width debit-highlight-box"><label><input id="debitEntryHighlight" type="checkbox"> ⭐ Viewer ও PDF-এ এই Entry Bold / Highlight দেখান</label></div>
+</div>
+<div class="debit-action-row">
+<button id="saveDebitEntryBtn" type="button" class="save-member-btn">💾 Expense Save করুন</button>
+<button id="cancelDebitEditBtn" type="button" class="debit-cancel-btn" style="display:none">❌ Edit Cancel</button>
+</div>
+<p id="debitEntryStatus"></p>
+</div>
+
+<div class="admin-box debit-details-box">
+<div class="debit-list-head"><div><h3>📊 Debit Details</h3><p>Category Total এবং Program Total Debit automatic হিসাব হবে।</p></div><select id="debitYearFilter"><option value="all">সব বছর</option></select></div>
+<div class="debit-tools">
+<input id="debitSearchInput" type="search" placeholder="🔍 নাম, Category, Program বা Note খুঁজুন...">
+<div id="debitCategoryScroll" class="debit-category-scroll"><button type="button" class="debit-category-chip active" data-debit-category-filter="all">সব Category</button></div>
+</div>
+<div id="debitProgramSummary"></div>
+<div id="adminDebitList" class="debit-flat-list">Debit Loading...</div>
 </div>
 </section>
 
@@ -803,5 +847,6 @@ src="member-request-admin.js">
 </script>
 <script type="module" src="program-admin.js"></script>
 <script type="module" src="credit-admin.js"></script>
+<script type="module" src="debit-admin.js"></script>
 </body>
 </html>
