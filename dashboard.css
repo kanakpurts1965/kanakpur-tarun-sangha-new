@@ -1004,3 +1004,21 @@ body.admin-auth-ready{
 .program-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.program-actions button{border:0;border-radius:8px;padding:9px 12px;cursor:pointer;font-weight:700}
 .program-edit-btn{background:#e9f2ff;color:#0757a8}.program-publish-btn{background:#e7f7ec;color:#147a34}.program-unpublish-btn{background:#fff4dc;color:#8a5a00}.program-delete-btn{background:#ffe7e7;color:#a40000}
 @media(max-width:700px){.program-admin-form{grid-template-columns:1fr}.program-list-heading,.program-card-head{flex-direction:column;align-items:stretch}.program-form-actions{flex-direction:column}}
+
+/* DAY 3 - CREDIT / INCOME */
+.credit-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-bottom:18px}
+.credit-highlight-box label{display:flex;align-items:center;gap:9px}.credit-highlight-box input{width:18px!important;height:18px}
+.credit-action-row{display:flex;gap:10px}.credit-cancel-btn{width:100%;border:0;border-radius:10px;padding:14px;background:#555;color:#fff;font-weight:700;cursor:pointer}
+.credit-list-head{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}
+#creditYearFilter{min-width:150px;padding:10px;border:1px solid #ddd;border-radius:9px}
+.credit-program-block{border:1px solid #e2e2e2;border-radius:14px;padding:16px;margin-bottom:18px}
+.credit-program-title{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:12px}
+.credit-total{font-size:18px;font-weight:800;color:#147a34}
+.credit-category-block{background:#fafafa;border:1px solid #ececec;border-radius:10px;padding:13px;margin:10px 0}
+.credit-category-head{display:flex;justify-content:space-between;gap:10px;margin-bottom:8px}
+.credit-entry-row{display:grid;grid-template-columns:minmax(150px,1.5fr) 120px 120px minmax(100px,1fr) auto;gap:10px;align-items:center;padding:10px 4px;border-top:1px solid #e7e7e7}
+.credit-entry-row.highlighted{font-weight:800;background:#fff8df;border-radius:7px;padding-left:8px;padding-right:8px}
+.credit-entry-actions{display:flex;gap:6px}.credit-entry-actions button{border:0;border-radius:7px;padding:7px 9px;cursor:pointer}
+.credit-edit-btn{background:#e9f2ff;color:#0757a8}.credit-delete-btn{background:#ffe7e7;color:#a40000}
+.credit-summary-card{background:#eef9f1;border:1px solid #cfead6;border-radius:12px;padding:15px;margin-bottom:15px;font-size:20px;font-weight:800}
+@media(max-width:800px){.credit-form-grid{grid-template-columns:1fr}.credit-list-head,.credit-program-title{flex-direction:column;align-items:stretch}.credit-entry-row{grid-template-columns:1fr 1fr}.credit-entry-actions{grid-column:1/-1}.credit-action-row{flex-direction:column}}
