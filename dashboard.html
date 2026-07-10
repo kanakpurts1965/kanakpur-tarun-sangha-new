@@ -19,6 +19,7 @@
 <li id="menuGallery">🖼 Gallery</li>
 <li id="menuMembers">👥 Members</li>
 <li id="menuPrograms">📅 Programs</li>
+<li id="menuCredit">💰 Credit</li>
     <li id="menuEvent">🎉 Events</li>
     <li id="menuContact">📞 Contact</li>
 <li id="menuSettings">⚙ Settings</li>
@@ -275,6 +276,48 @@ MEMBER PHOTO FILE
 <div class="full-width program-form-actions"><button type="button" id="saveProgramBtn" class="save-member-btn">💾 Program Save করুন</button><button type="button" id="cancelProgramEditBtn" class="program-cancel-btn" style="display:none;">❌ Edit Cancel</button></div>
 </div><p id="programSaveStatus"></p></div>
 <div class="admin-box"><div class="program-list-heading"><div><h3>📋 Program List</h3><p>ভবিষ্যৎ Accounts modules-সহ Program তালিকা।</p></div><select id="programYearFilter"><option value="all">সব বছর</option></select></div><div id="adminProgramList">Program Loading...</div></div>
+</section>
+
+
+<section class="page" id="creditPage">
+<div class="admin-page-header">
+<h2>💰 Credit / Income Management</h2>
+<p>Program নির্বাচন করে Income Category এবং তার ভিতরে বিস্তারিত Collection Entry যোগ করুন।</p>
+</div>
+
+<div class="admin-box">
+<h3>➕ Income Category তৈরি করুন</h3>
+<div class="credit-form-grid">
+<div class="admin-form-group"><label>🎉 Program</label><select id="creditProgramSelect"><option value="">Program নির্বাচন করুন</option></select></div>
+<div class="admin-form-group"><label>📂 Category Name</label><input id="creditCategoryName" type="text" placeholder="যেমন: পাড়া কালেকশন / সদস্য চাঁদা"></div>
+</div>
+<button id="saveCreditCategoryBtn" type="button" class="save-member-btn">💾 Category Save করুন</button>
+<p id="creditCategoryStatus"></p>
+</div>
+
+<div class="admin-box">
+<h3>➕ Collection Entry যোগ করুন</h3>
+<div class="credit-form-grid">
+<div class="admin-form-group"><label>🎉 Program</label><select id="entryProgramSelect"><option value="">Program নির্বাচন করুন</option></select></div>
+<div class="admin-form-group"><label>📂 Income Category</label><select id="entryCategorySelect"><option value="">Category নির্বাচন করুন</option></select></div>
+<div class="admin-form-group"><label>👤 নাম / Source</label><input id="creditEntryName" type="text" placeholder="দাতা, সদস্য বা Source-এর নাম"></div>
+<div class="admin-form-group"><label>💵 Amount (₹)</label><input id="creditEntryAmount" type="number" min="0" step="0.01" placeholder="0"></div>
+<div class="admin-form-group"><label>📅 Date</label><input id="creditEntryDate" type="date"></div>
+<div class="admin-form-group"><label>📝 Note</label><input id="creditEntryNote" type="text" placeholder="ঐচ্ছিক Note"></div>
+<div class="admin-form-group full-width credit-highlight-box"><label><input id="creditEntryHighlight" type="checkbox"> ⭐ Viewer ও PDF-এ এই Entry Bold / Highlight দেখান</label></div>
+</div>
+<div class="credit-action-row">
+<button id="saveCreditEntryBtn" type="button" class="save-member-btn">💾 Entry Save করুন</button>
+<button id="cancelCreditEditBtn" type="button" class="credit-cancel-btn" style="display:none">❌ Edit Cancel</button>
+</div>
+<p id="creditEntryStatus"></p>
+</div>
+
+<div class="admin-box">
+<div class="credit-list-head"><div><h3>📊 Credit Details</h3><p>Category Total এবং Program Total Credit automatic হিসাব হবে।</p></div><select id="creditYearFilter"><option value="all">সব বছর</option></select></div>
+<div id="creditProgramSummary"></div>
+<div id="adminCreditList">Credit Loading...</div>
+</div>
 </section>
 
 <section class="page" id="noticePage">
@@ -741,5 +784,6 @@ src="member-request-admin.js">
     src="event-admin.js">
 </script>
 <script type="module" src="program-admin.js"></script>
+<script type="module" src="credit-admin.js"></script>
 </body>
 </html>
