@@ -327,8 +327,14 @@ MEMBER PHOTO FILE
 
 <div class="admin-box">
 <div class="credit-list-head"><div><h3>📊 Credit Details</h3><p>Category Total এবং Program Total Credit automatic হিসাব হবে।</p></div><select id="creditYearFilter"><option value="all">সব বছর</option></select></div>
+<div class="credit-tools">
+<input id="creditSearchInput" type="search" placeholder="🔍 নাম, Category, Program বা Note খুঁজুন...">
+<div id="creditCategoryScroll" class="credit-category-scroll">
+<button type="button" class="credit-category-chip active" data-category-filter="all">সব Category</button>
+</div>
+</div>
 <div id="creditProgramSummary"></div>
-<div id="adminCreditList">Credit Loading...</div>
+<div id="adminCreditList" class="credit-flat-list">Credit Loading...</div>
 </div>
 </section>
 
