@@ -149,7 +149,8 @@ function showAdminPage(pageId) {
     const accountPages = [
         "accountsPage",
         "programsPage",
-        "creditPage"
+        "creditPage",
+        "debitPage"
     ];
 
     document.body.classList.toggle(
