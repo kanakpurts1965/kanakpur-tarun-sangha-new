@@ -27,24 +27,9 @@ $("entryProgramSelect")?.addEventListener("change",fillCategories);
 
 function renderCategoryChips(){
  const current=categoryFilter;
-
- function uniquePeopleCount(list){
-   const names=new Set(
-     list
-       .map(e=>String(e.name||"").trim().toLowerCase())
-       .filter(Boolean)
-   );
-   return names.size;
- }
-
- const allCount=uniquePeopleCount(entries);
-
  $("creditCategoryScroll").innerHTML=
-  `<button type="button" class="credit-category-chip ${current==="all"?"active":""}" data-category-filter="all">সব Category <span class="category-total-count">${allCount} জন</span></button>`+
-  categories.map(c=>{
-    const count=uniquePeopleCount(entries.filter(e=>e.categoryId===c.id));
-    return `<button type="button" class="credit-category-chip ${current===c.id?"active":""}" data-category-filter="${c.id}">${esc(c.name)} <span class="category-total-count">${count} জন</span></button>`;
-  }).join("");
+  `<button type="button" class="credit-category-chip ${current==="all"?"active":""}" data-category-filter="all">সব Category</button>`+
+  categories.map(c=>`<button type="button" class="credit-category-chip ${current===c.id?"active":""}" data-category-filter="${c.id}">${esc(c.name)}</button>`).join("");
 }
 $("creditCategoryScroll")?.addEventListener("click",e=>{
  const b=e.target.closest("[data-category-filter]"); if(!b)return;
@@ -98,7 +83,8 @@ function render(){
    pcs.map(c=>{
      const ce=pe.filter(e=>e.categoryId===c.id),ct=ce.reduce((s,e)=>s+Number(e.amount||0),0);
      if(searchText&&!ce.length)return "";
-     return `<section class="credit-flat-category-card"><div class="credit-flat-category-head"><strong>📂 ${esc(c.name)}</strong><strong>${money(ct)}</strong></div>${ce.length?ce.map(e=>`<div class="credit-flat-entry ${e.highlight?"highlighted":""}"><span>${e.highlight?"⭐ ":""}${esc(e.name)}</span><span>${money(e.amount)}</span><span>${esc(e.date||"তারিখ নেই")}</span><span>${esc(e.note||"—")}</span><span class="credit-entry-actions"><button class="credit-edit-btn" data-a="edit" data-id="${e.id}">✏️</button><button class="credit-delete-btn" data-a="delete" data-id="${e.id}">🗑️</button></span></div>`).join(""):"<p>কোনো Entry নেই।</p>"}</section>`;
+     const peopleCount=new Set(ce.map(e=>String(e.name||"").trim().toLowerCase()).filter(Boolean)).size;
+     return `<section class="credit-flat-category-card"><div class="credit-flat-category-head"><strong>📂 ${esc(c.name)} <span class="category-people-count">👥 ${peopleCount} জন</span></strong><strong>${money(ct)}</strong></div>${ce.length?ce.map((e,index)=>`<div class="credit-flat-entry ${e.highlight?"highlighted":""}"><span class="credit-serial">${String(index+1).padStart(3,"0")}</span><span>${e.highlight?"⭐ ":""}${esc(e.name)}</span><span>${money(e.amount)}</span><span>${esc(e.date||"তারিখ নেই")}</span><span>${esc(e.note||"—")}</span><span class="credit-entry-actions"><button class="credit-edit-btn" data-a="edit" data-id="${e.id}">✏️</button><button class="credit-delete-btn" data-a="delete" data-id="${e.id}">🗑️</button></span></div>`).join(""):"<p>কোনো Entry নেই।</p>"}</section>`;
    }).join("");
  }).join("") || "<p>কোনো matching Credit Entry পাওয়া যায়নি।</p>";
 }
