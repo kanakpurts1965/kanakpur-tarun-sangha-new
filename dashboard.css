@@ -1041,3 +1041,20 @@ body.accounts-mode > .dashboard .cards{display:none!important}
 .credit-flat-entry{grid-template-columns:1fr 1fr}
 .credit-flat-entry .credit-entry-actions{grid-column:1/-1}
 }
+
+/* REMOVE CREDIT BACKGROUND CONTAINER BOX */
+
+#creditPage .admin-box:last-child{
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
+#adminCreditList,
+.credit-flat-list{
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+}
