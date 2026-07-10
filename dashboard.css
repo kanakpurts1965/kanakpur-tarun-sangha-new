@@ -951,3 +951,42 @@ body{
 body.admin-auth-ready{
     visibility:visible;
 }
+
+
+/* MEMBER REQUEST PHOTO SIZE FIX */
+
+.member-request-card .request-photo{
+    width:80px !important;
+    height:80px !important;
+
+    min-width:80px !important;
+    max-width:80px !important;
+
+    min-height:80px !important;
+    max-height:80px !important;
+
+    object-fit:cover !important;
+    object-position:center !important;
+
+    border-radius:50% !important;
+
+    flex-shrink:0 !important;
+}
+
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    .member-request-card .request-photo{
+        width:70px !important;
+        height:70px !important;
+
+        min-width:70px !important;
+        max-width:70px !important;
+
+        min-height:70px !important;
+        max-height:70px !important;
+    }
+
+}
