@@ -1,5 +1,5 @@
 import { db } from "./firebase.js";
-import { collection, addDoc, setDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const $=id=>document.getElementById(id);
 const programsRef=collection(db,"programs"), categoriesRef=collection(db,"creditCategories"), entriesRef=collection(db,"creditEntries");
@@ -69,37 +69,55 @@ function resetEntry(){
 }
 $("cancelCreditEditBtn")?.addEventListener("click",resetEntry);
 
-$("saveCreditEntryBtn")?.addEventListener("click",async()=>{
+let creditSaveInProgress=false;
+
+async function saveCreditEntryOnce(){
+ if(creditSaveInProgress) return;
+
  const saveButton=$("saveCreditEntryBtn");
- if(saveButton.dataset.saving==="1") return;
- saveButton.dataset.saving="1";
- saveButton.disabled=true;
- const data={programId:$("entryProgramSelect").value,categoryId:$("entryCategorySelect").value,name:$("creditEntryName").value.trim(),amount:Number($("creditEntryAmount").value),date:$("creditEntryDate").value,note:$("creditEntryNote").value.trim(),highlight:$("creditEntryHighlight").checked,updatedAt:serverTimestamp()};
- if(!data.programId||!data.categoryId||!data.name||!(data.amount>0)){
+ const entryData={
+   programId:$("entryProgramSelect").value,
+   categoryId:$("entryCategorySelect").value,
+   name:$("creditEntryName").value.trim(),
+   amount:Number($("creditEntryAmount").value),
+   date:$("creditEntryDate").value,
+   note:$("creditEntryNote").value.trim(),
+   highlight:$("creditEntryHighlight").checked,
+   updatedAt:serverTimestamp()
+ };
+
+ if(!entryData.programId||!entryData.categoryId||!entryData.name||!(entryData.amount>0)){
    $("creditEntryStatus").textContent="⚠️ Program, Category, Name এবং সঠিক Amount দিন।";
-   saveButton.dataset.saving="0";
-   saveButton.disabled=false;
    return;
  }
+
+ creditSaveInProgress=true;
+ saveButton.disabled=true;
+
  try{
-  if(editingId){
-    await updateDoc(doc(db,"creditEntries",editingId),data);
-  }else{
-    const bucket=Math.floor(Date.now()/5000);
-    const rawKey=[data.programId,data.categoryId,data.name.toLowerCase(),data.amount,data.date||"",data.note.toLowerCase(),bucket].join("|");
-    let hash=0;
-    for(let i=0;i<rawKey.length;i++) hash=((hash<<5)-hash+rawKey.charCodeAt(i))|0;
-    const safeHash=Math.abs(hash).toString(36);
-    const entryId=`credit_${bucket}_${safeHash}`;
-    await setDoc(doc(db,"creditEntries",entryId),{...data,createdAt:serverTimestamp()});
-  }
-  $("creditEntryStatus").textContent=editingId?"✅ Entry Update হয়েছে।":"✅ Entry Save হয়েছে।";resetEntry();
- }catch(e){$("creditEntryStatus").textContent="❌ "+e.message}
- finally{
-   saveButton.dataset.saving="0";
-   saveButton.disabled=false;
+   if(editingId){
+     await updateDoc(doc(db,"creditEntries",editingId),entryData);
+     $("creditEntryStatus").textContent="✅ Entry Update হয়েছে।";
+   }else{
+     await addDoc(entriesRef,{...entryData,createdAt:serverTimestamp()});
+     $("creditEntryStatus").textContent="✅ Entry Save হয়েছে।";
+   }
+   resetEntry();
+ }catch(e){
+   $("creditEntryStatus").textContent="❌ "+e.message;
+ }finally{
+   setTimeout(()=>{
+     creditSaveInProgress=false;
+     saveButton.disabled=false;
+   },800);
  }
-});
+}
+
+const creditSaveButton=$("saveCreditEntryBtn");
+if(creditSaveButton && creditSaveButton.dataset.bound!=="1"){
+ creditSaveButton.dataset.bound="1";
+ creditSaveButton.addEventListener("click",saveCreditEntryOnce);
+}
 
 function render(){
  const year=$("creditYearFilter").value;
@@ -143,7 +161,19 @@ $("creditProgramFilter")?.addEventListener("change",()=>{categoryFilter="all";re
 
 onSnapshot(programsRef,s=>{programs=s.docs.map(d=>({id:d.id,...d.data()}));fillPrograms();fillCreditProgramFilter();renderCategoryChips();render()});
 onSnapshot(categoriesRef,s=>{categories=s.docs.map(d=>({id:d.id,...d.data()}));fillCategories();renderCategoryChips();render()});
-onSnapshot(entriesRef,s=>{entries=s.docs.map(d=>({id:d.id,...d.data()}));renderCategoryChips();render()});
+onSnapshot(entriesRef,s=>{
+ const raw=s.docs.map(d=>({id:d.id,...d.data()}));
+ const seen=new Set();
+ entries=raw.filter(e=>{
+   const created=e.createdAt?.seconds ?? 0;
+   const key=[e.programId,e.categoryId,String(e.name||"").trim().toLowerCase(),Number(e.amount||0),e.date||"",String(e.note||"").trim().toLowerCase(),created].join("|");
+   if(seen.has(key)) return false;
+   seen.add(key);
+   return true;
+ });
+ renderCategoryChips();
+ render();
+});
 resetEntry();
 
 /* FINAL DEPENDENT FILTER FIX: YEAR -> PROGRAM -> CATEGORY */
