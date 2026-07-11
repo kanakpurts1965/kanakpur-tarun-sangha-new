@@ -1183,3 +1183,239 @@ body.accounts-mode > .dashboard .cards{display:none!important}
 @media(max-width:800px){
     .category-head-right{justify-content:flex-start}
 }
+
+/* ==========================================
+   DAY 5 - CONTRACT & PAYABLE
+========================================== */
+
+.contract-filter-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.contract-filter-grid select,
+.contract-filter-grid input{
+
+    width:100%;
+    padding:12px 14px;
+
+    border:1px solid #d9d9d9;
+
+    border-radius:10px;
+
+    font-size:15px;
+
+    outline:none;
+
+    background:#fff;
+
+}
+
+.contract-filter-grid input:focus,
+.contract-filter-grid select:focus{
+
+    border-color:#a40000;
+
+}
+
+.contract-form-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:18px;
+
+    margin-bottom:20px;
+
+}
+
+.contract-form-grid input{
+
+    width:100%;
+
+    padding:13px 15px;
+
+    border:1px solid #ddd;
+
+    border-radius:10px;
+
+    font-size:15px;
+
+}
+
+.contract-form-grid input:focus{
+
+    border-color:#a40000;
+
+}
+
+#contractList{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+.contract-card{
+
+    background:#fff;
+
+    border:1px solid #e5e5e5;
+
+    border-radius:12px;
+
+    padding:18px;
+
+    box-shadow:none;
+
+}
+
+.contract-card-top{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:12px;
+
+}
+
+.contract-name{
+
+    font-size:18px;
+
+    font-weight:700;
+
+}
+
+.contract-amount{
+
+    color:#008000;
+
+    font-size:17px;
+
+    font-weight:700;
+
+}
+
+.contract-summary{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:12px;
+
+    margin-top:15px;
+
+}
+
+.contract-summary div{
+
+    background:#f7f7f7;
+
+    border-radius:10px;
+
+    padding:12px;
+
+    text-align:center;
+
+    font-weight:700;
+
+}
+
+.contract-action{
+
+    margin-top:15px;
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+.contract-action button{
+
+    border:none;
+
+    border-radius:8px;
+
+    padding:9px 14px;
+
+    cursor:pointer;
+
+    font-weight:700;
+
+}
+
+.contract-edit{
+
+    background:#e8f3ff;
+
+    color:#0062b8;
+
+}
+
+.contract-delete{
+
+    background:#ffe9e9;
+
+    color:#b40000;
+
+}
+
+@media(max-width:900px){
+
+.contract-filter-grid{
+
+grid-template-columns:1fr 1fr;
+
+}
+
+.contract-form-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.contract-summary{
+
+grid-template-columns:1fr;
+
+}
+
+}
+
+@media(max-width:600px){
+
+.contract-filter-grid{
+
+grid-template-columns:1fr;
+
+}
+
+.contract-card-top{
+
+flex-direction:column;
+
+align-items:flex-start;
+
+gap:10px;
+
+}
+
+.contract-action{
+
+flex-direction:column;
+
+}
+
+}
