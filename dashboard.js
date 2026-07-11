@@ -72,15 +72,7 @@ if (logoutBtn) {
 
 }
 
-// Collections
-const commentsRef=collection(db,"comments");
-const repliesRef=collection(db,"replies");
 
-
-
-    document.getElementById("totalLikes").innerHTML=total;
-
-});
 // ==========================================
 // KTS ADMIN DASHBOARD SPA MENU
 // Phase 1 - Part 3
