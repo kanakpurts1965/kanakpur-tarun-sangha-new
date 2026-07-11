@@ -359,4 +359,3 @@ document.querySelectorAll(".back-to-accounts").forEach((button)=>{
 
 showAdminPage("dashboardPage");
 
-// Serial order fix: category entries render oldest-to-newest; new entries append at end.
