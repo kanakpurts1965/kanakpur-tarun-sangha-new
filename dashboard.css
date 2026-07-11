@@ -1419,14 +1419,3 @@ flex-direction:column;
 }
 
 }
-
-
-/* Hide Dashboard Stats */
-
-.dashboard-stats{
-    display:none !important;
-}
-
-.stat-card{
-    display:none !important;
-}
