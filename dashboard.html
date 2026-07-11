@@ -266,7 +266,19 @@ MEMBER PHOTO FILE
 <button class="accounts-center-card active-tool" data-account-page="programsPage"><span>📅</span><strong>Program Management</strong><small>Add, Edit, Publish/Unpublish</small></button>
 <button class="accounts-center-card active-tool" data-account-page="creditPage"><span>💰</span><strong>Credit / Income</strong><small>Category, Collection Entry ও Total Credit</small></button>
 <button class="accounts-center-card active-tool" data-account-page="debitPage"><span>💸</span><strong>Debit / Expense</strong><small>Category, Expense Entry ও Total Debit</small></button>
-<button class="accounts-center-card coming-tool"><span>📋</span><strong>Contract & Payable</strong><small>Contract, Paid ও Remaining Due</small></button>
+<button class="accounts-center-card active-tool"
+        data-account-page="contractPage">
+
+    <span>📋</span>
+
+    <strong>Contract & Payable</strong>
+
+    <small>
+        Contractor, Contract Amount, Paid & Due
+    </small>
+
+</button>
+    
 <button class="accounts-center-card coming-tool"><span>👥</span><strong>Member Contribution</strong><small>Program ও Year-wise সদস্য চাঁদা</small></button>
 <button class="accounts-center-card coming-tool"><span>📊</span><strong>Total Account Statement</strong><small>Credit, Debit, Balance ও Charts</small></button>
 <button class="accounts-center-card coming-tool"><span>📁</span><strong>Files / Documents</strong><small>Program Files ও Documents</small></button>
@@ -380,6 +392,128 @@ MEMBER PHOTO FILE
 <div id="debitProgramSummary"></div>
 <div id="adminDebitList" class="debit-flat-list">Debit Loading...</div>
 </div>
+</section>
+    <section class="page" id="contractPage">
+
+<button type="button"
+class="back-to-accounts">
+
+← 💼 Accounts Center
+
+</button>
+
+<div class="admin-page-header">
+
+<h2>📋 Contract & Payable</h2>
+
+<p>
+Debit-এর সাথে Link করা Contractor Management
+</p>
+
+</div>
+
+<div class="admin-box">
+
+<h3>🔍 Filter</h3>
+
+<div class="contract-filter-grid">
+
+<select id="contractYearFilter">
+
+<option value="all">
+
+সব বছর
+
+</option>
+
+</select>
+
+<select id="contractProgramFilter">
+
+<option value="all">
+
+সব Program
+
+</option>
+
+</select>
+
+<select id="contractCategoryFilter">
+
+<option value="all">
+
+সব Category
+
+</option>
+
+</select>
+
+<input
+id="contractSearch"
+type="search"
+placeholder="🔍 Contractor Search">
+
+</div>
+
+</div>
+
+<div class="admin-box">
+
+<h3>
+
+➕ Contractor যোগ করুন
+
+</h3>
+
+<div class="contract-form-grid">
+
+<input
+id="contractName"
+type="text"
+placeholder="Company / Contractor Name">
+
+<input
+id="contractAmount"
+type="number"
+placeholder="Contract Amount">
+
+<input
+id="contractDate"
+type="date">
+
+<input
+id="contractNote"
+type="text"
+placeholder="Note">
+
+</div>
+
+<button
+id="saveContractBtn"
+class="save-member-btn">
+
+💾 Save Contractor
+
+</button>
+
+</div>
+
+<div class="admin-box">
+
+<h3>
+
+📊 Contractor List
+
+</h3>
+
+<div id="contractList">
+
+Loading...
+
+</div>
+
+</div>
+
 </section>
 
 <section class="page" id="noticePage">
@@ -848,5 +982,7 @@ src="member-request-admin.js">
 <script type="module" src="program-admin.js"></script>
 <script type="module" src="credit-admin.js"></script>
 <script type="module" src="debit-admin.js"></script>
+    <script type="module" src="contract-admin.js"></script>
+    
 </body>
 </html>
