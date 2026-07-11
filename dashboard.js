@@ -76,30 +76,7 @@ if (logoutBtn) {
 const commentsRef=collection(db,"comments");
 const repliesRef=collection(db,"replies");
 
-// Total Comments
-onSnapshot(commentsRef,(snap)=>{
 
-    document.getElementById("totalComments").innerHTML=snap.size;
-
-});
-
-// Total Replies
-onSnapshot(repliesRef,(snap)=>{
-
-    document.getElementById("totalReplies").innerHTML=snap.size;
-
-});
-
-// Total Likes
-onSnapshot(commentsRef,(snap)=>{
-
-    let total=0;
-
-    snap.forEach(doc=>{
- 
-        total+=doc.data().likes||0;
-
-    });
 
     document.getElementById("totalLikes").innerHTML=total;
 
@@ -146,12 +123,13 @@ function showAdminPage(pageId) {
 
     }
 
-    const accountPages = [
-        "accountsPage",
-        "programsPage",
-        "creditPage",
-        "debitPage"
-    ];
+  const accountPages = [
+    "accountsPage",
+    "programsPage",
+    "creditPage",
+    "debitPage",
+    "contractPage"
+];
 
     document.body.classList.toggle(
         "accounts-mode",
@@ -351,7 +329,34 @@ if (changePasswordBtn) {
 
 }
 
-document.querySelectorAll("[data-account-page]").forEach(btn=>btn.addEventListener("click",()=>showAdminPage(btn.dataset.accountPage)));
-document.querySelectorAll(".back-to-accounts").forEach(btn=>btn.addEventListener("click",()=>showAdminPage("accountsPage")));
+/* ==========================================
+   Accounts Center Navigation
+========================================== */
+
+document.querySelectorAll("[data-account-page]").forEach((button)=>{
+
+    button.addEventListener("click",()=>{
+
+        showAdminPage(button.dataset.accountPage);
+
+    });
+
+});
+
+
+document.querySelectorAll(".back-to-accounts").forEach((button)=>{
+
+    button.addEventListener("click",()=>{
+
+        showAdminPage("accountsPage");
+
+    });
+
+});
+
+
+/* Default */
+
+showAdminPage("dashboardPage");
 
 // Serial order fix: category entries render oldest-to-newest; new entries append at end.
