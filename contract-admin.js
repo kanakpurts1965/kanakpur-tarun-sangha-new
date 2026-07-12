@@ -422,7 +422,7 @@ return;
 
 let html="";
 
-contracts.forEach(item=>{
+filteredContracts().forEach(item=>{
 
 const paid=getPaid(item.categoryId);
 
@@ -551,6 +551,7 @@ data-id="${item.id}"
 list.innerHTML=html;
 
 bindContractButtons();
+  updateSummary();
 
 }
 /* ===========================
@@ -704,3 +705,120 @@ oldRender();
 updateSummary();
 
 };
+/* ===========================
+SUMMARY CARD
+=========================== */
+
+const summaryBox=document.createElement("div");
+
+summaryBox.className="contract-summary-top";
+
+const page=document.querySelector("#contractPage .admin-box:last-child");
+
+page.parentNode.insertBefore(summaryBox,page);
+
+function updateSummary(){
+
+let totalContract=0;
+let totalPaid=0;
+let totalDue=0;
+
+contracts.forEach(c=>{
+
+const paid=getPaid(c.categoryId);
+const due=getDue(c);
+
+totalContract+=Number(c.contractAmount||0);
+totalPaid+=paid;
+totalDue+=due;
+
+});
+
+summaryBox.innerHTML=`
+
+<div class="contract-summary">
+
+<div>
+
+<h3>₹${money(totalContract)}</h3>
+
+<p>Total Contract</p>
+
+</div>
+
+<div>
+
+<h3>₹${money(totalPaid)}</h3>
+
+<p>Total Paid</p>
+
+</div>
+
+<div>
+
+<h3>₹${money(totalDue)}</h3>
+
+<p>Total Due</p>
+
+</div>
+
+</div>
+
+`;
+
+}
+/* ===========================
+YEAR FILTER
+=========================== */
+
+contractYear.addEventListener("change",()=>{
+
+renderContracts();
+
+});
+
+function filteredContracts(){
+
+return contracts.filter(item=>{
+
+if(
+
+contractYear.value &&
+
+item.year!=contractYear.value
+
+){
+
+return false;
+
+}
+
+if(
+
+contractProgram.value &&
+
+item.programId!=contractProgram.value
+
+){
+
+return false;
+
+}
+
+if(
+
+contractCategory.value &&
+
+item.categoryId!=contractCategory.value
+
+){
+
+return false;
+
+}
+
+return true;
+
+});
+
+}
