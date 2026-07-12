@@ -633,3 +633,74 @@ alert("Delete Failed");
 });
 
 }
+/* ===========================
+   SEARCH
+=========================== */
+
+const search=document.getElementById("contractSearch");
+
+if(search){
+
+search.addEventListener("input",()=>{
+
+const txt=search.value.toLowerCase();
+
+document.querySelectorAll(".contract-card").forEach(card=>{
+
+card.style.display=
+
+card.innerText.toLowerCase().includes(txt)
+
+? ""
+
+: "none";
+
+});
+
+});
+
+}
+
+
+/* ===========================
+   SUMMARY
+=========================== */
+
+function updateSummary(){
+
+let totalContract=0;
+let totalPaid=0;
+let totalDue=0;
+
+contracts.forEach(item=>{
+
+const paid=getPaid(item.categoryId);
+
+const due=getDue(item);
+
+totalContract+=Number(item.contractAmount||0);
+totalPaid+=paid;
+totalDue+=due;
+
+});
+
+console.log("Contract :",totalContract);
+console.log("Paid :",totalPaid);
+console.log("Due :",totalDue);
+
+}
+
+
+/* ===========================
+   REFRESH
+=========================== */
+
+const oldRender=renderContracts;
+
+renderContracts=function(){
+
+oldRender();
+
+updateSummary();
+
+};
