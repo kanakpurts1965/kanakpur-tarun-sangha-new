@@ -11,7 +11,30 @@ import {
   query,
   orderBy
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+function loadContractYears() {
 
+    const years = [...new Set(
+
+        programs.map(p => String(p.year))
+
+    )].sort().reverse();
+
+    const year = document.getElementById("contractYear");
+
+    year.innerHTML =
+        '<option value="">বছর নির্বাচন করুন</option>';
+
+    years.forEach(y => {
+
+        year.innerHTML += `
+            <option value="${y}">
+                ${y}
+            </option>
+        `;
+
+    });
+
+}
 const $ = (id) => document.getElementById(id);
 
 const programsRef = collection(db,"programs");
@@ -106,6 +129,7 @@ function loadExpenseEntries(programId,categoryId){
     });
 
     return list;
+  loadContractYears();
 
 }
 onSnapshot(programsRef,(snap)=>{
