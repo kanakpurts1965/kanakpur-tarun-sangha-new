@@ -1,156 +1,150 @@
-const contractsRef = collection(db, "contracts");
+import { db } from "./firebase.js";
 
+import {
+  collection,
+  doc,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  onSnapshot,
+  serverTimestamp,
+  query,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+const $ = (id) => document.getElementById(id);
+
+const programsRef = collection(db,"programs");
+const categoriesRef = collection(db,"debitCategories");
+const entriesRef = collection(db,"debitEntries");
+const contractsRef = collection(db,"contracts");
+
+let programs = [];
+let categories = [];
+let entries = [];
 let contracts = [];
 
 let editingContract = null;
-onSnapshot(contractsRef, (snapshot) => {
 
-    contracts = snapshot.docs.map(doc => ({
+function esc(v){
+    return String(v ?? "")
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;");
+}
 
-        id: doc.id,
+function money(v){
+    return "₹"+Number(v||0).toLocaleString(
+        "en-IN",
+        {
+            maximumFractionDigits:2
+        }
+    );
+}
 
-        ...doc.data()
+function loadPrograms(){
 
-    }));
+    const opts =
+        '<option value="">Program নির্বাচন করুন</option>' +
 
-    renderContracts();
+        programs
+        .sort((a,b)=>Number(b.year)-Number(a.year))
+        .map(p=>`
+
+<option value="${p.id}">
+${esc(p.name)} (${esc(p.year)})
+</option>
+
+`).join("");
+
+    $("contractProgramFilter").innerHTML =
+        '<option value="all">সব Program</option>' +
+
+        programs.map(p=>`
+
+<option value="${p.id}">
+${esc(p.name)}
+</option>
+
+`).join("");
+
+}
+
+function loadCategories(programId){
+
+    $("contractCategoryFilter").innerHTML =
+
+    '<option value="all">সব Category</option>'+
+
+    categories
+
+    .filter(c=>c.programId===programId)
+
+    .map(c=>`
+
+<option value="${c.id}">
+${esc(c.name)}
+</option>
+
+`).join("");
+
+}
+
+function loadExpenseEntries(programId,categoryId){
+
+    const list = entries.filter(e=>{
+
+        return (
+
+            e.programId===programId &&
+
+            e.categoryId===categoryId
+
+        );
+
+    });
+
+    return list;
+
+}
+onSnapshot(programsRef,(snap)=>{
+
+    programs =
+        snap.docs.map(doc=>({
+
+            id:doc.id,
+
+            ...doc.data()
+
+        }));
+
+    loadPrograms();
 
 });
-function resetContractForm() {
 
-    editingContract = null;
+onSnapshot(categoriesRef,(snap)=>{
 
-    document.getElementById("contractName").value = "";
+    categories =
+        snap.docs.map(doc=>({
 
-    document.getElementById("contractAmount").value = "";
+            id:doc.id,
 
-    document.getElementById("contractDate").value = "";
+            ...doc.data()
 
-    document.getElementById("contractNote").value = "";
+        }));
 
-}
-document
-.getElementById("saveContractBtn")
-.addEventListener("click", saveContract);
-async function saveContract(){
+});
 
-    const name =
-        document.getElementById("contractName").value.trim();
+onSnapshot(entriesRef,(snap)=>{
 
-    const amount =
-        Number(
-            document.getElementById("contractAmount").value
-        );
+    entries =
+        snap.docs.map(doc=>({
 
-    const date =
-        document.getElementById("contractDate").value;
+            id:doc.id,
 
-    const note =
-        document.getElementById("contractNote").value.trim();
+            ...doc.data()
 
-    const year =
-        document.getElementById("contractYearFilter").value;
+        }));
 
-    const program =
-        document.getElementById("contractProgramFilter").value;
-
-    const category =
-        document.getElementById("contractCategoryFilter").value;
-
-    if(
-        !name ||
-        !amount ||
-        !program ||
-        !category
-    ){
-
-        alert("সব তথ্য পূরণ করুন");
-
-        return;
-
-    }
-
-    const already =
-        contracts.find(item =>
-
-            item.name.toLowerCase() === name.toLowerCase()
-
-            &&
-
-            item.programId === program
-
-            &&
-
-            item.categoryId === category
-
-        );
-
-    if(already && !editingContract){
-
-        alert("এই Contractor আগে থেকেই আছে");
-
-        return;
-
-    }
-
-    if(editingContract){
-
-        await updateDoc(
-
-            doc(db,"contracts",editingContract),
-
-            {
-
-                name,
-
-                amount,
-
-                date,
-
-                note,
-
-                year,
-
-                programId:program,
-
-                categoryId:category
-
-            }
-
-        );
-
-    }
-
-    else{
-
-        await addDoc(
-
-            contractsRef,
-
-            {
-
-                name,
-
-                amount,
-
-                date,
-
-                note,
-
-                year,
-
-                programId:program,
-
-                categoryId:category,
-
-                createdAt:serverTimestamp()
-
-            }
-
-        );
-
-    }
-
-    resetContractForm();
-
-}
+});
