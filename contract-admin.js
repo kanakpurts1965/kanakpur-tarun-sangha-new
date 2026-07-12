@@ -1,47 +1,49 @@
 import { db } from "./firebase.js";
 
 import {
-collection,
-doc,
-addDoc,
-updateDoc,
-deleteDoc,
-onSnapshot,
-query,
-orderBy,
-serverTimestamp
-}
-from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const contractRef = collection(db,"contracts");
 const programRef = collection(db,"programs");
-const debitCategoryRef = collection(db,"debitCategories");
-const debitEntryRef = collection(db,"debitEntries");
+const categoryRef = collection(db,"debitCategories");
+const debitRef = collection(db,"debitEntries");
 
-let allPrograms=[];
-let allCategories=[];
-let allEntries=[];
-let allContracts=[];
+let programs = [];
+let categories = [];
+let debits = [];
+let contracts = [];
 
-let editId=null;
+let editId = null;
 
-const contractYear=document.getElementById("contractYear");
-const contractProgram=document.getElementById("contractProgram");
-const contractCategory=document.getElementById("contractCategory");
+const year = document.getElementById("contractYear");
+const program = document.getElementById("contractProgram");
+const category = document.getElementById("contractCategory");
 
-const contractName=document.getElementById("contractName");
-const contractAmount=document.getElementById("contractAmount");
-const contractDate=document.getElementById("contractDate");
-const contractNote=document.getElementById("contractNote");
+const contractor = document.getElementById("contractName");
+const amount = document.getElementById("contractAmount");
+const date = document.getElementById("contractDate");
+const note = document.getElementById("contractNote");
 
-const saveContractBtn=document.getElementById("saveContractBtn");
-const contractList=document.getElementById("contractList");
+const saveBtn = document.getElementById("saveContractBtn");
+const list = document.getElementById("contractList");
 
-function taka(v){
-
-return Number(v||0).toLocaleString("en-IN");
-
+function money(v){
+    return Number(v||0).toLocaleString("en-IN");
 }
+/* ===========================
+   LOAD PROGRAMS
+=========================== */
+
+function loadPrograms(){
 
 onSnapshot(
 
@@ -49,11 +51,11 @@ query(programRef,orderBy("year","desc")),
 
 (snapshot)=>{
 
-allPrograms=[];
+programs=[];
 
 snapshot.forEach(doc=>{
 
-allPrograms.push({
+programs.push({
 
 id:doc.id,
 
@@ -65,106 +67,36 @@ id:doc.id,
 
 loadYears();
 
-loadPrograms();
-
-}
-
-);
-
-onSnapshot(
-
-debitCategoryRef,
-
-(snapshot)=>{
-
-allCategories=[];
-
-snapshot.forEach(doc=>{
-
-allCategories.push({
-
-id:doc.id,
-
-...doc.data()
-
-});
-
 });
 
 }
 
-);
 
-onSnapshot(
-
-debitEntryRef,
-
-(snapshot)=>{
-
-allEntries=[];
-
-snapshot.forEach(doc=>{
-
-allEntries.push({
-
-id:doc.id,
-
-...doc.data()
-
-});
-
-});
-
-}
-
-);
-
-onSnapshot(
-
-contractRef,
-
-(snapshot)=>{
-
-allContracts=[];
-
-snapshot.forEach(doc=>{
-
-allContracts.push({
-
-id:doc.id,
-
-...doc.data()
-
-});
-
-});
-
-renderContractList();
-
-}
-
-);
-/* ==========================================
-   YEAR LOAD
-========================================== */
+/* ===========================
+   LOAD YEARS
+=========================== */
 
 function loadYears(){
 
-const years=[...new Set(
+const years=[
 
-allPrograms.map(p=>String(p.year))
+...new Set(
 
-)];
+programs.map(x=>String(x.year))
+
+)
+
+];
 
 years.sort().reverse();
 
-contractYear.innerHTML=
+year.innerHTML=
 
 '<option value="">বছর নির্বাচন করুন</option>';
 
 years.forEach(y=>{
 
-contractYear.innerHTML+=`
+year.innerHTML+=`
 
 <option value="${y}">
 ${y}
@@ -174,34 +106,34 @@ ${y}
 
 });
 
+loadProgramDropdown();
+
 }
 
 
-/* ==========================================
-PROGRAM LOAD
-========================================== */
+/* ===========================
+   PROGRAM DROPDOWN
+=========================== */
 
-function loadPrograms(){
+function loadProgramDropdown(){
 
-const year=contractYear.value;
-
-contractProgram.innerHTML=
+program.innerHTML=
 
 '<option value="">Program নির্বাচন করুন</option>';
 
-allPrograms
+programs
 
 .filter(p=>{
 
-if(!year) return true;
+if(!year.value) return true;
 
-return String(p.year)===year;
+return String(p.year)===year.value;
 
 })
 
 .forEach(p=>{
 
-contractProgram.innerHTML+=`
+program.innerHTML+=`
 
 <option value="${p.id}">
 ${p.name}
@@ -211,30 +143,57 @@ ${p.name}
 
 });
 
-loadCategories();
+}
+/* ===========================
+   LOAD CATEGORIES
+=========================== */
+
+function loadCategories(){
+
+onSnapshot(
+
+categoryRef,
+
+(snapshot)=>{
+
+categories=[];
+
+snapshot.forEach(doc=>{
+
+categories.push({
+
+id:doc.id,
+
+...doc.data()
+
+});
+
+});
+
+fillCategoryDropdown();
+
+});
 
 }
 
 
-/* ==========================================
-CATEGORY LOAD
-========================================== */
+/* ===========================
+   CATEGORY DROPDOWN
+=========================== */
 
-function loadCategories(){
+function fillCategoryDropdown(){
 
-const pid=contractProgram.value;
-
-contractCategory.innerHTML=
+category.innerHTML=
 
 '<option value="">Category নির্বাচন করুন</option>';
 
-allCategories
+categories
 
-.filter(c=>c.programId===pid)
+.filter(c=>c.programId===program.value)
 
 .forEach(c=>{
 
-contractCategory.innerHTML+=`
+category.innerHTML+=`
 
 <option value="${c.id}">
 ${c.name}
@@ -247,120 +206,153 @@ ${c.name}
 }
 
 
-/* ==========================================
-CHANGE EVENT
-========================================== */
+/* ===========================
+   EVENTS
+=========================== */
 
-contractYear.addEventListener(
+year.addEventListener("change",()=>{
 
-"change",
+loadProgramDropdown();
 
-loadPrograms
+category.innerHTML=
+'<option value="">Category নির্বাচন করুন</option>';
 
-);
+});
 
-contractProgram.addEventListener(
+program.addEventListener("change",()=>{
 
-"change",
+fillCategoryDropdown();
 
-loadCategories
+});
 
-);
 
-/* ==========================================
-SAVE CONTRACT
-========================================== */
+/* ===========================
+   START
+=========================== */
 
-saveContractBtn.onclick=async()=>{
+loadPrograms();
+loadCategories();
+/* ===========================
+   SAVE CONTRACT
+=========================== */
 
-if(
+saveBtn.addEventListener("click", async () => {
 
-!contractYear.value||
+    if (
+        !year.value ||
+        !program.value ||
+        !category.value ||
+        !contractor.value.trim() ||
+        !amount.value
+    ) {
+        alert("সব তথ্য পূরণ করুন");
+        return;
+    }
 
-!contractProgram.value||
+    const data = {
 
-!contractCategory.value||
+        year: year.value,
 
-!contractName.value||
+        programId: program.value,
 
-!contractAmount.value
+        categoryId: category.value,
 
-){
+        contractor: contractor.value.trim(),
 
-alert("সব তথ্য পূরণ করুন");
+        contractAmount: Number(amount.value),
 
-return;
+        contractDate: date.value,
+
+        note: note.value.trim(),
+
+        createdAt: serverTimestamp()
+
+    };
+
+    try{
+
+        if(editId){
+
+            await updateDoc(
+                doc(db,"contracts",editId),
+                data
+            );
+
+            editId=null;
+
+        }else{
+
+            await addDoc(
+                contractRef,
+                data
+            );
+
+        }
+
+        contractor.value="";
+        amount.value="";
+        date.value="";
+        note.value="";
+
+        alert("Contract Save হয়েছে");
+
+    }catch(err){
+
+        console.error(err);
+
+        alert("Save Failed");
+
+    }
+
+});
+/* ===========================
+   LOAD CONTRACT LIST
+=========================== */
+
+function loadContracts(){
+
+onSnapshot(
+
+query(contractRef,orderBy("createdAt","desc")),
+
+(snapshot)=>{
+
+contracts=[];
+
+snapshot.forEach(doc=>{
+
+contracts.push({
+
+id:doc.id,
+
+...doc.data()
+
+});
+
+});
+
+renderContracts();
+
+});
 
 }
 
-const data={
 
-year:contractYear.value,
-
-programId:contractProgram.value,
-
-categoryId:contractCategory.value,
-
-contractor:contractName.value.trim(),
-
-contractAmount:Number(contractAmount.value),
-
-contractDate:contractDate.value,
-
-note:contractNote.value.trim(),
-
-createdAt:serverTimestamp()
-
-};
-
-if(editId){
-
-await updateDoc(
-
-doc(db,"contracts",editId),
-
-data
-
-);
-
-editId=null;
-
-}else{
-
-await addDoc(
-
-contractRef,
-
-data
-
-);
-
-}
-
-contractName.value="";
-
-contractAmount.value="";
-
-contractDate.value="";
-
-contractNote.value="";
-
-alert("Contract Save হয়েছে");
-
-};
-/* ==========================================
-   TOTAL PAID FROM DEBIT CATEGORY
-========================================== */
+/* ===========================
+   PAID AMOUNT
+=========================== */
 
 function getPaid(categoryId){
 
 let total=0;
 
-allEntries
-.filter(e=>e.categoryId===categoryId)
-.forEach(e=>{
+debits
 
-total+=Number(e.amount||0);
+.filter(d=>d.categoryId===categoryId)
+
+.forEach(d=>{
+
+total+=Number(d.amount||0);
 
 });
 
@@ -369,28 +361,60 @@ return total;
 }
 
 
-/* ==========================================
-TOTAL DUE
-========================================== */
+/* ===========================
+   DUE AMOUNT
+=========================== */
 
-function getDue(contract){
+function getDue(item){
 
-return Number(contract.contractAmount||0)-
+return Number(item.contractAmount||0)-
 
-getPaid(contract.categoryId);
+getPaid(item.categoryId);
 
 }
-/* ==========================================
-RENDER CONTRACT LIST
-========================================== */
+/* ===========================
+   LOAD DEBIT ENTRIES
+=========================== */
 
-function renderContractList(){
+onSnapshot(
 
-if(allContracts.length===0){
+debitRef,
 
-contractList.innerHTML=
+(snapshot)=>{
 
-"<h3 style='text-align:center'>কোনো Contractor নেই</h3>";
+debits=[];
+
+snapshot.forEach(doc=>{
+
+debits.push({
+
+id:doc.id,
+
+...doc.data()
+
+});
+
+});
+
+renderContracts();
+
+}
+
+);
+
+loadContracts();
+
+/* ===========================
+   RENDER CONTRACT LIST
+=========================== */
+
+function renderContracts(){
+
+if(!list) return;
+
+if(contracts.length===0){
+
+list.innerHTML="<h3 style='text-align:center'>কোনো Contractor পাওয়া যায়নি</h3>";
 
 return;
 
@@ -398,33 +422,21 @@ return;
 
 let html="";
 
-allContracts.forEach(item=>{
+contracts.forEach(item=>{
 
 const paid=getPaid(item.categoryId);
 
 const due=getDue(item);
+
+const p=programs.find(x=>x.id===item.programId);
+
+const c=categories.find(x=>x.id===item.categoryId);
 
 let status="🔴 Pending";
 
 if(paid>0) status="🟡 Partial";
 
 if(due<=0) status="🟢 Completed";
-
-const program=
-
-allPrograms.find(
-
-p=>p.id===item.programId
-
-);
-
-const category=
-
-allCategories.find(
-
-c=>c.id===item.categoryId
-
-);
 
 html+=`
 
@@ -442,13 +454,13 @@ ${item.contractor}
 
 <div>
 
-${program?program.name:""}
+${p ? p.name : "-"}
 
 </div>
 
 <div>
 
-${category?category.name:""}
+${c ? c.name : "-"}
 
 </div>
 
@@ -456,7 +468,7 @@ ${category?category.name:""}
 
 <div class="contract-amount">
 
-₹${taka(item.contractAmount)}
+₹${money(item.contractAmount)}
 
 </div>
 
@@ -466,37 +478,37 @@ ${category?category.name:""}
 
 <div>
 
-Contract
+<b>Contract</b>
 
 <br>
 
-₹${taka(item.contractAmount)}
+₹${money(item.contractAmount)}
 
 </div>
 
 <div>
 
-Paid
+<b>Paid</b>
 
 <br>
 
-₹${taka(paid)}
+₹${money(paid)}
 
 </div>
 
 <div>
 
-Due
+<b>Due</b>
 
 <br>
 
-₹${taka(due)}
+₹${money(due)}
 
 </div>
 
 </div>
 
-<div style="margin-top:10px;font-weight:bold">
+<div style="margin-top:12px;font-weight:bold">
 
 ${status}
 
@@ -505,18 +517,24 @@ ${status}
 <div class="contract-action">
 
 <button
+
 class="contract-edit"
 
-data-id="${item.id}">
+data-id="${item.id}"
+
+>
 
 ✏ Edit
 
 </button>
 
 <button
+
 class="contract-delete"
 
-data-id="${item.id}">
+data-id="${item.id}"
+
+>
 
 🗑 Delete
 
@@ -530,88 +548,85 @@ data-id="${item.id}">
 
 });
 
-contractList.innerHTML=html;
+list.innerHTML=html;
 
-bindButtons();
+bindContractButtons();
 
 }
-/* ==========================================
-EDIT DELETE
-========================================== */
+/* ===========================
+   EDIT + DELETE
+=========================== */
 
-function bindButtons(){
+function bindContractButtons(){
 
-document
-.querySelectorAll(".contract-edit")
-.forEach(btn=>{
+document.querySelectorAll(".contract-edit").forEach(btn=>{
 
 btn.onclick=()=>{
 
-const item=
-
-allContracts.find(
-
-x=>x.id===btn.dataset.id
-
-);
+const item=contracts.find(x=>x.id===btn.dataset.id);
 
 if(!item) return;
 
 editId=item.id;
 
-contractYear.value=item.year;
+year.value=item.year;
 
-loadPrograms();
-
-setTimeout(()=>{
-
-contractProgram.value=item.programId;
-
-loadCategories();
+loadProgramDropdown();
 
 setTimeout(()=>{
 
-contractCategory.value=item.categoryId;
+program.value=item.programId;
+
+fillCategoryDropdown();
+
+setTimeout(()=>{
+
+category.value=item.categoryId;
 
 },100);
 
 },100);
 
-contractName.value=item.contractor;
+contractor.value=item.contractor;
+amount.value=item.contractAmount;
+date.value=item.contractDate || "";
+note.value=item.note || "";
 
-contractAmount.value=item.contractAmount;
+window.scrollTo({
 
-contractDate.value=item.contractDate;
+top:0,
 
-contractNote.value=item.note||"";
+behavior:"smooth"
+
+});
 
 };
 
 });
 
-document
-.querySelectorAll(".contract-delete")
-.forEach(btn=>{
+document.querySelectorAll(".contract-delete").forEach(btn=>{
 
 btn.onclick=async()=>{
 
-if(!confirm("Delete করবেন?"))
+if(!confirm("এই Contractor Delete করবেন?")) return;
 
-return;
+try{
 
 await deleteDoc(
 
-doc(
-
-db,
-
-"contracts",
-
-btn.dataset.id
-
-)
+doc(db,"contracts",btn.dataset.id)
 
 );
+
+alert("Delete সফল হয়েছে");
+
+}catch(err){
+
+console.error(err);
+
+alert("Delete Failed");
+
+}
 
 };
 
