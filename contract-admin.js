@@ -348,3 +348,273 @@ contractNote.value="";
 alert("Contract Save হয়েছে");
 
 };
+/* ==========================================
+   TOTAL PAID FROM DEBIT CATEGORY
+========================================== */
+
+function getPaid(categoryId){
+
+let total=0;
+
+allEntries
+.filter(e=>e.categoryId===categoryId)
+.forEach(e=>{
+
+total+=Number(e.amount||0);
+
+});
+
+return total;
+
+}
+
+
+/* ==========================================
+TOTAL DUE
+========================================== */
+
+function getDue(contract){
+
+return Number(contract.contractAmount||0)-
+
+getPaid(contract.categoryId);
+
+}
+/* ==========================================
+RENDER CONTRACT LIST
+========================================== */
+
+function renderContractList(){
+
+if(allContracts.length===0){
+
+contractList.innerHTML=
+
+"<h3 style='text-align:center'>কোনো Contractor নেই</h3>";
+
+return;
+
+}
+
+let html="";
+
+allContracts.forEach(item=>{
+
+const paid=getPaid(item.categoryId);
+
+const due=getDue(item);
+
+let status="🔴 Pending";
+
+if(paid>0) status="🟡 Partial";
+
+if(due<=0) status="🟢 Completed";
+
+const program=
+
+allPrograms.find(
+
+p=>p.id===item.programId
+
+);
+
+const category=
+
+allCategories.find(
+
+c=>c.id===item.categoryId
+
+);
+
+html+=`
+
+<div class="contract-card">
+
+<div class="contract-card-top">
+
+<div>
+
+<div class="contract-name">
+
+${item.contractor}
+
+</div>
+
+<div>
+
+${program?program.name:""}
+
+</div>
+
+<div>
+
+${category?category.name:""}
+
+</div>
+
+</div>
+
+<div class="contract-amount">
+
+₹${taka(item.contractAmount)}
+
+</div>
+
+</div>
+
+<div class="contract-summary">
+
+<div>
+
+Contract
+
+<br>
+
+₹${taka(item.contractAmount)}
+
+</div>
+
+<div>
+
+Paid
+
+<br>
+
+₹${taka(paid)}
+
+</div>
+
+<div>
+
+Due
+
+<br>
+
+₹${taka(due)}
+
+</div>
+
+</div>
+
+<div style="margin-top:10px;font-weight:bold">
+
+${status}
+
+</div>
+
+<div class="contract-action">
+
+<button
+class="contract-edit"
+
+data-id="${item.id}">
+
+✏ Edit
+
+</button>
+
+<button
+class="contract-delete"
+
+data-id="${item.id}">
+
+🗑 Delete
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+contractList.innerHTML=html;
+
+bindButtons();
+
+}
+/* ==========================================
+EDIT DELETE
+========================================== */
+
+function bindButtons(){
+
+document
+.querySelectorAll(".contract-edit")
+.forEach(btn=>{
+
+btn.onclick=()=>{
+
+const item=
+
+allContracts.find(
+
+x=>x.id===btn.dataset.id
+
+);
+
+if(!item) return;
+
+editId=item.id;
+
+contractYear.value=item.year;
+
+loadPrograms();
+
+setTimeout(()=>{
+
+contractProgram.value=item.programId;
+
+loadCategories();
+
+setTimeout(()=>{
+
+contractCategory.value=item.categoryId;
+
+},100);
+
+},100);
+
+contractName.value=item.contractor;
+
+contractAmount.value=item.contractAmount;
+
+contractDate.value=item.contractDate;
+
+contractNote.value=item.note||"";
+
+};
+
+});
+
+document
+.querySelectorAll(".contract-delete")
+.forEach(btn=>{
+
+btn.onclick=async()=>{
+
+if(!confirm("Delete করবেন?"))
+
+return;
+
+await deleteDoc(
+
+doc(
+
+db,
+
+"contracts",
+
+btn.dataset.id
+
+)
+
+);
+
+};
+
+});
+
+}
