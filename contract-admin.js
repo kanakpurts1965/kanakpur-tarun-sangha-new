@@ -355,3 +355,227 @@ contractNote.value="";
 $("contractExpense").selectedIndex=0;
 
 }
+
+/* ==========================================
+   LIVE CONTRACT LIST
+========================================== */
+
+const contractList = $("contractList");
+
+onSnapshot(
+    query(
+        contractsRef,
+        orderBy("createdAt", "desc")
+    ),
+    (snap) => {
+
+        contracts = snap.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+        renderContracts();
+
+    }
+);
+
+function renderContracts() {
+
+    if (!contracts.length) {
+
+        contractList.innerHTML = `
+        <p style="text-align:center;padding:25px">
+            কোনো Contractor পাওয়া যায়নি।
+        </p>`;
+        return;
+
+    }
+
+    contractList.innerHTML = contracts.map(c => {
+
+        const paid = getPaidAmount(c.expenseId);
+
+        const due = Math.max(
+            Number(c.contractAmount || 0) - paid,
+            0
+        );
+
+        let status = "🔴 Pending";
+
+        if (paid > 0) status = "🟡 Partial";
+
+        if (due === 0) status = "🟢 Completed";
+
+        return `
+
+<div class="contract-card">
+
+<div class="contract-card-top">
+
+<div>
+
+<div class="contract-name">
+${esc(c.contractor)}
+</div>
+
+<div>
+${status}
+</div>
+
+</div>
+
+<div class="contract-amount">
+${money(c.contractAmount)}
+</div>
+
+</div>
+
+<div class="contract-summary">
+
+<div>
+
+<b>Paid</b><br>
+
+${money(paid)}
+
+</div>
+
+<div>
+
+<b>Due</b><br>
+
+${money(due)}
+
+</div>
+
+<div>
+
+<b>Date</b><br>
+
+${esc(c.contractDate || "-")}
+
+</div>
+
+</div>
+
+<div class="contract-action">
+
+<button
+class="contract-edit"
+data-edit="${c.id}">
+
+✏ Edit
+
+</button>
+
+<button
+class="contract-delete"
+data-delete="${c.id}">
+
+🗑 Delete
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+    }).join("");
+
+    bindContractButtons();
+
+}
+
+function getPaidAmount(expenseId){
+
+    return entries
+
+    .filter(e=>e.id===expenseId)
+
+    .reduce(
+
+        (sum,e)=>
+
+        sum+Number(e.amount||0),
+
+        0
+
+    );
+
+}
+
+function bindContractButtons(){
+
+document
+.querySelectorAll("[data-edit]")
+.forEach(btn=>{
+
+btn.onclick=()=>{
+
+const item=
+
+contracts.find(
+
+x=>x.id===
+
+btn.dataset.edit
+
+);
+
+if(!item) return;
+
+editingContract=item.id;
+
+contractProgram.value=item.programId;
+
+loadCategories(item.programId);
+
+renderExpenseDropdown();
+
+setTimeout(()=>{
+
+$("contractExpense").value=item.expenseId;
+
+},100);
+
+contractName.value=item.contractor;
+
+contractAmount.value=item.contractAmount;
+
+contractDate.value=item.contractDate;
+
+contractNote.value=item.note||"";
+
+};
+
+});
+
+document
+.querySelectorAll("[data-delete]")
+.forEach(btn=>{
+
+btn.onclick=async()=>{
+
+if(!confirm("Delete করবেন?")) return;
+
+await deleteDoc(
+
+doc(
+
+db,
+
+"contracts",
+
+btn.dataset.delete
+
+)
+
+);
+
+};
+
+});
+
+}
