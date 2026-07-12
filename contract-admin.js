@@ -415,6 +415,23 @@ if(!list) return;
 if(contracts.length===0){
 
 list.innerHTML="<h3 style='text-align:center'>কোনো Contractor পাওয়া যায়নি</h3>";
+  if(searchBox){
+
+const txt=searchBox.value.toLowerCase();
+
+if(
+
+txt &&
+
+!item.contractor.toLowerCase().includes(txt)
+
+){
+
+return false;
+
+}
+
+}
 
 return;
 
@@ -554,6 +571,19 @@ bindContractButtons();
   updateSummary();
 
 }
+const percent=
+
+item.contractAmount==0
+
+?0
+
+:Math.round(
+
+(getPaid(item.categoryId)/item.contractAmount)
+
+*100
+
+);
 /* ===========================
    EDIT + DELETE
 =========================== */
@@ -818,6 +848,45 @@ return false;
 }
 
 return true;
+
+});
+
+}
+/* ===========================
+PROGRAM FILTER
+=========================== */
+
+contractProgram.addEventListener("change",()=>{
+
+fillCategoryDropdown();
+
+renderContracts();
+
+});
+
+
+/* ===========================
+CATEGORY FILTER
+=========================== */
+
+contractCategory.addEventListener("change",()=>{
+
+renderContracts();
+
+});
+
+
+/* ===========================
+SEARCH FILTER
+=========================== */
+
+const searchBox=document.getElementById("contractSearch");
+
+if(searchBox){
+
+searchBox.addEventListener("input",()=>{
+
+renderContracts();
 
 });
 
