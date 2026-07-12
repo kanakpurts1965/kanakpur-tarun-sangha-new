@@ -148,3 +148,210 @@ onSnapshot(entriesRef,(snap)=>{
         }));
 
 });
+/* ==========================================
+   CONTRACT FORM
+========================================== */
+
+const contractProgram = $("contractProgramFilter");
+const contractCategory = $("contractCategoryFilter");
+
+const contractName = $("contractName");
+const contractAmount = $("contractAmount");
+const contractDate = $("contractDate");
+const contractNote = $("contractNote");
+
+const saveContractBtn = $("saveContractBtn");
+
+
+/* ==========================================
+   PROGRAM CHANGE
+========================================== */
+
+contractProgram.addEventListener("change",()=>{
+
+    loadCategories(contractProgram.value);
+
+    renderExpenseDropdown();
+
+});
+
+
+/* ==========================================
+   CATEGORY CHANGE
+========================================== */
+
+contractCategory.addEventListener("change",()=>{
+
+    renderExpenseDropdown();
+
+});
+
+
+/* ==========================================
+   EXPENSE ENTRY DROPDOWN
+========================================== */
+
+function renderExpenseDropdown(){
+
+    let old = $("contractExpense");
+
+    if(old){
+
+        old.remove();
+
+    }
+
+    const select =
+        document.createElement("select");
+
+    select.id="contractExpense";
+
+    select.innerHTML=
+    '<option value="">Expense Entry নির্বাচন করুন</option>';
+
+    const list =
+        loadExpenseEntries(
+
+            contractProgram.value,
+
+            contractCategory.value
+
+        );
+
+    list.forEach(item=>{
+
+        select.innerHTML+=`
+
+<option value="${item.id}">
+${item.name}
+(${money(item.amount)})
+</option>
+
+`;
+
+    });
+
+    contractCategory.parentNode
+        .appendChild(select);
+
+}
+
+/* ==========================================
+   SAVE CONTRACT
+========================================== */
+
+saveContractBtn.addEventListener(
+
+"click",
+
+async()=>{
+
+const expenseId=
+
+$("contractExpense").value;
+
+if(
+
+!contractProgram.value ||
+
+!contractCategory.value ||
+
+!expenseId ||
+
+!contractName.value ||
+
+!contractAmount.value
+
+){
+
+alert("সব তথ্য পূরণ করুন");
+
+return;
+
+}
+
+const payload={
+
+programId:contractProgram.value,
+
+categoryId:contractCategory.value,
+
+expenseId,
+
+contractor:contractName.value.trim(),
+
+contractAmount:Number(contractAmount.value),
+
+contractDate:contractDate.value,
+
+note:contractNote.value.trim(),
+
+createdAt:serverTimestamp()
+
+};
+
+try{
+
+if(editingContract){
+
+await updateDoc(
+
+doc(
+
+db,
+
+"contracts",
+
+editingContract
+
+),
+
+payload
+
+);
+
+editingContract=null;
+
+}else{
+
+await addDoc(
+
+contractsRef,
+
+payload
+
+);
+
+}
+
+clearContractForm();
+
+alert("Contract Save হয়েছে");
+
+}catch(err){
+
+console.error(err);
+
+alert("Save করা যায়নি");
+
+}
+
+});
+
+/* ==========================================
+CLEAR FORM
+========================================== */
+
+function clearContractForm(){
+
+contractName.value="";
+
+contractAmount.value="";
+
+contractDate.value="";
+
+contractNote.value="";
+
+$("contractExpense").selectedIndex=0;
+
+}
