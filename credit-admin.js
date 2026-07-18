@@ -254,3 +254,28 @@ document.getElementById("adminCreditList")?.addEventListener("click", async (eve
     if(categoryFilter===category.id) categoryFilter="all";
   }
 });
+// =========================
+// Member Collection Year
+// =========================
+
+const mcYear = document.getElementById("mcYear");
+
+if (mcYear) {
+
+    const currentYear = new Date().getFullYear();
+
+    for (let year = currentYear + 1; year >= 2020; year--) {
+
+        const option = document.createElement("option");
+
+        option.value = year;
+
+        option.textContent = year;
+
+        mcYear.appendChild(option);
+
+    }
+
+    mcYear.value = currentYear;
+
+}
