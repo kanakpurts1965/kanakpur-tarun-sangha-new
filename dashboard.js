@@ -351,3 +351,16 @@ document.querySelectorAll(".back-to-accounts").forEach((button)=>{
 
 showAdminPage("dashboardPage");
 
+/* ==========================================
+   OPEN PAGE FROM URL
+========================================== */
+
+const params = new URLSearchParams(window.location.search);
+
+const openPage = params.get("open");
+
+if (openPage === "accounts") {
+
+    showAdminPage("accountsPage");
+
+}
