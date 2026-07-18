@@ -2,7 +2,10 @@ import { db } from "./firebase.js";
 
 import {
   collection,
-  onSnapshot
+  onSnapshot,
+  doc,
+  setDoc,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 const $ = id => document.getElementById(id);
@@ -738,3 +741,64 @@ window.exportCSV=exportCSV;
 window.exportPDF=exportPDF;
 
 console.log("Statement Module Loaded Successfully");
+/* ==========================================
+   PUBLISH / UNPUBLISH STATEMENT
+========================================== */
+
+const publishBtn = document.getElementById("publishStatementBtn");
+const unpublishBtn = document.getElementById("unpublishStatementBtn");
+
+if (publishBtn) {
+
+    publishBtn.addEventListener("click", async () => {
+
+        try {
+
+            const statementData = {
+                credits,
+                debits,
+                contracts,
+                programs,
+                publishedAt: new Date().toISOString()
+            };
+
+            await setDoc(
+                doc(db, "publishedStatements", "current"),
+                statementData
+            );
+
+            alert("✅ Statement Published Successfully");
+
+        } catch (err) {
+
+            console.error(err);
+            alert("❌ Publish Failed");
+
+        }
+
+    });
+
+}
+
+if (unpublishBtn) {
+
+    unpublishBtn.addEventListener("click", async () => {
+
+        try {
+
+            await deleteDoc(
+                doc(db, "publishedStatements", "current")
+            );
+
+            alert("✅ Statement Unpublished");
+
+        } catch (err) {
+
+            console.error(err);
+            alert("❌ Unpublish Failed");
+
+        }
+
+    });
+
+}
