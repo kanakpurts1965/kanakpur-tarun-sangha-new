@@ -12,6 +12,7 @@ getDocs
 }
 from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 const $=id=>document.getElementById(id);
+console.log("DB =", db);
 const programsRef=collection(db,"programs"), categoriesRef=collection(db,"creditCategories"), entriesRef=collection(db,"creditEntries");
 let programs=[],categories=[],entries=[],editingId=null,categoryFilter="all",searchText="";
 
