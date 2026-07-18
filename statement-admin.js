@@ -60,24 +60,17 @@ function updateSummary() {
 
   const balance =
     totalCredit - totalDebit;
+if ($("totalCredit")) $("totalCredit").textContent = money(totalCredit);
 
-  $("totalCredit").textContent =
-    money(totalCredit);
+if ($("totalDebit")) $("totalDebit").textContent = money(totalDebit);
 
-  $("totalDebit").textContent =
-    money(totalDebit);
+if ($("totalContract")) $("totalContract").textContent = money(totalContract);
 
-  $("totalContract").textContent =
-    money(totalContract);
+if ($("totalPaid")) $("totalPaid").textContent = money(totalPaid);
 
-  $("totalPaid").textContent =
-    money(totalPaid);
+if ($("totalDue")) $("totalDue").textContent = money(totalDue);
 
-  $("totalDue").textContent =
-    money(totalDue);
-
-  $("currentBalance").textContent =
-    money(balance);
+if ($("currentBalance")) $("currentBalance").textContent = money(balance);
 
 }
 
