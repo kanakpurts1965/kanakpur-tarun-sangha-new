@@ -1,6 +1,14 @@
-import { db } from "./firebase.js";
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-
+import {
+collection,
+addDoc,
+updateDoc,
+deleteDoc,
+doc,
+onSnapshot,
+serverTimestamp,
+getDocs
+}
+from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 const $=id=>document.getElementById(id);
 const programsRef=collection(db,"programs"), categoriesRef=collection(db,"creditCategories"), entriesRef=collection(db,"creditEntries");
 let programs=[],categories=[],entries=[],editingId=null,categoryFilter="all",searchText="";
@@ -277,5 +285,136 @@ if (mcYear) {
     }
 
     mcYear.value = currentYear;
+
+}
+/* ===========================================
+   MEMBER COLLECTION SEARCH
+=========================================== */
+
+const memberSearch =
+document.getElementById("memberSearch");
+
+const memberSearchResult =
+document.getElementById("memberSearchResult");
+
+const selectedMemberBox =
+document.getElementById("selectedMember");
+
+let allMembers = [];
+
+let selectedMemberData = null;
+
+async function loadMembers(){
+
+    const snap = await getDocs(collection(db,"members"));
+
+    allMembers = [];
+
+    snap.forEach(doc=>{
+
+        allMembers.push({
+
+            id:doc.id,
+
+            ...doc.data()
+
+        });
+
+    });
+
+}
+
+loadMembers();
+memberSearch?.addEventListener("input",()=>{
+
+const keyword =
+memberSearch.value.trim().toLowerCase();
+
+if(keyword===""){
+
+memberSearchResult.innerHTML="";
+
+memberSearchResult.style.display="none";
+
+return;
+
+}
+
+const result = allMembers.filter(m=>{
+
+const n=(m.name||m.memberName||"")
+.toLowerCase();
+
+const id=(m.memberId||"")
+.toLowerCase();
+
+return n.includes(keyword)||id.includes(keyword);
+
+});
+
+renderMemberResult(result);
+
+});
+function renderMemberResult(list){
+
+memberSearchResult.innerHTML="";
+
+if(list.length===0){
+
+memberSearchResult.style.display="none";
+
+return;
+
+}
+
+memberSearchResult.style.display="block";
+
+list.forEach(member=>{
+
+const div=document.createElement("div");
+
+div.className="member-item";
+
+div.innerHTML=`
+
+<div class="member-name">
+
+${member.name || member.memberName}
+
+</div>
+
+<div class="member-id">
+
+${member.memberId}
+
+</div>
+
+`;
+
+div.onclick=()=>{
+
+selectedMemberData=member;
+
+selectedMemberBox.innerHTML=`
+
+<b>${member.name || member.memberName}</b>
+
+<br>
+
+${member.memberId}
+
+`;
+
+memberSearch.value=
+
+member.name || member.memberName;
+
+memberSearchResult.style.display="none";
+
+};
+
+memberSearchResult.appendChild(div);
+
+});
 
 }
