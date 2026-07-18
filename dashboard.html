@@ -347,20 +347,27 @@ onclick="window.location.href='statement-admin.html'">
             <select id="mcCategory"></select>
         </div>
 
-        <div class="form-group">
-            <label>👤 Member</label>
-            <input
-                type="text"
-                id="memberSearch"
-                placeholder="Member Search...">
-        </div>
+       <div class="form-group">
+    <label>👤 Member</label>
 
-        <div class="form-group">
-            <label>Selected Member</label>
-            <div id="selectedMember">
-                No Member Selected
-            </div>
-        </div>
+    <input
+        type="text"
+        id="memberSearch"
+        placeholder="Member Search...">
+
+    <!-- Search Result -->
+    <div id="memberSearchResult" class="member-search-result"></div>
+
+</div>
+
+<div class="form-group">
+    <label>Selected Member</label>
+
+    <div id="selectedMember">
+        No Member Selected
+    </div>
+
+</div>
 
         <div class="form-group">
             <label>💰 Amount</label>
