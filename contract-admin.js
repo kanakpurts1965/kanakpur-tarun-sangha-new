@@ -558,12 +558,16 @@ function renderContracts(){
 
     const data = filteredContracts();
 
-    if(data.length === 0){
+    if(data.length===0){
 
-        list.innerHTML = `
-            <div class="empty-state">
-                <h3>কোনো Contractor পাওয়া যায়নি</h3>
-            </div>
+        list.innerHTML=`
+
+        <div class="empty-state">
+
+            <h3>📂 কোনো Contractor পাওয়া যায়নি</h3>
+
+        </div>
+
         `;
 
         updateSummary();
@@ -572,151 +576,155 @@ function renderContracts(){
 
     }
 
-    let html = "";
+    let html="";
 
     data.forEach(item=>{
 
-        const paid = getPaid(item.categoryId);
+        const paid=getPaid(item.categoryId);
 
-        const due = getDue(item);
+        const due=getDue(item);
 
-        const p = programs.find(
-            x=>x.id===item.programId
-        );
+        const programName=getProgramName(item.programId);
 
-        const c = categories.find(
-            x=>x.id===item.categoryId
-        );
+        const categoryName=getCategoryName(item.categoryId);
 
-        let status = "🔴 Pending";
+        const status=getContractStatus(item);
 
-        if(paid>0){
-
-            status="🟡 Partial";
-
-        }
-
-        if(due===0){
-
-            status="🟢 Completed";
-
-        }
-
-        html += `
+        html+=`
 
 <div class="contract-card">
 
-<div class="contract-card-header">
+    <div class="contract-header">
 
-<h3>
+        <div>
 
-${item.contractor}
+            <h2 class="contract-title">
 
-</h3>
+                👤 ${item.contractor}
 
-<span>
+            </h2>
 
-${status}
+            <div class="contract-status"
 
-</span>
+            style="background:${status.color}">
 
-</div>
+                ${status.text}
 
-<p>
+            </div>
 
-<b>Program :</b>
+        </div>
 
-${p ? p.name : "-"}
+    </div>
 
-</p>
+    <div class="contract-info">
 
-<p>
+        <div>
 
-<b>Category :</b>
+            <b>📅 Year</b><br>
 
-${c ? c.name : "-"}
+            ${item.year}
 
-</p>
+        </div>
 
-<p>
+        <div>
 
-<b>Contract :</b>
+            <b>🎉 Program</b><br>
 
-₹${money(item.contractAmount)}
+            ${programName}
 
-</p>
+        </div>
 
-<p>
+        <div>
 
-<b>Paid :</b>
+            <b>📂 Category</b><br>
 
-₹${money(paid)}
+            ${categoryName}
 
-</p>
+        </div>
 
-<p>
+        <div>
 
-<b>Due :</b>
+            <b>🗓 Date</b><br>
 
-₹${money(due)}
+            ${item.contractDate || "-"}
 
-</p>
+        </div>
 
-<p>
+    </div>
 
-<b>Date :</b>
+    <div class="contract-money">
 
-${item.contractDate || "-"}
+        <div class="money-box">
 
-</p>
+            <small>Contract</small>
 
-`;
+            <h3>
 
-        if(item.note){
+            ₹${money(item.contractAmount)}
 
-            html += `
+            </h3>
 
-<p>
+        </div>
 
-<b>Note :</b>
+        <div class="money-box">
 
-${item.note}
+            <small>Paid</small>
 
-</p>
+            <h3 style="color:#0b8f3a">
 
-`;
+            ₹${money(paid)}
 
-        }
+            </h3>
 
-        html += `
+        </div>
 
-<div class="contract-action">
+        <div class="money-box">
 
-<button
+            <small>Due</small>
 
-class="contract-edit"
+            <h3 style="color:#d32f2f">
 
-data-id="${item.id}"
+            ₹${money(due)}
 
->
+            </h3>
 
-✏ Edit
+        </div>
 
-</button>
+    </div>
 
-<button
+    ${item.note ? `
 
-class="contract-delete"
+    <div class="contract-note">
 
-data-id="${item.id}"
+        📝 ${item.note}
 
->
+    </div>
 
-🗑 Delete
+    ` : ""}
 
-</button>
+    <div class="contract-action">
 
-</div>
+        <button
+
+        class="contract-edit"
+
+        data-id="${item.id}">
+
+        ✏ Edit
+
+        </button>
+
+        <button
+
+        class="contract-delete"
+
+        data-id="${item.id}">
+
+        🗑 Delete
+
+        </button>
+
+    </div>
 
 </div>
 
@@ -724,14 +732,13 @@ data-id="${item.id}"
 
     });
 
-    list.innerHTML = html;
+    list.innerHTML=html;
 
     bindContractButtons();
 
     updateSummary();
 
 }
-
 /* =====================================
    EDIT + DELETE BUTTON
 ===================================== */
