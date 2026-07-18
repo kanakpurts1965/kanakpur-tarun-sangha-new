@@ -112,6 +112,9 @@ onSnapshot(
         );
     }
 );
+fillYearFilter();
+
+fillProgramFilter();
 document.addEventListener("DOMContentLoaded",()=>{
 const ids=["totalCredit","totalDebit","totalContract","totalPaid","totalDue","currentBalance"];
 ids.forEach(id=>{
@@ -217,3 +220,63 @@ function renderStatement(rows) {
 `).join("");
 
 }
+function fillYearFilter() {
+
+    const yearFilter = document.getElementById("yearFilter");
+
+    if (!yearFilter) return;
+
+    const years = [...new Set(
+        programs
+            .map(p => String(p.year))
+            .filter(Boolean)
+    )].sort((a, b) => b - a);
+
+    yearFilter.innerHTML =
+        '<option value="all">সব বছর</option>' +
+        years.map(y =>
+            `<option value="${y}">${y}</option>`
+        ).join("");
+
+}
+
+function fillProgramFilter() {
+
+    const year =
+        document.getElementById("yearFilter")?.value || "all";
+
+    const programFilter =
+        document.getElementById("programFilter");
+
+    if (!programFilter) return;
+
+    const visiblePrograms = programs.filter(p =>
+        year === "all" ||
+        String(p.year) === String(year)
+    );
+
+    programFilter.innerHTML =
+        '<option value="all">সব Program</option>' +
+        visiblePrograms.map(p =>
+            `<option value="${p.id}">${p.name}</option>`
+        ).join("");
+
+}
+
+document
+.getElementById("yearFilter")
+?.addEventListener("change", () => {
+
+    fillProgramFilter();
+
+    buildStatement();
+
+});
+
+document
+.getElementById("programFilter")
+?.addEventListener("change", () => {
+
+    buildStatement();
+
+});
