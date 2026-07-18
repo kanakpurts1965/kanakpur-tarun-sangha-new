@@ -331,6 +331,78 @@ onclick="window.location.href='statement-admin.html'">
 
 <div class="admin-box">
 <h3>➕ Collection Entry যোগ করুন</h3>
+    <div class="card member-collection-card">
+
+    <h2>👥 Member Collection Entry যোগ করুন</h2>
+
+    <div class="form-grid">
+
+        <div class="form-group">
+            <label>🎉 Program</label>
+            <select id="mcProgram"></select>
+        </div>
+
+        <div class="form-group">
+            <label>📂 Collection Category</label>
+            <select id="mcCategory"></select>
+        </div>
+
+        <div class="form-group">
+            <label>👤 Member</label>
+            <input
+                type="text"
+                id="memberSearch"
+                placeholder="Member Search...">
+        </div>
+
+        <div class="form-group">
+            <label>Selected Member</label>
+            <div id="selectedMember">
+                No Member Selected
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>💰 Amount</label>
+            <input
+                type="number"
+                id="mcAmount">
+        </div>
+
+        <div class="form-group">
+            <label>📅 Payment Date</label>
+            <input
+                type="date"
+                id="mcDate">
+        </div>
+
+        <div class="form-group">
+            <label>💳 Payment Method</label>
+            <select id="mcMethod">
+
+                <option>Cash</option>
+
+                <option>UPI</option>
+
+                <option>Bank</option>
+
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>📝 Remarks</label>
+            <textarea id="mcRemarks"></textarea>
+        </div>
+
+    </div>
+
+    <button id="saveMemberCollection">
+
+        💾 Member Collection Save করুন
+
+    </button>
+
+</div>
 <div class="credit-form-grid">
 <div class="admin-form-group"><label>🎉 Program</label><select id="entryProgramSelect"><option value="">Program নির্বাচন করুন</option></select></div>
 <div class="admin-form-group"><label>📂 Income Category</label><select id="entryCategorySelect"><option value="">Category নির্বাচন করুন</option></select></div>
