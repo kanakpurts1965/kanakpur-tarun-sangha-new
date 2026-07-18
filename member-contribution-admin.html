@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Member Contribution</title>
+
+<link
+rel="stylesheet"
+href="member-contribution-admin.css">
+
+</head>
+
+<body>
+
+<div class="page-container">
+
+<div class="page-header">
+
+<button
+type="button"
+class="back-btn"
+onclick="window.location.href='dashboard.html?open=accounts'">
+
+← Accounts Center
+
+</button>
+
+<h1>
+
+👥 Member Contribution (Subscription)
+
+</h1>
+
+<p>
+
+Club Accounts Management System
+
+</p>
+
+</div>
+
+  <div class="summary-grid">
+
+<div class="summary-card">
+
+<h3 id="totalMembers">
+
+0
+
+</h3>
+
+<p>
+
+Total Members
+
+</p>
+
+</div>
+
+<div class="summary-card">
+
+<h3 id="totalContribution">
+
+₹0
+
+</h3>
+
+<p>
+
+Total Contribution
+
+</p>
+
+</div>
+
+<div class="summary-card">
+
+<h3 id="totalPrograms">
+
+0
+
+</h3>
+
+<p>
+
+Programs
+
+</p>
+
+</div>
+
+<div class="summary-card">
+
+<h3 id="totalDue">
+
+₹0
+
+</h3>
+
+<p>
+
+Total Due
+
+</p>
+
+</div>
+
+</div>
+<div class="card">
+
+<div class="card-title">
+
+Master Member List
+
+</div>
+
+<input
+type="text"
+id="memberSearch"
+placeholder="Search Member">
+
+<div id="memberList">
+
+</div>
+
+</div>
+<div class="card">
+
+<div class="card-title">
+
+Add / Update Contribution
+
+</div>
+
+<select id="contributionYear">
+
+<option value="">
+
+Select Year
+
+</option>
+
+</select>
+
+<select id="contributionProgram">
+
+<option value="">
+
+Select Program
+
+</option>
+
+</select>
+
+<select id="contributionCategory">
+
+<option value="">
+
+Select Category
+
+</option>
+
+</select>
+
+<input
+type="number"
+id="contributionAmount"
+placeholder="Contribution Amount">
+
+<input
+type="date"
+id="paymentDate">
+
+<select id="paymentMethod">
+
+<option>
+
+Cash
+
+</option>
+
+<option>
+
+UPI
+
+</option>
+
+<option>
+
+Bank
+
+</option>
+
+</select>
+
+<textarea
+id="remarks"
+placeholder="Remarks"></textarea>
+
+<button
+id="saveContributionBtn">
+
+💾 Save Contribution
+
+</button>
+
+<button
+id="cancelContributionBtn">
+
+Reset
+
+</button>
+
+</div>
+<div class="card">
+
+<div class="card-title">
+
+Selected Member
+
+</div>
+
+<div id="selectedMember">
+
+Select Member...
+
+</div>
+
+</div>
+<div class="card">
+
+<div class="card-title">
+
+Contribution History
+
+</div>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Date</th>
+
+<th>Year</th>
+
+<th>Program</th>
+
+<th>Category</th>
+
+<th>Amount</th>
+
+<th>Status</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody
+id="historyBody">
+
+</tbody>
+
+</table>
+
+</div>
+<script
+type="module"
+src="member-contribution-admin.js">
+
+</script>
+
+</body>
+
+</html>
