@@ -171,7 +171,9 @@ $("creditYearFilter")?.addEventListener("change",()=>{fillCreditProgramFilter();
 $("creditProgramFilter")?.addEventListener("change",()=>{categoryFilter="all";renderCategoryChips();render();});
 
 onSnapshot(programsRef,s=>{programs=s.docs.map(d=>({id:d.id,...d.data()}));fillPrograms();fillCreditProgramFilter();renderCategoryChips();render()});
+fillMemberPrograms();
 onSnapshot(categoriesRef,s=>{categories=s.docs.map(d=>({id:d.id,...d.data()}));fillCategories();renderCategoryChips();render()});
+fillMemberCategories();
 onSnapshot(entriesRef,s=>{
  const raw=s.docs.map(d=>({id:d.id,...d.data()}));
  const seen=new Set();
@@ -421,3 +423,60 @@ memberSearchResult.appendChild(div);
 });
 
 }
+/* ===========================================
+   MEMBER COLLECTION PROGRAM
+=========================================== */
+
+function fillMemberPrograms(){
+
+    const mcProgram = document.getElementById("mcProgram");
+
+    if(!mcProgram) return;
+
+    const old = mcProgram.value;
+
+    mcProgram.innerHTML =
+        '<option value="">Program নির্বাচন করুন</option>' +
+
+        programs
+        .sort((a,b)=>Number(b.year)-Number(a.year))
+        .map(p=>`
+            <option value="${p.id}">
+                ${p.name} (${p.year})
+            </option>
+        `)
+        .join("");
+
+    mcProgram.value = old;
+}
+function fillMemberCategories(){
+
+    const mcProgram =
+        document.getElementById("mcProgram");
+
+    const mcCategory =
+        document.getElementById("mcCategory");
+
+    if(!mcProgram || !mcCategory) return;
+
+    const pid = mcProgram.value;
+
+    mcCategory.innerHTML =
+        '<option value="">Category নির্বাচন করুন</option>' +
+
+        categories
+        .filter(c=>c.programId===pid)
+        .map(c=>`
+            <option value="${c.id}">
+                ${c.name}
+            </option>
+        `)
+        .join("");
+
+}
+document
+.getElementById("mcProgram")
+?.addEventListener(
+    "change",
+    fillMemberCategories
+);
