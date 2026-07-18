@@ -1,1 +1,42 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statement Admin</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f5f5f5;margin:0;padding:20px}
+h1{text-align:center}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin:20px 0}
+select,button{padding:10px}
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px}
+.card{background:#fff;padding:18px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+table{width:100%;border-collapse:collapse;background:#fff;margin-top:20px}
+th,td{border:1px solid #ddd;padding:10px;text-align:center}
+th{background:#1976d2;color:#fff}
+</style>
+</head>
+<body>
+<h1>Club Accounts Management System</h1>
+<p style="text-align:center;">Statement Module</p>
+<div class="filters">
+<select id="yearFilter"><option>Select Year</option></select>
+<select id="programFilter"><option>Select Program</option></select>
+<button>Print</button><button>PDF</button><button>Excel</button>
+</div>
+<div class="summary">
+<div class="card"><h3>Total Credit</h3><h2 id="totalCredit">₹0</h2></div>
+<div class="card"><h3>Total Debit</h3><h2 id="totalDebit">₹0</h2></div>
+<div class="card"><h3>Total Contract</h3><h2 id="totalContract">₹0</h2></div>
+<div class="card"><h3>Total Paid</h3><h2 id="totalPaid">₹0</h2></div>
+<div class="card"><h3>Total Due</h3><h2 id="totalDue">₹0</h2></div>
+<div class="card"><h3>Current Balance</h3><h2 id="currentBalance">₹0</h2></div>
+</div>
+<table>
+<thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead>
+<tbody id="statementBody"><tr><td colspan="5">No data available</td></tr></tbody>
+</table>
+</body>
+</html>
