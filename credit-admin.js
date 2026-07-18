@@ -170,24 +170,21 @@ $("adminCreditList")?.addEventListener("click",async ev=>{
 $("creditYearFilter")?.addEventListener("change",()=>{fillCreditProgramFilter();categoryFilter="all";renderCategoryChips();render();});
 $("creditProgramFilter")?.addEventListener("change",()=>{categoryFilter="all";renderCategoryChips();render();});
 
-onSnapshot(programsRef,s=>{
-    programs=s.docs.map(d=>({id:d.id,...d.data()}));
+onSnapshot(categoriesRef,s=>{
 
-    fillPrograms();
+    categories =
+        s.docs.map(d=>({id:d.id,...d.data()}));
 
-    fillMemberPrograms();   // <-- এটা যোগ করো
+    fillCategories();
 
-    fillCreditProgramFilter();
+    fillMemberCategories();
 
     renderCategoryChips();
 
     render();
+
 });
-fillMemberPrograms();
-onSnapshot(categoriesRef,s=>{categories=s.docs.map(d=>({id:d.id,...d.data()}));fillCategories();renderCategoryChips();render()});
-fillMemberCategories();
-onSnapshot(entriesRef,s=>{
- const raw=s.docs.map(d=>({id:d.id,...d.data()}));
+
  const seen=new Set();
  entries=raw.filter(e=>{
    const created=e.createdAt?.seconds ?? 0;
@@ -438,34 +435,34 @@ memberSearchResult.appendChild(div);
 /* ===========================================
    MEMBER COLLECTION PROGRAM
 =========================================== */
+function fillMemberCategories(){
 
-function fillMemberPrograms(){
+    const mcProgram =
+        document.getElementById("mcProgram");
 
-    const mcProgram = document.getElementById("mcProgram");
+    const mcCategory =
+        document.getElementById("mcCategory");
 
-    if(!mcProgram) return;
+    if(!mcProgram || !mcCategory) return;
 
-    mcProgram.innerHTML =
-        '<option value="">Program নির্বাচন করুন</option>';
+    const pid = mcProgram.value;
 
-    programs
-    .sort((a,b)=>Number(b.year)-Number(a.year))
-    .forEach(program=>{
+    mcCategory.innerHTML =
+        '<option value="">Category নির্বাচন করুন</option>';
 
-        const option=document.createElement("option");
+    categories
+        .filter(c => c.programId === pid)
+        .forEach(category => {
 
-        option.value=program.id;
+            const option =
+                document.createElement("option");
 
-        option.textContent=
-            `${program.name} (${program.year})`;
+            option.value = category.id;
 
-        mcProgram.appendChild(option);
+            option.textContent = category.name;
 
-    });
+            mcCategory.appendChild(option);
 
-}
-const mcProgram = document.getElementById("mcProgram");
+        });
 
-if (mcProgram) {
-    mcProgram.addEventListener("change", fillMemberCategories);
 }
