@@ -464,9 +464,8 @@ function fillMemberPrograms(){
     });
 
 }
-document
-    .getElementById("mcProgram")
-    ?.addEventListener(
-        "change",
-        fillMemberCategories
-    );
+const mcProgram = document.getElementById("mcProgram");
+
+if (mcProgram) {
+    mcProgram.addEventListener("change", fillMemberCategories);
+}
