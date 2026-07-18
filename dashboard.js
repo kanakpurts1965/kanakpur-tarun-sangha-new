@@ -364,3 +364,30 @@ if (openPage === "accounts") {
     showAdminPage("accountsPage");
 
 }
+/* ==========================================
+   OPEN ACCOUNTS SUB PAGE
+========================================== */
+
+if (openPage === "statement") {
+
+    showAdminPage("accountsPage");
+
+    setTimeout(() => {
+
+        document.querySelectorAll(".accounts-center-card")
+        .forEach(card => card.classList.remove("active-tool"));
+
+        const statementCard = [...document.querySelectorAll(".accounts-center-card")]
+            .find(card =>
+                card.textContent.includes("Total Account Statement")
+            );
+
+        if (statementCard) {
+
+            statementCard.classList.add("active-tool");
+
+        }
+
+    }, 100);
+
+}
