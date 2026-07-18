@@ -280,7 +280,17 @@ MEMBER PHOTO FILE
 </button>
     
 <button class="accounts-center-card coming-tool"><span>👥</span><strong>Member Contribution</strong><small>Program ও Year-wise সদস্য চাঁদা</small></button>
-<button class="accounts-center-card coming-tool"><span>📊</span><strong>statement-admin.html</strong><small>Credit, Debit, Balance ও Charts</small></button>
+<button
+class="accounts-center-card active-tool"
+onclick="window.location.href='statement-admin.html'">
+
+<span>📊</span>
+
+<strong>Total Account Statement</strong>
+
+<small>Credit, Debit, Balance ও Charts</small>
+
+</button>
 <button class="accounts-center-card coming-tool"><span>📁</span><strong>Files / Documents</strong><small>Program Files ও Documents</small></button>
 <button class="accounts-center-card coming-tool"><span>📜</span><strong>Agreement Copies</strong><small>প্রতি Program/Year-এর Agreement Files</small></button>
 <button class="accounts-center-card coming-tool"><span>📄</span><strong>Reports / PDF</strong><small>বাংলা, English ও Bilingual</small></button>
@@ -1004,6 +1014,7 @@ src="member-request-admin.js">
 <script type="module" src="program-admin.js"></script>
 <script type="module" src="credit-admin.js"></script>
 <script type="module" src="debit-admin.js"></script>
+    <script type="module" src="contract-admin.js"></script>
     <script type="module" src="contract-admin.js"></script>
     
 </body>
