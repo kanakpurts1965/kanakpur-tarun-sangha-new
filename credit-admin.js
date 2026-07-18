@@ -464,7 +464,9 @@ function fillMemberPrograms(){
     });
 
 }
-?.addEventListener(
-    "change",
-    fillMemberCategories
-);
+document
+    .getElementById("mcProgram")
+    ?.addEventListener(
+        "change",
+        fillMemberCategories
+    );
