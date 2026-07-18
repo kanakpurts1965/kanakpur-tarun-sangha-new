@@ -24,7 +24,16 @@ th{background:#1976d2;color:#fff}
 <div class="filters">
 <select id="yearFilter"><option>Select Year</option></select>
 <select id="programFilter"><option>Select Program</option></select>
-<button>Print</button><button>PDF</button><button>Excel</button>
+  <input
+type="text"
+id="searchBox"
+placeholder="Search Statement..."
+style="padding:10px;min-width:220px;">
+<button id="printBtn">Print</button>
+
+<button id="pdfBtn">PDF</button>
+
+<button id="excelBtn">Excel</button>
 </div>
 <div class="summary">
 <div class="card"><h3>Total Credit</h3><h2 id="totalCredit">₹0</h2></div>
@@ -35,8 +44,29 @@ th{background:#1976d2;color:#fff}
 <div class="card"><h3>Current Balance</h3><h2 id="currentBalance">₹0</h2></div>
 </div>
 <table>
-<thead><tr><th>Date</th><th>Type</th><th>Description</th><th>Amount</th><th>Status</th></tr></thead>
+<thead>
+
+<tr>
+
+<th>Date</th>
+
+<th>Year</th>
+
+<th>Program</th>
+
+<th>Type</th>
+
+<th>Name</th>
+
+<th>Amount</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
 <tbody id="statementBody"><tr><td colspan="5">No data available</td></tr></tbody>
 </table>
+  <script type="module" src="statement-admin.js"></script>
 </body>
 </html>
