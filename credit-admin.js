@@ -170,7 +170,19 @@ $("adminCreditList")?.addEventListener("click",async ev=>{
 $("creditYearFilter")?.addEventListener("change",()=>{fillCreditProgramFilter();categoryFilter="all";renderCategoryChips();render();});
 $("creditProgramFilter")?.addEventListener("change",()=>{categoryFilter="all";renderCategoryChips();render();});
 
-onSnapshot(programsRef,s=>{programs=s.docs.map(d=>({id:d.id,...d.data()}));fillPrograms();fillCreditProgramFilter();renderCategoryChips();render()});
+onSnapshot(programsRef,s=>{
+    programs=s.docs.map(d=>({id:d.id,...d.data()}));
+
+    fillPrograms();
+
+    fillMemberPrograms();   // <-- এটা যোগ করো
+
+    fillCreditProgramFilter();
+
+    renderCategoryChips();
+
+    render();
+});
 fillMemberPrograms();
 onSnapshot(categoriesRef,s=>{categories=s.docs.map(d=>({id:d.id,...d.data()}));fillCategories();renderCategoryChips();render()});
 fillMemberCategories();
@@ -433,49 +445,25 @@ function fillMemberPrograms(){
 
     if(!mcProgram) return;
 
-    const old = mcProgram.value;
-
     mcProgram.innerHTML =
-        '<option value="">Program নির্বাচন করুন</option>' +
+        '<option value="">Program নির্বাচন করুন</option>';
 
-        programs
-        .sort((a,b)=>Number(b.year)-Number(a.year))
-        .map(p=>`
-            <option value="${p.id}">
-                ${p.name} (${p.year})
-            </option>
-        `)
-        .join("");
+    programs
+    .sort((a,b)=>Number(b.year)-Number(a.year))
+    .forEach(program=>{
 
-    mcProgram.value = old;
-}
-function fillMemberCategories(){
+        const option=document.createElement("option");
 
-    const mcProgram =
-        document.getElementById("mcProgram");
+        option.value=program.id;
 
-    const mcCategory =
-        document.getElementById("mcCategory");
+        option.textContent=
+            `${program.name} (${program.year})`;
 
-    if(!mcProgram || !mcCategory) return;
+        mcProgram.appendChild(option);
 
-    const pid = mcProgram.value;
-
-    mcCategory.innerHTML =
-        '<option value="">Category নির্বাচন করুন</option>' +
-
-        categories
-        .filter(c=>c.programId===pid)
-        .map(c=>`
-            <option value="${c.id}">
-                ${c.name}
-            </option>
-        `)
-        .join("");
+    });
 
 }
-document
-.getElementById("mcProgram")
 ?.addEventListener(
     "change",
     fillMemberCategories
