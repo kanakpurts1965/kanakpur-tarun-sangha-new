@@ -5614,3 +5614,29 @@ width:100%;
 }
 
 }
+/* ===== NOTICE → EVENT GAP = 0 ===== */
+
+.notice-bar{
+    margin:0 !important;
+    padding:0 !important;
+}
+
+.home-event-countdown-bar{
+    margin:0 !important;
+    padding:12px 0 !important;
+}
+
+.notice-bar + .home-event-countdown-bar{
+    margin-top:0 !important;
+}
+
+/* যদি মাঝখানে wrapper থাকে */
+.notice-bar + div{
+    margin:0 !important;
+    padding:0 !important;
+}
+
+/* Hero এর আগে gap */
+.home-event-countdown-bar + *{
+    margin-top:0 !important;
+}
