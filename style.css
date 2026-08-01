@@ -5315,3 +5315,24 @@ right:10px;
 }
 
 }
+.slide.active img{
+
+animation:zoomHero 6s linear forwards;
+
+}
+
+@keyframes zoomHero{
+
+0%{
+
+transform:scale(1);
+
+}
+
+100%{
+
+transform:scale(1.08);
+
+}
+
+}
