@@ -4869,3 +4869,80 @@ transform:rotate(360deg);
 }
 
 }
+/* ==========================================
+   SCROLL ANIMATION
+========================================== */
+
+.reveal{
+
+opacity:0;
+
+transform:translateY(70px);
+
+transition:all .8s ease;
+
+will-change:transform,opacity;
+
+}
+
+.reveal.active{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+.reveal-left{
+
+opacity:0;
+
+transform:translateX(-80px);
+
+transition:all .8s ease;
+
+}
+
+.reveal-left.active{
+
+opacity:1;
+
+transform:translateX(0);
+
+}
+
+.reveal-right{
+
+opacity:0;
+
+transform:translateX(80px);
+
+transition:all .8s ease;
+
+}
+
+.reveal-right.active{
+
+opacity:1;
+
+transform:translateX(0);
+
+}
+
+.reveal-zoom{
+
+opacity:0;
+
+transform:scale(.85);
+
+transition:all .8s ease;
+
+}
+
+.reveal-zoom.active{
+
+opacity:1;
+
+transform:scale(1);
+
+}
