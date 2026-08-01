@@ -395,3 +395,37 @@ showSlide(index);
 };
 
 });
+const prevBtn=document.querySelector(".slider-prev");
+const nextBtn=document.querySelector(".slider-next");
+
+function nextSlide(){
+
+currentSlide++;
+
+if(currentSlide>=slides.length){
+
+currentSlide=0;
+
+}
+
+showSlide(currentSlide);
+
+}
+
+function prevSlide(){
+
+currentSlide--;
+
+if(currentSlide<0){
+
+currentSlide=slides.length-1;
+
+}
+
+showSlide(currentSlide);
+
+}
+
+nextBtn.onclick=nextSlide;
+
+prevBtn.onclick=prevSlide;
