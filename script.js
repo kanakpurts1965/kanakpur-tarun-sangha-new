@@ -353,3 +353,79 @@ window.addEventListener("load", () => {
     }, 2500);
 
 });
+/* ==========================
+   LOADER
+========================== */
+
+#loader{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:999999;
+    transition:.5s;
+}
+
+.loader-box{
+    text-align:center;
+}
+
+.loader-logo{
+    width:110px;
+    height:110px;
+    border-radius:50%;
+    animation:spin 2s linear infinite;
+}
+
+.loader-box h2{
+    margin:20px 0;
+    color:#8B0000;
+}
+
+.loader-bar{
+    width:250px;
+    height:8px;
+    background:#ddd;
+    border-radius:20px;
+    overflow:hidden;
+    margin:15px auto;
+}
+
+#loaderFill{
+    width:0%;
+    height:100%;
+    background:#8B0000;
+    animation:loading 2.5s forwards;
+}
+
+@keyframes loading{
+    100%{
+        width:100%;
+    }
+}
+
+@keyframes spin{
+    100%{
+        transform:rotate(360deg);
+    }
+}
+window.addEventListener("load", function () {
+
+    setTimeout(function () {
+
+        document.getElementById("loader").style.opacity = "0";
+
+        setTimeout(function () {
+
+            document.getElementById("loader").style.display = "none";
+
+        }, 500);
+
+    }, 2500);
+
+});
