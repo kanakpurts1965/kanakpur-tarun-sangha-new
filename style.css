@@ -5569,9 +5569,9 @@ width:100%;
 
 width:300px;
 
-height:8px;
+height:10px;
 
-background:#ddd;
+background:#e0e0e0;
 
 border-radius:50px;
 
@@ -5579,25 +5579,31 @@ overflow:hidden;
 
 margin:20px auto;
 
+position:relative;
+
 }
 
 #loaderFill{
 
+display:block;
+
+width:0%;
+
 height:100%;
 
-background:#8B0000;
+background:linear-gradient(90deg,#8B0000,#ff2d2d,#8B0000);
 
-width:0;
+border-radius:50px;
 
-animation:fillBar 2.2s linear forwards;
+animation:loaderProgress 2.2s linear forwards;
 
 }
 
-@keyframes fillBar{
+@keyframes loaderProgress{
 
 0%{
 
-width:0;
+width:0%;
 
 }
 
@@ -5608,3 +5614,4 @@ width:100%;
 }
 
 }
+
