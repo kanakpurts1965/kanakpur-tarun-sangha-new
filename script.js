@@ -429,3 +429,47 @@ showSlide(currentSlide);
 nextBtn.onclick=nextSlide;
 
 prevBtn.onclick=prevSlide;
+/* ==========================================
+   MOBILE SWIPE SUPPORT
+========================================== */
+
+let startX = 0;
+let endX = 0;
+
+const heroSlider = document.querySelector(".hero-slider");
+
+if(heroSlider){
+
+heroSlider.addEventListener("touchstart",(e)=>{
+
+startX = e.changedTouches[0].screenX;
+
+});
+
+heroSlider.addEventListener("touchend",(e)=>{
+
+endX = e.changedTouches[0].screenX;
+
+handleSwipe();
+
+});
+
+}
+
+function handleSwipe(){
+
+const diff = startX - endX;
+
+if(diff > 60){
+
+nextSlide();
+
+}
+
+if(diff < -60){
+
+prevSlide();
+
+}
+
+}
