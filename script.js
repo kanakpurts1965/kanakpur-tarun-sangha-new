@@ -333,3 +333,18 @@ document.addEventListener("keydown", (e) => {
 
 console.log("Kanakpur Tarun Sangha Website v5.0 Loaded Successfully"); 
 
+window.addEventListener("load",()=>{
+
+setTimeout(()=>{
+
+document.getElementById("loader").style.opacity="0";
+
+setTimeout(()=>{
+
+document.getElementById("loader").style.display="none";
+
+},500);
+
+},2500);
+
+});
