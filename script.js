@@ -335,13 +335,17 @@ console.log("Kanakpur Tarun Sangha Website v5.0 Loaded Successfully");
 
 window.addEventListener("load",()=>{
 
+const loader = document.getElementById("loader");
+
+if(!loader) return;
+
 setTimeout(()=>{
 
-document.getElementById("loader").style.opacity="0";
+loader.style.opacity="0";
 
 setTimeout(()=>{
 
-document.getElementById("loader").style.display="none";
+loader.style.display="none";
 
 },500);
 
