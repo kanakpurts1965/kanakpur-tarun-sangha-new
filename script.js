@@ -338,25 +338,30 @@ window.addEventListener("load", function () {
 
     const loader = document.getElementById("loader");
 
-    if (sessionStorage.getItem("loaderShown")) {
+    if (!loader) return;
 
-        loader.style.display = "none";
+    if (sessionStorage.getItem("siteLoaded") === "yes") {
+
+        loader.remove();
+
         return;
 
     }
 
-    sessionStorage.setItem("loaderShown","true");
+    sessionStorage.setItem("siteLoaded", "yes");
 
-    setTimeout(function(){
+    setTimeout(function () {
 
-        loader.style.opacity="0";
+        loader.style.opacity = "0";
 
-        setTimeout(function(){
+        loader.style.visibility = "hidden";
 
-            loader.style.display="none";
+        setTimeout(function () {
 
-        },500);
+            loader.remove();
 
-    },2200);
+        }, 500);
+
+    }, 2200);
 
 });
