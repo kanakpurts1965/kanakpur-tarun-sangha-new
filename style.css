@@ -928,37 +928,6 @@ justify-content:center;
 
 }
 /* ==========================================
-   HIDDEN ADMIN LOGIN
-========================================== */
-
-let adminClick = 0;
-
-const adminLogo = document.getElementById("adminLogo");
-
-if (adminLogo) {
-
-    adminLogo.addEventListener("click", () => {
-
-        adminClick++;
-
-        if (adminClick >= 5) {
-
-            adminClick = 0;
-
-            window.location.href = "admin.html";
-
-        }
-
-        setTimeout(() => {
-
-            adminClick = 0;
-
-        }, 3000);
-
-    });
-
-}
-/* ==========================================
    HOLD ADMIN INDICATOR
 ========================================== */
 
