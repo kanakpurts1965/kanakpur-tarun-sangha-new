@@ -5010,3 +5010,61 @@ font-size:14px !important;
 }
 
 }
+/* ==========================================
+   SIDEBAR LOGO CENTER FINAL FIX
+========================================== */
+
+.sidebar-header{
+    display:flex !important;
+    flex-direction:column !important;
+    justify-content:center !important;
+    align-items:center !important;
+    text-align:center !important;
+    padding:30px 15px !important;
+}
+
+.sidebar-header .sidebar-logo{
+    display:block !important;
+    width:110px !important;
+    height:110px !important;
+    margin:0 auto 20px auto !important;
+}
+
+.sidebar-header h2{
+    width:100% !important;
+    margin:0 0 8px 0 !important;
+    text-align:center !important;
+    color:#fff !important;
+    font-size:30px !important;
+    line-height:1.3 !important;
+}
+
+.sidebar-header p{
+    width:100% !important;
+    margin:0 !important;
+    text-align:center !important;
+    color:#ffe9a8 !important;
+    font-size:18px !important;
+}
+
+@media (max-width:768px){
+
+.sidebar-header{
+    padding:25px 15px !important;
+}
+
+.sidebar-header .sidebar-logo{
+    width:95px !important;
+    height:95px !important;
+    margin:0 auto 15px auto !important;
+}
+
+.sidebar-header h2{
+    font-size:18px !important;
+}
+
+.sidebar-header p{
+    font-size:14px !important;
+}
+
+}
