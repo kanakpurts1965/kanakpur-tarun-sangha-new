@@ -352,100 +352,46 @@ document.getElementById("loader").style.display="none";
 HERO SLIDER
 ========================================== */
 
-.hero-slider{
+const slides=document.querySelectorAll(".slide");
 
-position:relative;
+const dots=document.querySelectorAll(".dot");
 
-width:100%;
+let currentSlide=0;
 
-height:500px;
+function showSlide(index){
 
-overflow:hidden;
+slides.forEach(s=>s.classList.remove("active"));
 
-border-radius:25px;
+dots.forEach(d=>d.classList.remove("active"));
 
-box-shadow:0 20px 50px rgba(0,0,0,.18);
+slides[index].classList.add("active");
 
-}
-
-.slide{
-
-position:absolute;
-
-inset:0;
-
-opacity:0;
-
-transition:opacity .8s;
+dots[index].classList.add("active");
 
 }
 
-.slide.active{
+setInterval(()=>{
 
-opacity:1;
+currentSlide++;
 
-z-index:2;
+if(currentSlide>=slides.length){
 
-}
-
-.slide img{
-
-width:100%;
-
-height:100%;
-
-object-fit:cover;
+currentSlide=0;
 
 }
 
-.slider-dots{
+showSlide(currentSlide);
 
-position:absolute;
+},4000);
 
-left:50%;
+dots.forEach((dot,index)=>{
 
-bottom:20px;
+dot.onclick=()=>{
 
-transform:translateX(-50%);
+currentSlide=index;
 
-display:flex;
+showSlide(index);
 
-gap:10px;
+};
 
-z-index:5;
-
-}
-
-.dot{
-
-width:12px;
-
-height:12px;
-
-border-radius:50%;
-
-background:#ffffff88;
-
-cursor:pointer;
-
-transition:.3s;
-
-}
-
-.dot.active{
-
-background:#fff;
-
-transform:scale(1.3);
-
-}
-
-@media(max-width:768px){
-
-.hero-slider{
-
-height:300px;
-
-}
-
-}
+});
