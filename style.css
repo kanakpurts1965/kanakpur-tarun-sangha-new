@@ -3235,3 +3235,93 @@ main.content .hero{
 }
 
 }
+/* ==========================
+   FINAL STATISTICS
+========================== */
+
+#statistics{
+    padding:60px 0;
+}
+
+#statistics .stats-grid{
+    display:grid !important;
+    grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    gap:20px !important;
+    align-items:stretch;
+}
+
+#statistics .stats-card{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
+
+    padding:25px 15px;
+    border-radius:18px;
+
+    background:#fff;
+
+    text-align:center;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+    transition:.35s;
+}
+
+#statistics .stats-card:hover{
+    transform:translateY(-8px);
+}
+
+#statistics .stats-icon{
+    font-size:40px;
+    margin-bottom:15px;
+}
+
+#statistics .stats-card h3{
+    font-size:42px;
+    color:#8B0000;
+}
+
+#statistics .stats-card p{
+    font-size:20px;
+    font-weight:700;
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+#statistics .stats-grid{
+
+grid-template-columns:repeat(4,1fr) !important;
+
+gap:8px !important;
+
+}
+
+#statistics .stats-card{
+
+padding:12px 6px;
+
+border-radius:12px;
+
+}
+
+#statistics .stats-icon{
+
+font-size:22px;
+
+}
+
+#statistics .stats-card h3{
+
+font-size:20px;
+
+}
+
+#statistics .stats-card p{
+
+font-size:11px;
+
+}
+
+}
