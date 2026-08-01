@@ -334,22 +334,29 @@ document.addEventListener("keydown", (e) => {
 console.log("Kanakpur Tarun Sangha Website v5.0 Loaded Successfully"); 
 
 
-window.addEventListener("load", () => {
+window.addEventListener("load", function () {
 
     const loader = document.getElementById("loader");
 
-    if (!loader) return;
+    if (sessionStorage.getItem("loaderShown")) {
 
-    setTimeout(() => {
+        loader.style.display = "none";
+        return;
 
-        loader.style.opacity = "0";
+    }
 
-        setTimeout(() => {
+    sessionStorage.setItem("loaderShown","true");
 
-            loader.style.display = "none";
+    setTimeout(function(){
 
-        }, 500);
+        loader.style.opacity="0";
 
-    }, 2500);
+        setTimeout(function(){
+
+            loader.style.display="none";
+
+        },500);
+
+    },2200);
 
 });
