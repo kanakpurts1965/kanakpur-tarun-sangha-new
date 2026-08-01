@@ -4917,3 +4917,96 @@ html,
 body{
     overflow-x:hidden;
 }
+/* ==========================================
+   SIDEBAR HEADER CENTER FIX
+========================================== */
+
+.sidebar-header{
+
+display:flex !important;
+
+flex-direction:column !important;
+
+align-items:center !important;
+
+justify-content:center !important;
+
+text-align:center !important;
+
+padding:30px 20px !important;
+
+}
+
+.sidebar-logo{
+
+display:block !important;
+
+margin:0 auto 15px auto !important;
+
+width:100px !important;
+
+height:100px !important;
+
+}
+
+.sidebar-title{
+
+width:100% !important;
+
+text-align:center !important;
+
+}
+
+.sidebar-title h2{
+
+margin:10px 0 5px 0 !important;
+
+text-align:center !important;
+
+font-size:28px !important;
+
+line-height:1.3 !important;
+
+}
+
+.sidebar-title p{
+
+margin:0 !important;
+
+text-align:center !important;
+
+font-size:18px !important;
+
+}
+
+@media(max-width:768px){
+
+.sidebar-header{
+
+padding:25px 15px !important;
+
+}
+
+.sidebar-logo{
+
+width:95px !important;
+
+height:95px !important;
+
+margin:0 auto 15px auto !important;
+
+}
+
+.sidebar-title h2{
+
+font-size:20px !important;
+
+}
+
+.sidebar-title p{
+
+font-size:14px !important;
+
+}
+
+}
