@@ -3994,3 +3994,142 @@ justify-content:center;
 }
 
 }
+/* ==========================================
+   WELCOME SECTION V2
+========================================== */
+
+.welcome{
+
+background:linear-gradient(135deg,#ffffff,#fff7f2);
+
+padding:50px;
+
+border-radius:24px;
+
+box-shadow:0 15px 40px rgba(0,0,0,.08);
+
+border-left:8px solid #8B0000;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.welcome::before{
+
+content:"";
+
+position:absolute;
+
+top:-80px;
+
+right:-80px;
+
+width:220px;
+
+height:220px;
+
+background:rgba(139,0,0,.05);
+
+border-radius:50%;
+
+}
+
+.welcome h2{
+
+font-size:38px;
+
+color:#8B0000;
+
+margin-bottom:25px;
+
+font-weight:800;
+
+}
+
+.welcome p{
+
+font-size:20px;
+
+line-height:2;
+
+color:#444;
+
+margin-bottom:20px;
+
+text-align:justify;
+
+}
+
+.welcome .read-btn{
+
+display:inline-flex;
+
+align-items:center;
+
+justify-content:center;
+
+padding:15px 32px;
+
+border-radius:50px;
+
+background:#8B0000;
+
+color:#fff;
+
+font-size:17px;
+
+font-weight:700;
+
+text-decoration:none;
+
+transition:.35s;
+
+box-shadow:0 12px 30px rgba(139,0,0,.20);
+
+}
+
+.welcome .read-btn:hover{
+
+background:#a50000;
+
+transform:translateY(-4px);
+
+}
+
+@media(max-width:768px){
+
+.welcome{
+
+padding:28px 20px;
+
+border-radius:18px;
+
+}
+
+.welcome h2{
+
+font-size:28px;
+
+text-align:center;
+
+}
+
+.welcome p{
+
+font-size:17px;
+
+text-align:left;
+
+line-height:1.9;
+
+}
+
+.welcome .read-btn{
+
+width:100%;
+
+}
+
+}
