@@ -1,3 +1,7 @@
+// Detect Installed App (PWA)
+const isAppMode =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
 /* ==========================================
    SIDEBAR
 ========================================== */
