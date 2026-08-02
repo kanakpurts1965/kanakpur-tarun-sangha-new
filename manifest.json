@@ -1,20 +1,21 @@
 {
   "name": "Kanakpur Tarun Sangha",
   "short_name": "KTS",
- "start_url": "/kanakpur-tarun-sangha-new/",
-"scope": "/kanakpur-tarun-sangha-new/"
+  "description": "Kanakpur Tarun Sangha Official Website",
+  "start_url": "/kanakpur-tarun-sangha-new/",
+  "scope": "/kanakpur-tarun-sangha-new/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#8B0000",
+  "theme_color": "#0d6efd",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "123.png.png",
+      "src": "images/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "123.png.png",
+      "src": "images/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
