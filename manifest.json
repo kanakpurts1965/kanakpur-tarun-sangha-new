@@ -2,7 +2,7 @@
   "name": "Kanakpur Tarun Sangha",
   "short_name": "KTS",
   "description": "Kanakpur Tarun Sangha Official Website",
-  "start_url": "/kanakpur-tarun-sangha-new/intro.html"
+  "start_url": "/kanakpur-tarun-sangha-new/intro.html",
   "scope": "/kanakpur-tarun-sangha-new/",
   "display": "standalone",
   "background_color": "#ffffff",
