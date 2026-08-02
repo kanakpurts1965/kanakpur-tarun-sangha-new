@@ -11,3 +11,20 @@ window.addEventListener("load", () => {
     }, 3200);
 
 });
+const txt=document.getElementById("loadingText");
+
+let i=0;
+
+const timer=setInterval(()=>{
+
+i++;
+
+txt.innerHTML=`Loading... ${i}%`;
+
+if(i>=100){
+
+clearInterval(timer);
+
+}
+
+},30);
