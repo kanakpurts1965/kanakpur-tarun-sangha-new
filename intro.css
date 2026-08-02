@@ -14,10 +14,23 @@ animation:fade 1s;
 }
 
 .logo{
-width:130px;
-animation:zoom 1.5s infinite alternate;
+    width:140px;
+    border-radius:50%;
+    animation:logoFloat 2s infinite alternate;
+    box-shadow:0 0 35px rgba(139,0,0,.45);
 }
 
+@keyframes logoFloat{
+
+from{
+transform:translateY(0);
+}
+
+to{
+transform:translateY(-12px);
+}
+
+}
 h1{
 color:#8B0000;
 margin-top:20px;
