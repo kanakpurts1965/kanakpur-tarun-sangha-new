@@ -1,4 +1,4 @@
-const CACHE_NAME = "kts-v1";
+const CACHE_NAME = "kts-v3";
 
 const urlsToCache = [
  "/",
