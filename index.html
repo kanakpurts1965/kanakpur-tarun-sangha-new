@@ -722,5 +722,12 @@ Designed & Developed by
   <script type="module" src="comments.js"></script>
 <script src="script.js"></script>
   <script type="module" src="home-event.js"></script>
+    <script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/kanakpur-tarun-sangha-new/service-worker.js")
+    .then(() => console.log("Service Worker Registered"))
+    .catch(err => console.log(err));
+}
+</script>
 </body>
 </html>
