@@ -340,17 +340,27 @@ console.log("Kanakpur Tarun Sangha Website v5.0 Loaded Successfully");
 
 window.addEventListener("load", function () {
 
-    const loader = document.getElementById("loader");
+   const loader = document.getElementById("loader");
 
-    if (!loader) return;
-
-    if (sessionStorage.getItem("siteLoaded") === "yes") {
-
-        loader.remove();
-
-        return;
-
+if (isAppMode) {
+    // Installed App হলে পুরনো Loader দেখাবে না
+    if (loader) {
+        loader.style.display = "none";
     }
+} else {
+    // Browser হলে আগের Loader চলবে
+    window.addEventListener("load", () => {
+        setTimeout(() => {
+            if (loader) {
+                loader.style.opacity = "0";
+
+                setTimeout(() => {
+                    loader.style.display = "none";
+                }, 500);
+            }
+        }, 2000);
+    });
+}
 
     sessionStorage.setItem("siteLoaded", "yes");
 
