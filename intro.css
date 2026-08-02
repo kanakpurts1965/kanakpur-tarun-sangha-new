@@ -1,0 +1,55 @@
+body{
+margin:0;
+background:#ffffff;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:Arial,sans-serif;
+}
+
+.intro{
+text-align:center;
+animation:fade 1s;
+}
+
+.logo{
+width:130px;
+animation:zoom 1.5s infinite alternate;
+}
+
+h1{
+color:#8B0000;
+margin-top:20px;
+}
+
+.loader{
+width:220px;
+height:8px;
+background:#ddd;
+margin:25px auto;
+border-radius:10px;
+overflow:hidden;
+}
+
+.bar{
+width:0;
+height:100%;
+background:#8B0000;
+animation:load 3s linear forwards;
+}
+
+@keyframes load{
+from{width:0;}
+to{width:100%;}
+}
+
+@keyframes zoom{
+from{transform:scale(1);}
+to{transform:scale(1.08);}
+}
+
+@keyframes fade{
+from{opacity:0;}
+to{opacity:1;}
+}
