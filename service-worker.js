@@ -1,10 +1,10 @@
 const CACHE_NAME = "kts-v1";
 
 const urlsToCache = [
-  "/kanakpur-tarun-sangha-new/",
-  "/kanakpur-tarun-sangha-new/index.html",
-  "/kanakpur-tarun-sangha-new/style.css",
-  "/kanakpur-tarun-sangha-new/dashboard.html"
+ "/",
+"/index.html",
+"/style.css",
+"/dashboard.html"
 ];
 
 self.addEventListener("install", event => {
