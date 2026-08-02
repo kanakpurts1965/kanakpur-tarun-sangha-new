@@ -1,7 +1,8 @@
 {
   "name": "Kanakpur Tarun Sangha",
   "short_name": "KTS",
-  "start_url": "/",
+ "start_url": "/kanakpur-tarun-sangha-new/",
+"scope": "/kanakpur-tarun-sangha-new/"
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#8B0000",
