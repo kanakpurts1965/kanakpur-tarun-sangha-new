@@ -121,3 +121,11 @@ font-weight:500;
         transform:translateY(0);
     }
 }
+.version-box{
+position:fixed;
+bottom:20px;
+width:100%;
+text-align:center;
+color:#888;
+font-size:13px;
+}
