@@ -1,7 +1,7 @@
-// ======================================
-// GALLERY V3
+// ==========================================
+// gallery.js
 // PART 1
-// ======================================
+// ==========================================
 
 import { db } from "./firebase.js";
 
@@ -12,13 +12,13 @@ orderBy,
 onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-const publicGalleryGroups=
+const publicGalleryGroups =
 document.getElementById("publicGalleryGroups");
 
-const galleryRef=
+const galleryRef =
 collection(db,"galleryGroups");
 
-const galleryQuery=
+const galleryQuery =
 query(
 galleryRef,
 orderBy("createdAt","desc")
@@ -37,11 +37,19 @@ return String(text)
 
 }
 
+function getPhoto(photo){
+
+return typeof photo==="string"
+?photo
+:(photo?.url||"");
+
+}
+
 onSnapshot(galleryQuery,(snapshot)=>{
 
-window.galleryGroups=[];
-
 publicGalleryGroups.innerHTML="";
+
+window.galleryGroups=[];
 
 snapshot.forEach(doc=>{
 
@@ -56,89 +64,43 @@ id:doc.id,
 });
 
 const photos=
-
 Array.isArray(data.photos)
-
 ?data.photos
-
 :[];
 
-const previewPhotos = photos.slice(0,6);
+const preview=
+photos.slice(0,6);
 
-const photosHTML = previewPhotos.map((photo,index)=>{
-
-const photoURL =
-typeof photo==="string"
-?photo
-:photo.url||"";
-
-const remain = photos.length-6;
-
-return `
-
-<button
-type="button"
-class="public-gallery-photo-btn"
-data-group="${item.id}"
-data-index="${index}">
-
-<img
-src="${safeAttribute(photoURL)}"
-alt="${safeAttribute(data.heading||"Gallery Photo")}"
-loading="lazy">
-
-${index===5 && remain>0 ? `
-<div class="gallery-overlay">
-<span>+${remain}</span>
-</div>
-` : ""}
-
-</button>
-
-`;
-
-}).join("");
 const remain=
+Math.max(0,photos.length-6);
 
-photos.length-6;
-
-let html="";
+let previewHTML="";
 
 preview.forEach((photo,index)=>{
 
-const src=
-
-typeof photo==="string"
-
-?photo
-
-:photo.url||"";
-
-html+=`
+previewHTML+=`
 
 <button
 class="gallery-preview"
 data-id="${doc.id}">
 
 <img
-src="${safe(src)}"
-loading="lazy">
+src="${safe(getPhoto(photo))}"
+loading="lazy"
+alt="${safe(data.heading||"Gallery")}">
 
 ${
-index===5&&remain>0
-
+index===5 && remain>0
 ?`
 
-<div class="gallery-count">
+<div class="gallery-overlay">
 
 +${remain}
 
 </div>
 
 `
-
 :""
-
 }
 
 </button>
@@ -155,13 +117,25 @@ publicGalleryGroups.insertAdjacentHTML(
 
 <section class="gallery-group">
 
-<h2>${safe(data.heading||"")}</h2>
+<div class="gallery-group-header">
 
-<p>${safe(data.caption||"")}</p>
+<h2>
+
+${safe(data.heading||"")}
+
+</h2>
+
+${
+data.caption
+?`<p>${safe(data.caption)}</p>`
+:""
+}
+
+</div>
 
 <div class="gallery-grid">
 
-${html}
+${previewHTML}
 
 </div>
 
@@ -174,74 +148,149 @@ ${html}
 });
 
 });
-// ======================================
-// GALLERY V3
-// PART 2
-// ======================================
 
-const galleryViewer =
-document.getElementById("galleryViewer");
+// ==========================================
+// gallery.js
+// PART 1
+// ==========================================
 
-const galleryViewerGrid =
-document.getElementById("galleryViewerGrid");
+import { db } from "./firebase.js";
 
-const galleryViewerClose =
-document.getElementById("galleryViewerClose");
+import {
+collection,
+query,
+orderBy,
+onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-const photoViewer =
-document.getElementById("photoViewer");
+const publicGalleryGroups =
+document.getElementById("publicGalleryGroups");
 
-const photoViewerImage =
-document.getElementById("photoViewerImage");
+const galleryRef =
+collection(db,"galleryGroups");
 
-const photoViewerClose =
-document.getElementById("photoViewerClose");
-
-
-// ======================================
-// OPEN GALLERY
-// ======================================
-
-document.addEventListener("click",(e)=>{
-
-const btn=e.target.closest(".gallery-preview");
-
-if(!btn)return;
-
-const id=btn.dataset.id;
-
-const group=
-
-window.galleryGroups.find(
-
-x=>x.id===id
-
+const galleryQuery =
+query(
+galleryRef,
+orderBy("createdAt","desc")
 );
 
-if(!group)return;
+window.galleryGroups=[];
 
-galleryViewerGrid.innerHTML="";
+function safe(text=""){
 
-group.photos.forEach(photo=>{
+return String(text)
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
 
-const src=
+}
 
-typeof photo==="string"
+function getPhoto(photo){
 
+return typeof photo==="string"
 ?photo
+:(photo?.url||"");
 
-:photo.url||"";
+}
 
-galleryViewerGrid.insertAdjacentHTML(
+onSnapshot(galleryQuery,(snapshot)=>{
+
+publicGalleryGroups.innerHTML="";
+
+window.galleryGroups=[];
+
+snapshot.forEach(doc=>{
+
+const data=doc.data();
+
+window.galleryGroups.push({
+
+id:doc.id,
+
+...data
+
+});
+
+const photos=
+Array.isArray(data.photos)
+?data.photos
+:[];
+
+const preview=
+photos.slice(0,6);
+
+const remain=
+Math.max(0,photos.length-6);
+
+let previewHTML="";
+
+preview.forEach((photo,index)=>{
+
+previewHTML+=`
+
+<button
+class="gallery-preview"
+data-id="${doc.id}">
+
+<img
+src="${safe(getPhoto(photo))}"
+loading="lazy"
+alt="${safe(data.heading||"Gallery")}">
+
+${
+index===5 && remain>0
+?`
+
+<div class="gallery-overlay">
+
++${remain}
+
+</div>
+
+`
+:""
+}
+
+</button>
+
+`;
+
+});
+
+publicGalleryGroups.insertAdjacentHTML(
 
 "beforeend",
 
 `
 
-<img
-class="gallery-grid-photo"
-src="${src}"
-loading="lazy">
+<section class="gallery-group">
+
+<div class="gallery-group-header">
+
+<h2>
+
+${safe(data.heading||"")}
+
+</h2>
+
+${
+data.caption
+?`<p>${safe(data.caption)}</p>`
+:""
+}
+
+</div>
+
+<div class="gallery-grid">
+
+${previewHTML}
+
+</div>
+
+</section>
 
 `
 
@@ -249,41 +298,30 @@ loading="lazy">
 
 });
 
-galleryViewer.classList.add("show");
-
-document.body.style.overflow="hidden";
-
 });
 
 
-// ======================================
-// OPEN PHOTO
-// ======================================
+// ==========================================
+// gallery.js
+// PART 3
+// ==========================================
+
+// OPEN FULL PHOTO
 
 document.addEventListener("click",(e)=>{
 
-if(!e.target.classList.contains("gallery-grid-photo"))
+const img=e.target.closest(".gallery-grid-photo");
 
-return;
+if(!img)return;
 
-photoViewerImage.src=e.target.src;
+photoViewerImage.src=img.src;
 
 photoViewer.classList.add("show");
 
 });
 
 
-// ======================================
-// CLOSE
-// ======================================
-
-galleryViewerClose.onclick=()=>{
-
-galleryViewer.classList.remove("show");
-
-document.body.style.overflow="";
-
-};
+// CLOSE PHOTO
 
 photoViewerClose.onclick=()=>{
 
@@ -293,17 +331,8 @@ photoViewerImage.src="";
 
 };
 
-galleryViewer.onclick=(e)=>{
 
-if(e.target===galleryViewer){
-
-galleryViewer.classList.remove("show");
-
-document.body.style.overflow="";
-
-}
-
-};
+// CLICK OUTSIDE PHOTO
 
 photoViewer.onclick=(e)=>{
 
@@ -317,109 +346,10 @@ photoViewerImage.src="";
 
 };
 
-// ======================================
-// GALLERY V3
-// PART 3
-// ======================================
 
-// ESC
+// CLOSE GALLERY
 
-document.addEventListener("keydown",(e)=>{
-
-if(e.key==="Escape"){
-
-galleryViewer.classList.remove("show");
-
-photoViewer.classList.remove("show");
-
-photoViewerImage.src="";
-
-document.body.style.overflow="";
-
-}
-
-});
-
-
-// CLICK OUTSIDE
-
-galleryViewer.addEventListener("click",(e)=>{
-
-if(e.target===galleryViewer){
-
-galleryViewer.classList.remove("show");
-
-document.body.style.overflow="";
-
-}
-
-});
-
-photoViewer.addEventListener("click",(e)=>{
-
-if(e.target===photoViewer){
-
-photoViewer.classList.remove("show");
-
-photoViewerImage.src="";
-
-}
-
-});
-
-
-// IMAGE ZOOM
-
-document.addEventListener("click",(e)=>{
-
-if(!e.target.classList.contains("gallery-grid-photo"))
-
-return;
-
-e.target.classList.toggle("zoom");
-
-});
-
-
-// PRELOAD
-
-function preload(list){
-
-list.forEach(src=>{
-
-const img=new Image();
-
-img.src=
-
-typeof src==="string"
-
-?src
-
-:src.url||"";
-
-});
-
-}
-
-window.addEventListener("load",()=>{
-
-window.galleryGroups.forEach(group=>{
-
-preload(group.photos);
-
-});
-
-});
-
-
-// ======================================
-// GALLERY V3
-// PART 4 (FINAL)
-// ======================================
-
-// CLOSE BUTTONS
-
-galleryViewerClose?.addEventListener("click",()=>{
+galleryViewerClose.onclick=()=>{
 
 galleryViewer.classList.remove("show");
 
@@ -427,20 +357,12 @@ galleryViewerGrid.innerHTML="";
 
 document.body.style.overflow="";
 
-});
-
-photoViewerClose?.addEventListener("click",()=>{
-
-photoViewer.classList.remove("show");
-
-photoViewerImage.src="";
-
-});
+};
 
 
-// CLICK OUTSIDE
+// CLICK OUTSIDE GALLERY
 
-galleryViewer?.addEventListener("click",(e)=>{
+galleryViewer.onclick=(e)=>{
 
 if(e.target===galleryViewer){
 
@@ -452,34 +374,26 @@ document.body.style.overflow="";
 
 }
 
-});
+};
 
-photoViewer?.addEventListener("click",(e)=>{
+// ==========================================
+// gallery.js
+// PART 4
+// ==========================================
 
-if(e.target===photoViewer){
-
-photoViewer.classList.remove("show");
-
-photoViewerImage.src="";
-
-}
-
-});
-
-
-// ESC
+// ESC CLOSE
 
 document.addEventListener("keydown",(e)=>{
 
 if(e.key!=="Escape") return;
 
-galleryViewer.classList.remove("show");
-
-galleryViewerGrid.innerHTML="";
-
 photoViewer.classList.remove("show");
 
 photoViewerImage.src="";
+
+galleryViewer.classList.remove("show");
+
+galleryViewerGrid.innerHTML="";
 
 document.body.style.overflow="";
 
@@ -490,16 +404,41 @@ document.body.style.overflow="";
 
 document.addEventListener("dblclick",(e)=>{
 
-if(!e.target.classList.contains("gallery-grid-photo"))
+const img=e.target.closest(".gallery-grid-photo");
 
-return;
+if(!img)return;
 
-e.target.classList.toggle("zoom");
+img.classList.toggle("zoom");
 
 });
 
 
-// IMAGE LOAD ERROR
+// PRELOAD
+
+function preloadImages(list){
+
+list.forEach(photo=>{
+
+const img=new Image();
+
+img.src=getPhoto(photo);
+
+});
+
+}
+
+window.addEventListener("load",()=>{
+
+window.galleryGroups.forEach(group=>{
+
+preloadImages(group.photos);
+
+});
+
+});
+
+
+// IMAGE ERROR
 
 document.addEventListener("error",(e)=>{
 
@@ -512,4 +451,81 @@ e.target.src="123.png.png";
 
 // READY
 
-console.log("Gallery Viewer V3 Loaded");
+console.log("Gallery V3 Loaded");
+
+// ==========================================
+// gallery.js
+// PART 4
+// ==========================================
+
+// ESC CLOSE
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key!=="Escape") return;
+
+photoViewer.classList.remove("show");
+
+photoViewerImage.src="";
+
+galleryViewer.classList.remove("show");
+
+galleryViewerGrid.innerHTML="";
+
+document.body.style.overflow="";
+
+});
+
+
+// DOUBLE CLICK ZOOM
+
+document.addEventListener("dblclick",(e)=>{
+
+const img=e.target.closest(".gallery-grid-photo");
+
+if(!img)return;
+
+img.classList.toggle("zoom");
+
+});
+
+
+// PRELOAD
+
+function preloadImages(list){
+
+list.forEach(photo=>{
+
+const img=new Image();
+
+img.src=getPhoto(photo);
+
+});
+
+}
+
+window.addEventListener("load",()=>{
+
+window.galleryGroups.forEach(group=>{
+
+preloadImages(group.photos);
+
+});
+
+});
+
+
+// IMAGE ERROR
+
+document.addEventListener("error",(e)=>{
+
+if(e.target.tagName!=="IMG") return;
+
+e.target.src="123.png.png";
+
+},true);
+
+
+// READY
+
+console.log("Gallery V3 Loaded");
