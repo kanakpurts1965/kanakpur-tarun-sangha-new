@@ -362,20 +362,22 @@ if (isAppMode) {
     });
 }
 
-    sessionStorage.setItem("siteLoaded", "yes");
+  sessionStorage.setItem("siteLoaded", "yes");
 
-    setTimeout(function () {
+if(loader){
 
-        loader.style.opacity = "0";
+setTimeout(function(){
 
-        loader.style.visibility = "hidden";
+loader.style.opacity="0";
 
-        setTimeout(function () {
+loader.style.visibility="hidden";
 
-            loader.remove();
+setTimeout(function(){
 
-        }, 500);
+loader.remove();
 
-    }, 2200);
+},500);
 
-});
+},2200);
+
+}
