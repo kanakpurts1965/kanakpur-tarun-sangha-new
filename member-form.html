@@ -1,227 +1,109 @@
 <!DOCTYPE html>
+
 <html lang="bn">
- 
 <head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>Member Form | Kanakpur Tarun Sangha</title>
-
-<link rel="stylesheet" href="member-form.css">
-
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Member Form | Kanakpur Tarun Sangha</title><meta content="Membership registration form for Kanakpur Tarun Sangha." name="description"/>
+<link href="member-form.css" rel="stylesheet"/>
 </head>
-
-
 <body>
-
-
 <div class="member-form-box">
-
-
-<img
-src="123.png.png"
-class="club-logo"
-alt="Club Logo"
->
-
-
+<img alt="Club Logo" class="club-logo" src="123.png.png"/>
 <h1>
 কনকপুর তরুণ সংঘ
 </h1>
-
-
 <h2>
 Member registration from
 </h2>
-
-
 <p class="form-info">
 
 আপনার তথ্য সঠিকভাবে পূরণ করুন।
 Admin অনুমোদন করার পরে আপনার নাম সদস্য তালিকায় যুক্ত হবে।
 
 </p>
-
-
-
 <form id="memberRequestForm">
-
-
 <label>
 👤 সদস্যের নাম
 </label>
-
-<input
-type="text"
-id="requestName"
-placeholder="আপনার নাম লিখুন"
-required
->
-
-
-
+<input id="requestName" placeholder="আপনার নাম লিখুন" required="" type="text"/>
 <label>
 📞 মোবাইল নম্বর
 </label>
-
-<input
-type="tel"
-id="requestMobile"
-placeholder="মোবাইল নম্বর লিখুন"
-required
->
-
-
-
+<input id="requestMobile" placeholder="মোবাইল নম্বর লিখুন" required="" type="tel"/>
 <label>
 🩸 Blood Group
 </label>
-
-<select
-id="requestBlood"
-required
->
-
+<select id="requestBlood" required="">
 <option value="">
 Blood Group নির্বাচন করুন
 </option>
-
 <option value="A+">A+</option>
 <option value="A-">A-</option>
-
 <option value="B+">B+</option>
 <option value="B-">B-</option>
-
 <option value="O+">O+</option>
 <option value="O-">O-</option>
-
 <option value="AB+">AB+</option>
 <option value="AB-">AB-</option>
-
 </select>
-
-
-
 <label>
 👔 সদস্যের পদ
 </label>
-
-<select
-id="requestPosition"
-required
->
-
+<select id="requestPosition" required="">
 <option value="">
 পদ নির্বাচন করুন
 </option>
-
 <option value="General Member">
 General 
 </option>
-
 <option value="Volunteer">
 Volunteer
 </option>
-
 </select>
-
-
-
 <label>
 📷 সদস্যের ছবি
 </label>
-
-
-<input
-type="file"
-id="requestPhoto"
-accept="image/*"
-hidden
-required
->
-
-
-<button
-type="button"
-id="choosePhotoBtn"
-class="photo-btn"
->
+<input accept="image/*" hidden="" id="requestPhoto" required="" type="file"/>
+<button class="photo-btn" id="choosePhotoBtn" type="button">
 
 📷 ছবি নির্বাচন করুন
 
 </button>
-
-
 <p id="photoName">
 
 কোনো ছবি নির্বাচন করা হয়নি
 
 </p>
-
-
-
-<div
-id="previewBox"
-class="preview-box"
-style="display:none"
->
-
-<img
-id="photoPreview"
-alt="Preview"
->
-
+<div class="preview-box" id="previewBox" style="display:none">
+<img alt="Preview" id="photoPreview"/>
 </div>
-
-
-
-<button
-type="submit"
-id="submitRequestBtn"
-class="submit-btn"
->
+<button class="submit-btn" id="submitRequestBtn" type="submit">
 
 📩 আবেদন Submit করুন
 
 </button>
-
-
 <p id="requestMessage"></p>
-
-
 </form>
-
-
 </div>
-
-
 <footer class="footer">
 <div class="footer-social">
 <a href="https://www.facebook.com/share/1bEGxwSM3c/" target="_blank">
-<img src="facebook.png" alt="Facebook">
+<img alt="Facebook" src="facebook.png"/>
 </a>
 <a href="https://www.instagram.com/thetanmoyadak" target="_blank">
-<img src="instagram.png" alt="Instagram">
+<img alt="Instagram" src="instagram.png"/>
 </a>
 </div>
 <div class="footer-copy">
 <p>
 © 2026 Kanakpur Tarun Sangha. All Rights Reserved.
 </p> <p>
-Designed & Developed by
+Designed &amp; Developed by
 <strong id="adminLogo">Tanmoy Adak</strong>
 </p>
-
 </div>
-<script
-type="module"
-src="member-form.js">
+<script src="member-form.js" type="module">
 </script>
-
-
-</body>
-
+</footer></body>
 </html>

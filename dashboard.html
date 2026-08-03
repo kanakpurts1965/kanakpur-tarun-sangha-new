@@ -1,10 +1,10 @@
-<!DOCTYPE html> 
-    
-<html lang="bn"> 
-<head>   
+<!DOCTYPE html>
+
+<html lang="bn">
+<head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Admin Dashboard</title>
+<title>Admin Dashboard</title><meta content="Dashboard for Kanakpur Tarun Sangha management system." name="description"/>
 <link href="dashboard.css" rel="stylesheet"/>
 </head>
 <body>
@@ -18,9 +18,8 @@
 <li id="menuNotice">📢 Notice</li>
 <li id="menuGallery">🖼 Gallery</li>
 <li id="menuMembers">👥 Members</li>
-
-    <li id="menuEvent">🎉 Events</li>
-    <li id="menuContact">📞 Contact</li>
+<li id="menuEvent">🎉 Events</li>
+<li id="menuContact">📞 Contact</li>
 <li id="menuSettings">⚙ Settings</li>
 <li id="logoutBtn">🚪 Logout</li>
 </ul>
@@ -44,21 +43,15 @@
 </div>
 <div id="pageContent">
 <section class="page active" id="dashboardPage"><h2>🏠 Dashboard</h2><p>Welcome to Kanakpur Tarun Sangha Admin Dashboard</p></section>
-<section
-    class="page"
-    id="commentsPage"
->
-
-    <h2>
+<section class="page" id="commentsPage">
+<h2>
         💬 Comment Management
     </h2>
-
-    <div id="adminComments">
+<div id="adminComments">
 
         Loading...
 
     </div>
-
 </section>
 <section class="page" id="repliesPage">
 <h2>💬 Reply Management</h2>
@@ -147,86 +140,49 @@
 <!-- ======================================
 MEMBER CATEGORY
 ======================================= -->
-
 <div class="admin-form-group">
-
-    <label for="memberCategory">
+<label for="memberCategory">
         👥 সদস্যের তালিকা
     </label>
-
-    <select id="memberCategory">
-
-        <option value="">
+<select id="memberCategory">
+<option value="">
             তালিকা নির্বাচন করুন
         </option>
-
-        <option value="executive">
+<option value="executive">
             কার্যকরী সদস্য
         </option>
-
-        <option value="general">
+<option value="general">
             সকল সদস্য
         </option>
-
-    </select>
-
+</select>
 </div>
-
-
 <!-- ======================================
 MEMBER PHOTO FILE
 ======================================= -->
-
 <div class="admin-form-group full-width photo-picker-group">
-
-    <label>📷 সদস্যের ছবি নির্বাচন করুন</label>
-
-    <input
-        type="file"
-        id="memberPhotoFile"
-        accept="image/*"
-        hidden
-    >
-
-    <button type="button" id="chooseMemberPhotoBtn" class="choose-photo-btn">
+<label>📷 সদস্যের ছবি নির্বাচন করুন</label>
+<input accept="image/*" hidden="" id="memberPhotoFile" type="file"/>
+<button class="choose-photo-btn" id="chooseMemberPhotoBtn" type="button">
         📷 ছবি নির্বাচন করুন
     </button>
-
-    <div id="memberPhotoFileName" class="photo-file-name">
+<div class="photo-file-name" id="memberPhotoFileName">
         কোনো ছবি নির্বাচন করা হয়নি
     </div>
-
 </div>
-
-
 <!-- PHOTO PREVIEW -->
-
 <div class="admin-form-group full-width">
-
-    <div
-        id="memberPhotoPreviewBox"
-        style="display:none; text-align:center;"
-    >
-
-        <img
-            id="memberPhotoPreview"
-            src=""
-            alt="Photo Preview"
-            style="
+<div id="memberPhotoPreviewBox" style="display:none; text-align:center;">
+<img alt="Photo Preview" id="memberPhotoPreview" src="" style="
                 width:120px;
                 height:120px;
                 object-fit:cover;
                 border-radius:50%;
                 border:3px solid #c40000;
-            "
-        >
-
-        <p>
+            "/>
+<p>
             নির্বাচিত ছবি
         </p>
-
-    </div>
-
+</div>
 </div>
 <!-- Save Button -->
 <div class="admin-form-group full-width">
@@ -247,7 +203,7 @@ MEMBER PHOTO FILE
                     যোগ করা সকল সদস্য এখানে দেখা যাবে।
                 </p>
 </div>
-<div class="member-list-tools"><button type="button" id="downloadMemberPdf" class="pdf-download-btn">📄 Download PDF</button><input id="adminMemberSearch" placeholder="🔍 সদস্য খুঁজুন..." type="search"/></div>
+<div class="member-list-tools"><button class="pdf-download-btn" id="downloadMemberPdf" type="button">📄 Download PDF</button><input id="adminMemberSearch" placeholder="🔍 সদস্য খুঁজুন..." type="search"/></div>
 </div>
 <!-- Dynamic Member List -->
 <div id="adminMemberList">
@@ -258,487 +214,240 @@ MEMBER PHOTO FILE
             </p>
 </div>
 </div>
-    </section>
-
-
+</section>
 <section class="page" id="noticePage">
-
-    <div class="admin-page-header">
-
-        <h2>📢 Notice Management</h2>
-
-        <p>
+<div class="admin-page-header">
+<h2>📢 Notice Management</h2>
+<p>
             নোটিশ যোগ, সম্পাদনা ও মুছে ফেলুন।
         </p>
-
-    </div>
-
-
-    <div class="admin-box">
-
-        <h3>➕ নতুন Notice যোগ করুন</h3>
-
-
-        <div class="admin-form-group">
-
-            <label for="noticeTitle">
+</div>
+<div class="admin-box">
+<h3>➕ নতুন Notice যোগ করুন</h3>
+<div class="admin-form-group">
+<label for="noticeTitle">
                 📌 Notice Title
             </label>
-
-            <input
-                type="text"
-                id="noticeTitle"
-                placeholder="নোটিশের শিরোনাম লিখুন"
-            >
-
-        </div>
-
-
-        <div class="admin-form-group">
-
-            <label for="noticeDate">
+<input id="noticeTitle" placeholder="নোটিশের শিরোনাম লিখুন" type="text"/>
+</div>
+<div class="admin-form-group">
+<label for="noticeDate">
                 📅 Notice Date
             </label>
-
-            <input
-                type="date"
-                id="noticeDate"
-            >
-
-        </div>
-
-
-        <div class="admin-form-group">
-
-            <label for="noticeText">
+<input id="noticeDate" type="date"/>
+</div>
+<div class="admin-form-group">
+<label for="noticeText">
                 📝 Notice Details
             </label>
-
-            <textarea
-                id="noticeText"
-                rows="7"
-                placeholder="সম্পূর্ণ নোটিশ লিখুন..."
-            ></textarea>
-
-        </div>
-
-
-        <button
-            type="button"
-            id="saveNoticeBtn"
-            class="save-member-btn"
-        >
+<textarea id="noticeText" placeholder="সম্পূর্ণ নোটিশ লিখুন..." rows="7"></textarea>
+</div>
+<button class="save-member-btn" id="saveNoticeBtn" type="button">
             💾 Notice Save করুন
         </button>
-
-    </div>
-
-
-    <div class="admin-box">
-
-        <h3>
+</div>
+<div class="admin-box">
+<h3>
             📋 সকল Notice
         </h3>
-
-        <div id="adminNoticeList">
+<div id="adminNoticeList">
 
             Notice Loading...
 
         </div>
-
-    </div>
-    <div class="admin-form-group">
-
-<label>📎 Agreement File</label>
-
-<input
-type="file"
-id="contractAgreement"
-accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
-
 </div>
-
+<div class="admin-form-group">
+<label>📎 Agreement File</label>
+<input accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" id="contractAgreement" type="file"/>
+</div>
 </section>
-
 <!-- ==========================================
 photo uplod
 ========================================== -->
-
-    
 <section class="page" id="galleryPage">
 <div class="admin-page-header"><h2>🖼 Gallery Management</h2><p>Heading, Caption ও একাধিক ছবি দিয়ে Gallery Group তৈরি ও Edit করুন।</p></div>
 <div class="admin-box">
 <h3 id="galleryFormTitle">➕ নতুন Gallery Group তৈরি করুন</h3>
-<div class="admin-form-group"><label for="galleryHeading">🏷️ Heading</label><input type="text" id="galleryHeading" placeholder="যেমন: বস্ত্র বিতরণ কর্মসূচি ২০২৬"></div>
-<div class="admin-form-group"><label for="galleryCaption">📝 Caption / Description</label><textarea id="galleryCaption" rows="4" placeholder="সংক্ষিপ্ত বিবরণ লিখুন..."></textarea></div>
-<div class="admin-form-group"><label>📷 ছবি নির্বাচন করুন</label><input type="file" id="galleryPhotoFile" accept="image/*" multiple><p id="gallerySelectedCount">কোনো ছবি নির্বাচন করা হয়নি</p></div>
-<div id="galleryExistingPhotos"></div><div id="galleryPreviewBox" class="gallery-admin-preview-grid"></div>
-<button type="button" id="saveGalleryBtn" class="save-member-btn">📤 Gallery Group Upload করুন</button>
-<button type="button" id="cancelGalleryEditBtn" style="display:none;">❌ Edit Cancel</button>
+<div class="admin-form-group"><label for="galleryHeading">🏷️ Heading</label><input id="galleryHeading" placeholder="যেমন: বস্ত্র বিতরণ কর্মসূচি ২০২৬" type="text"/></div>
+<div class="admin-form-group"><label for="galleryCaption">📝 Caption / Description</label><textarea id="galleryCaption" placeholder="সংক্ষিপ্ত বিবরণ লিখুন..." rows="4"></textarea></div>
+<div class="admin-form-group"><label>📷 ছবি নির্বাচন করুন</label><input accept="image/*" id="galleryPhotoFile" multiple="" type="file"/><p id="gallerySelectedCount">কোনো ছবি নির্বাচন করা হয়নি</p></div>
+<div id="galleryExistingPhotos"></div><div class="gallery-admin-preview-grid" id="galleryPreviewBox"></div>
+<button class="save-member-btn" id="saveGalleryBtn" type="button">📤 Gallery Group Upload করুন</button>
+<button id="cancelGalleryEditBtn" style="display:none;" type="button">❌ Edit Cancel</button>
 </div>
 <div class="admin-box"><h3>📋 Gallery Groups</h3><div id="adminGalleryList">Gallery Loading...</div></div>
 </section>
-    <!-- =====================================================
+<!-- =====================================================
      EVENT MANAGEMENT PAGE
 ===================================================== -->
-
 <section class="page" id="eventPage">
-
-    <div class="admin-page-header">
-        <h2>🎉 Event Management</h2>
-        <p>নতুন Event তৈরি, Edit এবং Delete করুন।</p>
-    </div>
-
-
-    <div class="admin-box">
-
-        <h3 id="eventFormTitle">
+<div class="admin-page-header">
+<h2>🎉 Event Management</h2>
+<p>নতুন Event তৈরি, Edit এবং Delete করুন।</p>
+</div>
+<div class="admin-box">
+<h3 id="eventFormTitle">
             ➕ নতুন Event তৈরি করুন
         </h3>
-
-
-        <!-- EVENT NAME -->
-
-        <div class="admin-form-group">
-
-            <label for="eventName">
+<!-- EVENT NAME -->
+<div class="admin-form-group">
+<label for="eventName">
                 🎉 Event Name
             </label>
-
-            <input
-                type="text"
-                id="eventName"
-                placeholder="Event-এর নাম লিখুন"
-            >
-
-        </div>
-
-
-        <!-- EVENT BANNER -->
-
-        <div class="admin-form-group">
-
-            <label for="eventBannerFile">
+<input id="eventName" placeholder="Event-এর নাম লিখুন" type="text"/>
+</div>
+<!-- EVENT BANNER -->
+<div class="admin-form-group">
+<label for="eventBannerFile">
                 🖼️ Event Banner
             </label>
-
-            <input
-                type="file"
-                id="eventBannerFile"
-                accept="image/*"
-            >
-
-        </div>
-
-
-        <!-- BANNER PREVIEW -->
-
-        <div
-            id="eventBannerPreviewBox"
-            class="event-banner-preview-box"
-            style="display:none;"
-        >
-
-            <img
-                id="eventBannerPreview"
-                src=""
-                alt="Event Banner Preview"
-            >
-
-        </div>
-
-
-        <!-- DATE + TIME -->
-
-        <div class="event-date-time-row">
-
-            <div class="admin-form-group">
-
-                <label for="eventDate">
+<input accept="image/*" id="eventBannerFile" type="file"/>
+</div>
+<!-- BANNER PREVIEW -->
+<div class="event-banner-preview-box" id="eventBannerPreviewBox" style="display:none;">
+<img alt="Event Banner Preview" id="eventBannerPreview" src=""/>
+</div>
+<!-- DATE + TIME -->
+<div class="event-date-time-row">
+<div class="admin-form-group">
+<label for="eventDate">
                     📅 Date
                 </label>
-
-                <input
-                    type="date"
-                    id="eventDate"
-                >
-
-            </div>
-
-
-            <div class="admin-form-group">
-
-                <label for="eventTime">
+<input id="eventDate" type="date"/>
+</div>
+<div class="admin-form-group">
+<label for="eventTime">
                     ⏰ Time
                 </label>
-
-                <input
-                    type="time"
-                    id="eventTime"
-                >
-
-            </div>
-
-        </div>
-
-
-        <!-- PLACE -->
-
-        <div class="admin-form-group">
-
-            <label for="eventPlace">
+<input id="eventTime" type="time"/>
+</div>
+</div>
+<!-- PLACE -->
+<div class="admin-form-group">
+<label for="eventPlace">
                 📍 Place
             </label>
-
-            <input
-                type="text"
-                id="eventPlace"
-                placeholder="অনুষ্ঠানের স্থান লিখুন"
-            >
-
-        </div>
-
-
-        <!-- DESCRIPTION -->
-
-        <div class="admin-form-group">
-
-            <label>
+<input id="eventPlace" placeholder="অনুষ্ঠানের স্থান লিখুন" type="text"/>
+</div>
+<!-- DESCRIPTION -->
+<div class="admin-form-group">
+<label>
                 📝 Description Points
             </label>
-
-            <div id="eventDescriptionList">
-
-                <div class="event-description-row">
-
-                    <span>1.</span>
-
-                    <input
-                        type="text"
-                        class="event-description-input"
-                        placeholder="প্রথম বিবরণ লিখুন"
-                    >
-
-                </div>
-
-            </div>
-
-
-            <button
-                type="button"
-                id="addEventDescriptionBtn"
-                class="event-add-point-btn"
-            >
+<div id="eventDescriptionList">
+<div class="event-description-row">
+<span>1.</span>
+<input class="event-description-input" placeholder="প্রথম বিবরণ লিখুন" type="text"/>
+</div>
+</div>
+<button class="event-add-point-btn" id="addEventDescriptionBtn" type="button">
                 ➕ আরেকটি Description যোগ করুন
             </button>
-
-        </div>
-
-
-        <!-- SAVE -->
-
-        <button
-            type="button"
-            id="saveEventBtn"
-            class="save-member-btn"
-        >
+</div>
+<!-- SAVE -->
+<button class="save-member-btn" id="saveEventBtn" type="button">
             💾 Event Save করুন
         </button>
-
-
-        <!-- CANCEL EDIT -->
-
-        <button
-            type="button"
-            id="cancelEventEditBtn"
-            style="display:none;"
-        >
+<!-- CANCEL EDIT -->
+<button id="cancelEventEditBtn" style="display:none;" type="button">
             ❌ Edit Cancel
         </button>
-
-    </div>
-
-
-    <!-- EVENT LIST -->
-
-    <div class="admin-box">
-
-        <h3>📋 Event List</h3>
-
-        <div id="adminEventList">
+</div>
+<!-- EVENT LIST -->
+<div class="admin-box">
+<h3>📋 Event List</h3>
+<div id="adminEventList">
 
             Event Loading...
 
         </div>
-
-    </div>
-
-</section>
-   <section class="page" id="contactPage">
-
-    <div class="admin-page-header">
-        <h2>📞 Contact Management</h2>
-        <p>ক্লাবের যোগাযোগের তথ্য পরিবর্তন করুন।</p>
-    </div>
-
-    <div class="admin-box">
-
-        <div class="admin-form-group">
-            <label>📍 Club Address</label>
-            <textarea
-                id="contactAddress"
-                rows="3"
-                placeholder="ক্লাবের ঠিকানা লিখুন"
-            ></textarea>
-        </div>
-
-        <div class="admin-form-group">
-            <label>📞 Mobile Number</label>
-            <input
-                type="tel"
-                id="contactMobile"
-                placeholder="মোবাইল নম্বর"
-            >
-        </div>
-
-        <div class="admin-form-group">
-            <label>📧 Email Address</label>
-            <input
-                type="email"
-                id="contactEmail"
-                placeholder="Email Address"
-            >
-        </div>
-
-        <div class="admin-form-group">
-            <label>🗺️ Google Map Link</label>
-            <input
-                type="url"
-                id="contactMap"
-                placeholder="Google Map Link"
-            >
-        </div>
-        <div class="admin-form-group">
-    <label>📘 Facebook Link</label>
-
-    <input
-        type="url"
-        id="contactFacebook"
-        placeholder="Facebook Page বা Profile Link"
-    >
 </div>
-
-        <button
-            type="button"
-            id="saveContactBtn"
-            class="save-member-btn"
-        >
+</section>
+<section class="page" id="contactPage">
+<div class="admin-page-header">
+<h2>📞 Contact Management</h2>
+<p>ক্লাবের যোগাযোগের তথ্য পরিবর্তন করুন।</p>
+</div>
+<div class="admin-box">
+<div class="admin-form-group">
+<label>📍 Club Address</label>
+<textarea id="contactAddress" placeholder="ক্লাবের ঠিকানা লিখুন" rows="3"></textarea>
+</div>
+<div class="admin-form-group">
+<label>📞 Mobile Number</label>
+<input id="contactMobile" placeholder="মোবাইল নম্বর" type="tel"/>
+</div>
+<div class="admin-form-group">
+<label>📧 Email Address</label>
+<input id="contactEmail" placeholder="Email Address" type="email"/>
+</div>
+<div class="admin-form-group">
+<label>🗺️ Google Map Link</label>
+<input id="contactMap" placeholder="Google Map Link" type="url"/>
+</div>
+<div class="admin-form-group">
+<label>📘 Facebook Link</label>
+<input id="contactFacebook" placeholder="Facebook Page বা Profile Link" type="url"/>
+</div>
+<button class="save-member-btn" id="saveContactBtn" type="button">
             💾 Contact Save করুন
         </button>
-
-        <p id="contactSaveStatus"></p>
-
-    </div>
-
-</section> 
+<p id="contactSaveStatus"></p>
+</div>
+</section>
 <!-- ==========================================
 admin pasword setting
 ========================================== -->
-    
 <section class="page" id="settingsPage">
-
-    <div class="admin-page-header">
-        <h2>⚙ Admin Settings</h2>
-        <p>Admin Account-এর Password পরিবর্তন করুন।</p>
-    </div>
-
-    <div class="admin-box">
-
-        <h3>🔐 Change Password</h3>
-
-        <div class="admin-form-group">
-            <label>বর্তমান Password</label>
-
-            <input
-                type="password"
-                id="currentAdminPassword"
-                placeholder="Current Password"
-            >
-        </div>
-
-        <div class="admin-form-group">
-            <label>নতুন Password</label>
-
-            <input
-                type="password"
-                id="newAdminPassword"
-                placeholder="New Password"
-            >
-        </div>
-
-        <div class="admin-form-group">
-            <label>নতুন Password আবার লিখুন</label>
-
-            <input
-                type="password"
-                id="confirmAdminPassword"
-                placeholder="Confirm New Password"
-            >
-        </div>
-
-        <button
-            type="button"
-            id="changeAdminPasswordBtn"
-            class="save-member-btn"
-        >
+<div class="admin-page-header">
+<h2>⚙ Admin Settings</h2>
+<p>Admin Account-এর Password পরিবর্তন করুন।</p>
+</div>
+<div class="admin-box">
+<h3>🔐 Change Password</h3>
+<div class="admin-form-group">
+<label>বর্তমান Password</label>
+<input id="currentAdminPassword" placeholder="Current Password" type="password"/>
+</div>
+<div class="admin-form-group">
+<label>নতুন Password</label>
+<input id="newAdminPassword" placeholder="New Password" type="password"/>
+</div>
+<div class="admin-form-group">
+<label>নতুন Password আবার লিখুন</label>
+<input id="confirmAdminPassword" placeholder="Confirm New Password" type="password"/>
+</div>
+<button class="save-member-btn" id="changeAdminPasswordBtn" type="button">
             🔐 Change Password
         </button>
-
-        <p id="passwordChangeMsg"></p>
-
-    </div>
-
+<p id="passwordChangeMsg"></p>
+</div>
 </section>
-
-
-    
 </div>
 </main>
 </div>
 <!-- ==========================================
 MEMBER MANAGEMENT PAGE
 ========================================== -->
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="dashboard.js" type="module"></script>
 <script src="replies-admin.js" type="module"></script>
 <script src="comments-admin.js" type="module"></script>
 <script src="member-admin.js" type="module"></script>
-<script
-type="module"
-src="member-request-admin.js">
+<script src="member-request-admin.js" type="module">
 </script>
-   <script
-    type="module"
-    src="notice-admin.js">
+<script src="notice-admin.js" type="module">
 </script>
-    <script
-    type="module"
-    src="gallery-admin.js">
+<script src="gallery-admin.js" type="module">
 </script>
-    <script
-    type="module"
-    src="contact-admin.js">
+<script src="contact-admin.js" type="module">
 </script>
-    <script
-    type="module"
-    src="event-admin.js">
+<script src="event-admin.js" type="module">
 </script>
-<script type="module" src="program-admin.js"></script>
-<script type="module" src="credit-admin.js"></script>
-<script type="module" src="debit-admin.js"></script>
-    <script type="module" src="contract-admin.js"></script>
-    <script type="module" src="statement-admin.js"></script>
-    
+<script src="program-admin.js" type="module"></script>
+<script src="credit-admin.js" type="module"></script>
+<script src="debit-admin.js" type="module"></script>
+<script src="contract-admin.js" type="module"></script>
+<script src="statement-admin.js" type="module"></script>
 </body>
 </html>
