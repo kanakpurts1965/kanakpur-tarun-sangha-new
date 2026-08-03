@@ -100,42 +100,54 @@ onSnapshot(
             group.className =
                 "public-gallery-group";
 
+const previewPhotos = photos.slice(0,6);
 
-            const photosHTML =
-                photos
+const photosHTML = previewPhotos.map((photo,index)=>{
 
-                    .map((photo) => {
+const photoURL =
+typeof photo==="string"
+?photo
+:photo.url||"";
 
-                        const photoURL =
-                            typeof photo === "string"
-                                ? photo
-                                : photo.url || "";
+const remaining =
+photos.length-6;
 
+const overlay =
 
-                        return `
+(index===5 && remaining>0)
 
-                            <button
-                                type="button"
-                                class="public-gallery-photo-btn"
-                                data-photo="${safeAttribute(photoURL)}"
-                            >
+?`
 
-                                <img
-                                    src="${safeAttribute(photoURL)}"
-                                    alt="${safeAttribute(
-                                        data.heading ||
-                                        "Gallery Photo"
-                                    )}"
-                                    loading="lazy"
-                                >
+<div class="gallery-more-overlay">
 
-                            </button>
++${remaining}
 
-                        `;
+</div>
 
-                    })
+`
 
-                    .join("");
+:"";
+
+return `
+
+<button
+type="button"
+class="public-gallery-photo-btn"
+data-index="${index}"
+data-group="${item.id}">
+
+<img
+src="${photoURL}"
+loading="lazy">
+
+${overlay}
+
+</button>
+
+`;
+
+}).join("");
+           
 
 
             group.innerHTML = `
