@@ -125,7 +125,12 @@ content="Tanmoy Adak">
 <div id="loader">
     <div class="loader-box">
 
-        <img src="123.png.png" class="loader-logo">
+     <img
+src="123.png.png"
+class="loader-logo"
+width="120"
+height="120"
+alt="Loading Logo">
 
         <h2>কনকপুর তরুণ সংঘ</h2>
 
@@ -153,11 +158,13 @@ HEADER
 
 <div class="logo-area">
 
- <img
-        src="123.png.png"
-        alt="Club Logo"
-        class="logo"
-        id="topLogo">
+<img
+src="123.png.png"
+alt="Club Logo"
+class="logo"
+id="topLogo"
+width="80"
+height="80">
 
 <div class="club-title">
 
@@ -187,7 +194,12 @@ SIDEBAR
 
 <div class="sidebar-header">
 
-<img src="123.png.png" class="sidebar-logo">
+<img
+src="123.png.png"
+class="sidebar-logo"
+width="120"
+height="120"
+alt="Sidebar Logo">
 
 <h2>কনকপুর তরুণ সংঘ</h2>
 
@@ -350,8 +362,12 @@ HERO SECTION
 </div>
 
 <div class="hero-video">
-<video autoplay muted loop playsinline>
-
+<video
+autoplay
+muted
+loop
+playsinline
+preload="metadata">
 <source src="KTS logo viedo 2.mp4" type="video/mp4">
 
 </video>
@@ -589,7 +605,10 @@ OFFICE BEARERS
 
 <div class="office-card">
 
-<img src="president.jpg" alt="সভাপতি">
+<img src="president.jpg" alt="সভাপতি" loading="lazy"
+decoding="async"
+width="300"
+height="300">
 
 <h3>স্বপন জানা</h3>
 
@@ -599,7 +618,10 @@ OFFICE BEARERS
 
 <div class="office-card">
 
-<img src="secretary.jpg" alt="সম্পাদক">
+<img src="secretary.jpg" alt="সম্পাদক"loading="lazy"
+decoding="async"
+width="300"
+height="300">
 
 <h3>রাম চন্দ্র সামন্ত</h3>
 
@@ -609,7 +631,10 @@ OFFICE BEARERS
 
 <div class="office-card">
 
-<img src="cashier.jpg" alt="ক্যাশিয়ার">
+<img src="cashier.jpg" alt="ক্যাশিয়ার"loading="lazy"
+decoding="async"
+width="300"
+height="300">
 
 <h3>তন্ময় আদক</h3>
 
@@ -710,7 +735,11 @@ FOOTER
 
 <div class="footer-logo">
 
-<img src="123.png.png" alt="Club Logo">
+<img
+src="123.png.png"
+alt="Club Logo"
+width="90"
+height="90">
 
 <h3>কনকপুর তরুণ সংঘ</h3>
 
@@ -737,11 +766,21 @@ FOOTER
 <div class="footer-social">
 
 <a href="https://www.facebook.com/share/1bEGxwSM3c/" target="_blank">
-<img src="facebook.png" alt="Facebook">
+<img
+src="facebook.png"
+alt="Facebook"
+loading="lazy"
+width="32"
+height="32">
 </a>
 
 <a href="https://www.instagram.com/thetanmoyadak" target="_blank">
-<img src="instagram.png" alt="Instagram">
+<img
+src="instagram.png"
+alt="Instagram"
+loading="lazy"
+width="32"
+height="32">
 </a>
 
 </div>
@@ -769,7 +808,7 @@ Designed & Developed by
 
 <script type="module" src="firebase.js"></script>
   <script type="module" src="comments.js"></script>
-<script src="script.js"></script>
+<script src="script.js" defer></script>
   <script type="module" src="home-event.js"></script>
     <script>
 if ("serviceWorker" in navigator) {
