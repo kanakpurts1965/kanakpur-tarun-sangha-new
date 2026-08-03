@@ -80,12 +80,17 @@ onSnapshot(
             return;
         }
 
-
+window.__galleryData=[];
         snapshot.forEach((item) => {
 
             const data =
                 item.data();
 
+
+            window.__galleryData.push({
+    id: item.id,
+    ...data
+});
 
             const photos =
                 Array.isArray(data.photos)
@@ -217,30 +222,51 @@ index===5 && remain>0
 // PHOTO CLICK
 // =====================================================
 
-document.addEventListener("click",(e)=>{
+document.addEventListener("click",(event)=>{
 
-const btn=e.target.closest(".public-gallery-photo-btn");
+const button=event.target.closest(".public-gallery-photo-btn");
 
-if(!btn)return;
+if(!button)return;
 
-const group=btn.closest(".public-gallery-group");
+const group=button.closest(".public-gallery-group");
 
-const allPhotos=[];
+if(!group)return;
 
-group.querySelectorAll("img").forEach(img=>{
+const heading=
 
-allPhotos.push(img.src);
+group.querySelector("h2")?.textContent.trim();
 
-});
+const galleryDoc=[...document.querySelectorAll(".public-gallery-group")]
 
-const modalGrid=
-document.getElementById("galleryModalGrid");
+.find(g=>
 
-modalGrid.innerHTML="";
+g.querySelector("h2")?.textContent.trim()===heading
 
-allPhotos.forEach(src=>{
+);
 
-modalGrid.insertAdjacentHTML(
+const data=[...window.__galleryData||[]]
+
+.find(x=>x.heading===heading);
+
+if(!data)return;
+
+const modal=document.getElementById("galleryModal");
+
+const grid=document.getElementById("galleryModalGrid");
+
+grid.innerHTML="";
+
+data.photos.forEach(photo=>{
+
+const src=
+
+typeof photo==="string"
+
+?photo
+
+:photo.url||"";
+
+grid.insertAdjacentHTML(
 
 "beforeend",
 
@@ -258,9 +284,7 @@ modalGrid.insertAdjacentHTML(
 
 });
 
-document
-.getElementById("galleryModal")
-.classList.add("show");
+modal.classList.add("show");
 
 document.body.style.overflow="hidden";
 
