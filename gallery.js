@@ -63,10 +63,41 @@ Array.isArray(data.photos)
 
 :[];
 
-const preview=
+const previewPhotos = photos.slice(0,6);
 
-photos.slice(0,6);
+const photosHTML = previewPhotos.map((photo,index)=>{
 
+const photoURL =
+typeof photo==="string"
+?photo
+:photo.url||"";
+
+const remain = photos.length-6;
+
+return `
+
+<button
+type="button"
+class="public-gallery-photo-btn"
+data-group="${item.id}"
+data-index="${index}">
+
+<img
+src="${safeAttribute(photoURL)}"
+alt="${safeAttribute(data.heading||"Gallery Photo")}"
+loading="lazy">
+
+${index===5 && remain>0 ? `
+<div class="gallery-overlay">
+<span>+${remain}</span>
+</div>
+` : ""}
+
+</button>
+
+`;
+
+}).join("");
 const remain=
 
 photos.length-6;
