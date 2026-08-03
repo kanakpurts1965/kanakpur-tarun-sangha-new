@@ -373,3 +373,40 @@ function safeAttribute(value = "") {
     return safe(value);
 
 }
+const galleryModal =
+document.getElementById("galleryModal");
+
+const galleryModalClose =
+document.getElementById("galleryModalClose");
+
+galleryModalClose?.addEventListener("click",()=>{
+
+galleryModal.classList.remove("show");
+
+document.body.style.overflow="";
+
+});
+
+galleryModal?.addEventListener("click",(e)=>{
+
+if(e.target===galleryModal){
+
+galleryModal.classList.remove("show");
+
+document.body.style.overflow="";
+
+}
+
+});
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Escape"){
+
+galleryModal.classList.remove("show");
+
+document.body.style.overflow="";
+
+}
+
+});
