@@ -370,23 +370,4 @@ loader.remove();
 
 });
 
-  sessionStorage.setItem("siteLoaded", "yes");
-
-if(loader){
-
-setTimeout(function(){
-
-loader.style.opacity="0";
-
-loader.style.visibility="hidden";
-
-setTimeout(function(){
-
-loader.remove();
-
-},500);
-
-},2200);
-
-}
-});
+ 
