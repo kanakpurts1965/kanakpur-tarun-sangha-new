@@ -1,5 +1,3 @@
-
-
 // ==========================================
 // gallery.js
 // PART 1
@@ -17,6 +15,24 @@ onSnapshot
 const publicGalleryGroups =
 document.getElementById("publicGalleryGroups");
 
+const galleryViewer =
+document.getElementById("galleryViewer");
+
+const galleryViewerGrid =
+document.getElementById("galleryViewerGrid");
+
+const galleryViewerClose =
+document.getElementById("galleryViewerClose");
+
+const photoViewer =
+document.getElementById("photoViewer");
+
+const photoViewerImage =
+document.getElementById("photoViewerImage");
+
+const photoViewerClose =
+document.getElementById("photoViewerClose");
+
 const galleryRef =
 collection(db,"galleryGroups");
 
@@ -26,7 +42,7 @@ galleryRef,
 orderBy("createdAt","desc")
 );
 
-window.galleryGroups=[];
+let galleryData=[];
 
 function safe(text=""){
 
@@ -46,18 +62,22 @@ return typeof photo==="string"
 :(photo?.url||"");
 
 }
+// ==========================================
+// gallery.js
+// PART 2
+// ==========================================
 
 onSnapshot(galleryQuery,(snapshot)=>{
 
-publicGalleryGroups.innerHTML="";
+galleryData=[];
 
-window.galleryGroups=[];
+publicGalleryGroups.innerHTML="";
 
 snapshot.forEach(doc=>{
 
 const data=doc.data();
 
-window.galleryGroups.push({
+galleryData.push({
 
 id:doc.id,
 
@@ -66,14 +86,17 @@ id:doc.id,
 });
 
 const photos=
+
 Array.isArray(data.photos)
 ?data.photos
 :[];
 
 const preview=
+
 photos.slice(0,6);
 
 const remain=
+
 Math.max(0,photos.length-6);
 
 let previewHTML="";
@@ -83,6 +106,7 @@ preview.forEach((photo,index)=>{
 previewHTML+=`
 
 <button
+type="button"
 class="gallery-preview"
 data-id="${doc.id}">
 
@@ -121,11 +145,7 @@ publicGalleryGroups.insertAdjacentHTML(
 
 <div class="gallery-group-header">
 
-<h2>
-
-${safe(data.heading||"")}
-
-</h2>
+<h2>${safe(data.heading||"")}</h2>
 
 ${
 data.caption
@@ -150,14 +170,68 @@ ${previewHTML}
 });
 
 });
-
-
 // ==========================================
 // gallery.js
 // PART 3
 // ==========================================
 
+// OPEN GALLERY
+
+document.addEventListener("click",(e)=>{
+
+const btn=e.target.closest(".gallery-preview");
+
+if(!btn)return;
+
+const id=btn.dataset.id;
+
+const group=
+
+galleryData.find(
+
+g=>g.id===id
+
+);
+
+if(!group)return;
+
+galleryViewerGrid.innerHTML="";
+
+(group.photos||[]).forEach(photo=>{
+
+const src=getPhoto(photo);
+
+galleryViewerGrid.insertAdjacentHTML(
+
+"beforeend",
+
+`
+
+<div class="gallery-photo-card">
+
+<img
+class="gallery-grid-photo"
+src="${safe(src)}"
+loading="lazy">
+
+</div>
+
+`
+
+);
+
+});
+
+galleryViewer.classList.add("show");
+
+document.body.style.overflow="hidden";
+
+});
+
+
+// ==========================================
 // OPEN FULL PHOTO
+// ==========================================
 
 document.addEventListener("click",(e)=>{
 
@@ -170,7 +244,10 @@ photoViewerImage.src=img.src;
 photoViewer.classList.add("show");
 
 });
-
+// ==========================================
+// gallery.js
+// PART 4
+// ==========================================
 
 // CLOSE PHOTO
 
@@ -179,6 +256,19 @@ photoViewerClose.onclick=()=>{
 photoViewer.classList.remove("show");
 
 photoViewerImage.src="";
+
+};
+
+
+// CLOSE GALLERY
+
+galleryViewerClose.onclick=()=>{
+
+galleryViewer.classList.remove("show");
+
+galleryViewerGrid.innerHTML="";
+
+document.body.style.overflow="";
 
 };
 
@@ -194,19 +284,6 @@ photoViewer.classList.remove("show");
 photoViewerImage.src="";
 
 }
-
-};
-
-
-// CLOSE GALLERY
-
-galleryViewerClose.onclick=()=>{
-
-galleryViewer.classList.remove("show");
-
-galleryViewerGrid.innerHTML="";
-
-document.body.style.overflow="";
 
 };
 
@@ -227,12 +304,8 @@ document.body.style.overflow="";
 
 };
 
-// ==========================================
-// gallery.js
-// PART 4
-// ==========================================
 
-// ESC CLOSE
+// ESC
 
 document.addEventListener("keydown",(e)=>{
 
@@ -250,10 +323,14 @@ document.body.style.overflow="";
 
 });
 
+// ==========================================
+// gallery.js
+// PART 5 (FINAL)
+// ==========================================
 
-// DOUBLE CLICK ZOOM
+// IMAGE ZOOM
 
-document.addEventListener("dblclick",(e)=>{
+document.addEventListener("click",(e)=>{
 
 const img=e.target.closest(".gallery-grid-photo");
 
@@ -264,29 +341,25 @@ img.classList.toggle("zoom");
 });
 
 
-// PRELOAD
+// IMAGE PRELOAD
 
-function preloadImages(list){
+function preloadImages(){
 
-list.forEach(photo=>{
+galleryData.forEach(group=>{
 
-const img=new Image();
+(group.photos||[]).forEach(photo=>{
 
-img.src=getPhoto(photo);
+const image=new Image();
+
+image.src=getPhoto(photo);
+
+});
 
 });
 
 }
 
-window.addEventListener("load",()=>{
-
-window.galleryGroups.forEach(group=>{
-
-preloadImages(group.photos);
-
-});
-
-});
+window.addEventListener("load",preloadImages);
 
 
 // IMAGE ERROR
@@ -302,69 +375,4 @@ e.target.src="123.png.png";
 
 // READY
 
-console.log("Gallery V3 Loaded");
-
-// ==========================================
-// gallery.js
-// PART 4
-// ==========================================
-
-// ESC CLOSE
-
-document.addEventListener("keydown",(e)=>{
-
-if(e.key!=="Escape") return;
-
-photoViewer.classList.remove("show");
-
-photoViewerImage.src="";
-
-galleryViewer.classList.remove("show");
-
-galleryViewerGrid.innerHTML="";
-
-document.body.style.overflow="";
-
-});
-
-
-// DOUBLE CLICK ZOOM
-
-document.addEventListener("dblclick",(e)=>{
-
-const img=e.target.closest(".gallery-grid-photo");
-
-if(!img)return;
-
-img.classList.toggle("zoom");
-
-});
-
-
-
-
-window.addEventListener("load",()=>{
-
-window.galleryGroups.forEach(group=>{
-
-preloadImages(group.photos);
-
-});
-
-});
-
-
-// IMAGE ERROR
-
-document.addEventListener("error",(e)=>{
-
-if(e.target.tagName!=="IMG") return;
-
-e.target.src="123.png.png";
-
-},true);
-
-
-// READY
-
-console.log("Gallery V3 Loaded");
+console.log("Gallery Viewer V3 Ready");
