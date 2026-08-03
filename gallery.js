@@ -1,343 +1,439 @@
-// =====================================================
-// KTS PUBLIC GALLERY GROUP SYSTEM
-// =====================================================
+// ======================================
+// GALLERY V2
+// PART 1
+// ======================================
 
-import { db } from "./firebase.js";
+let galleryPhotos = [];
+let currentPhoto = 0;
 
-import {
-    collection,
-    onSnapshot,
-    query,
-    orderBy
-} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+function createGalleryPreview(photos){
 
+const preview = photos.slice(0,6);
 
-// =====================================================
-// ELEMENTS
-// =====================================================
+return preview.map((photo,index)=>{
 
-const publicGalleryGroups =
-    document.getElementById("publicGalleryGroups");
-
-const galleryLightbox =
-    document.getElementById("galleryLightbox");
-
-const galleryLightboxImage =
-    document.getElementById("galleryLightboxImage");
-
-const galleryLightboxClose =
-    document.getElementById("galleryLightboxClose");
-
-
-// =====================================================
-// FIRESTORE
-// =====================================================
-
-const galleryGroupsRef =
-    collection(db, "galleryGroups");
-
-const galleryGroupsQuery =
-    query(
-        galleryGroupsRef,
-        orderBy("createdAt", "desc")
-    );
-
-
-// =====================================================
-// LOAD PUBLIC GALLERY GROUPS
-// =====================================================
-
-onSnapshot(
-
-    galleryGroupsQuery,
-
-    (snapshot) => {
-
-        if (!publicGalleryGroups) {
-            console.error(
-                "publicGalleryGroups container পাওয়া যায়নি"
-            );
-
-            return;
-        }
-
-
-        publicGalleryGroups.innerHTML = "";
-
-
-        if (snapshot.empty) {
-
-            publicGalleryGroups.innerHTML = `
-
-                <div class="gallery-empty">
-
-                    🖼️ বর্তমানে Gallery-তে কোনো ছবি নেই।
-
-                </div>
-
-            `;
-
-            return;
-        }
-
-
-        snapshot.forEach((item) => {
-
-            const data =
-                item.data();
-
-
-            const photos =
-                Array.isArray(data.photos)
-                    ? data.photos
-                    : [];
-
-
-            const group =
-                document.createElement("section");
-
-
-            group.className =
-                "public-gallery-group";
-
-const previewPhotos = photos.slice(0,6);
-
-const photosHTML = previewPhotos.map((photo,index)=>{
-
-const photoURL =
-typeof photo==="string"
-?photo
-:photo.url||"";
-
-const remaining =
-photos.length-6;
-
-const overlay =
-
-(index===5 && remaining>0)
-
-?`
-
-<div class="gallery-more-overlay">
-
-+${remaining}
-
-</div>
-
-`
-
-:"";
+const remain = photos.length-6;
 
 return `
 
-<button
-type="button"
-class="public-gallery-photo-btn"
-data-index="${index}"
-data-group="${item.id}">
+<div
+class="gallery-item"
+data-index="${index}">
 
 <img
-src="${photoURL}"
+src="${photo}"
 loading="lazy">
 
-${overlay}
+${
+index===5 && remain>0
+?
 
-</button>
+`<div class="gallery-overlay">
+
+<span>+${remain}</span>
+
+</div>`
+
+:""
+
+}
+
+</div>
 
 `;
 
 }).join("");
-           
+
+}
+
+function openGallery(index){
+
+currentPhoto=index;
+
+document
+.getElementById("galleryLightbox")
+.classList.add("show");
+
+showPhoto();
+
+}
+
+function showPhoto(){
+
+document
+.getElementById("galleryLightboxImage")
+.src=
+
+galleryPhotos[currentPhoto];
+
+document
+.getElementById("galleryCounter")
+.innerHTML=
+
+`${currentPhoto+1} / ${galleryPhotos.length}`;
+
+}
+// ======================================
+// GALLERY V2
+// PART 2
+// ======================================
+
+document.addEventListener("click",(e)=>{
+
+const card=e.target.closest(".gallery-item");
+
+if(!card)return;
+
+currentPhoto=Number(card.dataset.index);
+
+openGallery(currentPhoto);
+
+});
+
+function closeGallery(){
+
+document
+.getElementById("galleryLightbox")
+.classList.remove("show");
+
+}
+
+document
+.getElementById("galleryLightboxClose")
+.addEventListener("click",closeGallery);
+
+document
+.getElementById("galleryLightbox")
+.addEventListener("click",(e)=>{
+
+if(e.target.id==="galleryLightbox")
+
+closeGallery();
+
+});
+
+function nextPhoto(){
+
+currentPhoto++;
+
+if(currentPhoto>=galleryPhotos.length)
+
+currentPhoto=0;
+
+showPhoto();
+
+}
+
+function prevPhoto(){
+
+currentPhoto--;
+
+if(currentPhoto<0)
+
+currentPhoto=
+
+galleryPhotos.length-1;
+
+showPhoto();
+
+}
+// ======================================
+// GALLERY V2
+// PART 3
+// ======================================
+
+document.addEventListener("keydown",(e)=>{
+
+if(!document
+.getElementById("galleryLightbox")
+.classList.contains("show")) return;
+
+if(e.key==="ArrowRight") nextPhoto();
+
+if(e.key==="ArrowLeft") prevPhoto();
+
+if(e.key==="Escape") closeGallery();
+
+});
+
+document
+.getElementById("galleryNext")
+.addEventListener("click",nextPhoto);
+
+document
+.getElementById("galleryPrev")
+.addEventListener("click",prevPhoto);
 
 
-            group.innerHTML = `
+// ======================================
+// LOAD GALLERY
+// ======================================
 
-                <div class="gallery-group-header">
+onSnapshot(galleryGroupsQuery,(snapshot)=>{
 
-                    <h2>
-                        ${safe(data.heading || "")}
-                    </h2>
+publicGalleryGroups.innerHTML="";
 
-                    ${
-                        data.caption
+snapshot.forEach((doc)=>{
 
-                            ? `
+const data=doc.data();
 
-                                <p>
-                                    ${safe(data.caption)}
-                                </p>
+galleryPhotos=(data.photos||[]).map(p=>
 
-                              `
+typeof p==="string"
 
-                            : ""
-                    }
+?p
 
-                </div>
-
-
-                <div class="public-gallery-photo-grid">
-
-                    ${photosHTML}
-
-                </div>
-
-            `;
-
-
-            publicGalleryGroups.appendChild(group);
-
-        });
-
-    },
-
-    (error) => {
-
-        console.error(
-            "PUBLIC GALLERY ERROR:",
-            error
-        );
-
-
-        if (publicGalleryGroups) {
-
-            publicGalleryGroups.innerHTML = `
-
-                <div class="gallery-empty">
-
-                    ❌ Gallery Load করা যায়নি।
-
-                </div>
-
-            `;
-
-        }
-
-    }
+:p.url
 
 );
 
+const html=`
 
-// =====================================================
-// PHOTO CLICK
-// =====================================================
+<section class="public-gallery-group">
 
-document.addEventListener(
-    "click",
-    (event) => {
+<div class="gallery-group-header">
 
-        const button =
-            event.target.closest(
-                ".public-gallery-photo-btn"
-            );
+<h2>${data.heading}</h2>
 
+<p>${data.caption||""}</p>
 
-        if (!button) return;
+</div>
 
+<div class="gallery-grid">
 
-        const photoURL =
-            button.dataset.photo;
+${createGalleryPreview(galleryPhotos)}
 
+</div>
 
-        if (!photoURL) return;
+</section>
 
+`;
 
-        galleryLightboxImage.src =
-            photoURL;
+publicGalleryGroups.insertAdjacentHTML(
 
+"beforeend",
 
-        galleryLightbox.classList.add(
-            "show"
-        );
+html
 
-
-        document.body.style.overflow =
-            "hidden";
-
-    }
 );
 
+});
 
-// =====================================================
-// CLOSE LIGHTBOX
-// =====================================================
+});
+// ======================================
+// GALLERY V2
+// PART 4
+// ======================================
 
-galleryLightboxClose?.addEventListener(
-    "click",
-    closeLightbox
-);
+let touchStartX=0;
+let touchEndX=0;
 
+const lightbox=
+document.getElementById("galleryLightbox");
 
-galleryLightbox?.addEventListener(
-    "click",
-    (event) => {
+lightbox.addEventListener("touchstart",(e)=>{
 
-        if (
-            event.target === galleryLightbox
-        ) {
+touchStartX=e.changedTouches[0].screenX;
 
-            closeLightbox();
+});
 
-        }
+lightbox.addEventListener("touchend",(e)=>{
 
-    }
-);
+touchEndX=e.changedTouches[0].screenX;
 
+handleSwipe();
 
-document.addEventListener(
-    "keydown",
-    (event) => {
+});
 
-        if (event.key === "Escape") {
+function handleSwipe(){
 
-            closeLightbox();
+const diff=touchStartX-touchEndX;
 
-        }
+if(diff>60){
 
-    }
-);
+nextPhoto();
 
+}
 
-function closeLightbox() {
+if(diff<-60){
 
-    if (!galleryLightbox) return;
+prevPhoto();
 
-
-    galleryLightbox.classList.remove(
-        "show"
-    );
-
-
-    galleryLightboxImage.src = "";
-
-
-    document.body.style.overflow = "";
+}
 
 }
 
 
-// =====================================================
-// SAFE TEXT
-// =====================================================
+// ===============================
+// PRELOAD IMAGE
+// ===============================
 
-function safe(value = "") {
+function preload(){
 
-    return String(value)
+galleryPhotos.forEach(src=>{
 
-        .replaceAll("&", "&amp;")
+const img=new Image();
 
-        .replaceAll("<", "&lt;")
+img.src=src;
 
-        .replaceAll(">", "&gt;")
-
-        .replaceAll('"', "&quot;")
-
-        .replaceAll("'", "&#039;");
+});
 
 }
 
 
-function safeAttribute(value = "") {
+// ===============================
+// ZOOM EFFECT
+// ===============================
 
-    return safe(value);
+galleryLightboxImage.addEventListener(
+
+"click",
+
+()=>{
+
+galleryLightboxImage.classList.toggle(
+
+"zoom"
+
+);
 
 }
+
+);
+
+
+// ===============================
+// AUTO PRELOAD
+// ===============================
+
+window.addEventListener(
+
+"load",
+
+()=>{
+
+preload();
+
+}
+
+);
+// ======================================
+// GALLERY V2
+// PART 5
+// FINAL
+// ======================================
+
+// SHOW TOTAL PHOTO
+
+function updateCounter(){
+
+document.getElementById("galleryCounter").innerHTML=
+
+`${currentPhoto+1} / ${galleryPhotos.length}`;
+
+}
+
+
+// NEXT
+
+function nextPhoto(){
+
+currentPhoto++;
+
+if(currentPhoto>=galleryPhotos.length){
+
+currentPhoto=0;
+
+}
+
+galleryLightboxImage.src=
+
+galleryPhotos[currentPhoto];
+
+updateCounter();
+
+}
+
+
+// PREVIOUS
+
+function prevPhoto(){
+
+currentPhoto--;
+
+if(currentPhoto<0){
+
+currentPhoto=
+
+galleryPhotos.length-1;
+
+}
+
+galleryLightboxImage.src=
+
+galleryPhotos[currentPhoto];
+
+updateCounter();
+
+}
+
+
+// CLOSE
+
+function closeGallery(){
+
+galleryLightbox.classList.remove("show");
+
+galleryLightboxImage.src="";
+
+document.body.style.overflow="";
+
+}
+
+
+// OPEN
+
+function openGallery(index){
+
+currentPhoto=index;
+
+galleryLightbox.classList.add("show");
+
+galleryLightboxImage.src=
+
+galleryPhotos[currentPhoto];
+
+updateCounter();
+
+document.body.style.overflow="hidden";
+
+}
+
+
+// BUTTON
+
+galleryLightboxClose.onclick=
+
+closeGallery;
+
+document.getElementById("galleryNext").onclick=
+
+nextPhoto;
+
+document.getElementById("galleryPrev").onclick=
+
+prevPhoto;
+
+
+// ESC
+
+document.addEventListener("keydown",(e)=>{
+
+if(e.key==="Escape")
+
+closeGallery();
+
+});
+
+
+// END
