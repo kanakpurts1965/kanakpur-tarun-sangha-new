@@ -341,19 +341,7 @@ img.classList.toggle("zoom");
 });
 
 
-// PRELOAD
 
-function preloadImages(list){
-
-list.forEach(photo=>{
-
-const img=new Image();
-
-img.src=getPhoto(photo);
-
-});
-
-}
 
 window.addEventListener("load",()=>{
 
