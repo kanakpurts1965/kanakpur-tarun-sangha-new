@@ -1,38 +1,108 @@
 // ======================================
 // GALLERY V2
+// gallery.js
 // PART 1
 // ======================================
 
-let galleryPhotos = [];
-let currentPhoto = 0;
+import { db } from "./firebase.js";
 
-function createGalleryPreview(photos){
+import {
+collection,
+query,
+orderBy,
+onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
-const preview = photos.slice(0,6);
+const publicGalleryGroups =
+document.getElementById("publicGalleryGroups");
+
+const galleryLightbox =
+document.getElementById("galleryLightbox");
+
+const galleryLightboxImage =
+document.getElementById("galleryLightboxImage");
+
+const galleryLightboxClose =
+document.getElementById("galleryLightboxClose");
+
+const galleryNext =
+document.getElementById("galleryNext");
+
+const galleryPrev =
+document.getElementById("galleryPrev");
+
+const galleryCounter =
+document.getElementById("galleryCounter");
+
+const galleryGroupsRef =
+collection(db,"galleryGroups");
+
+const galleryGroupsQuery =
+query(
+galleryGroupsRef,
+orderBy("createdAt","desc")
+);
+
+let currentPhotos=[];
+let currentIndex=0;
+
+function escapeHTML(text=""){
+
+return String(text)
+
+.replaceAll("&","&amp;")
+
+.replaceAll("<","&lt;")
+
+.replaceAll(">","&gt;")
+
+.replaceAll('"',"&quot;")
+
+.replaceAll("'","&#039;");
+
+}
+
+function renderPreview(photos){
+
+const preview=photos.slice(0,6);
 
 return preview.map((photo,index)=>{
 
-const remain = photos.length-6;
+const url=
 
-return `
+typeof photo==="string"
+
+?photo
+
+:photo.url||"";
+
+const remain=
+
+photos.length-6;
+
+return`
 
 <div
 class="gallery-item"
-data-index="${index}">
+data-index="${index}"
+data-src="${escapeHTML(url)}">
 
 <img
-src="${photo}"
+src="${escapeHTML(url)}"
 loading="lazy">
 
 ${
 index===5 && remain>0
-?
 
-`<div class="gallery-overlay">
+?`
+
+<div class="gallery-overlay">
 
 <span>+${remain}</span>
 
-</div>`
+</div>
+
+`
 
 :""
 
@@ -46,79 +116,44 @@ index===5 && remain>0
 
 }
 
-function openGallery(index){
-
-currentPhoto=index;
-
-document
-.getElementById("galleryLightbox")
-.classList.add("show");
-
-showPhoto();
-
-}
-
-function showPhoto(){
-
-document
-.getElementById("galleryLightboxImage")
-.src=
-
-galleryPhotos[currentPhoto];
-
-document
-.getElementById("galleryCounter")
-.innerHTML=
-
-`${currentPhoto+1} / ${galleryPhotos.length}`;
-
-}
 // ======================================
 // GALLERY V2
 // PART 2
 // ======================================
 
-document.addEventListener("click",(e)=>{
+function openGallery(index){
 
-const card=e.target.closest(".gallery-item");
+currentIndex=index;
 
-if(!card)return;
+showPhoto();
 
-currentPhoto=Number(card.dataset.index);
+galleryLightbox.classList.add("show");
 
-openGallery(currentPhoto);
-
-});
-
-function closeGallery(){
-
-document
-.getElementById("galleryLightbox")
-.classList.remove("show");
+document.body.style.overflow="hidden";
 
 }
 
-document
-.getElementById("galleryLightboxClose")
-.addEventListener("click",closeGallery);
+function showPhoto(){
 
-document
-.getElementById("galleryLightbox")
-.addEventListener("click",(e)=>{
+galleryLightboxImage.src=
 
-if(e.target.id==="galleryLightbox")
+currentPhotos[currentIndex];
 
-closeGallery();
+galleryCounter.innerHTML=
 
-});
+`${currentIndex+1} / ${currentPhotos.length}`;
+
+}
 
 function nextPhoto(){
 
-currentPhoto++;
+currentIndex++;
 
-if(currentPhoto>=galleryPhotos.length)
+if(currentIndex>=currentPhotos.length){
 
-currentPhoto=0;
+currentIndex=0;
+
+}
 
 showPhoto();
 
@@ -126,126 +161,163 @@ showPhoto();
 
 function prevPhoto(){
 
-currentPhoto--;
+currentIndex--;
 
-if(currentPhoto<0)
+if(currentIndex<0){
 
-currentPhoto=
+currentIndex=currentPhotos.length-1;
 
-galleryPhotos.length-1;
+}
 
 showPhoto();
 
 }
-// ======================================
-// GALLERY V2
-// PART 3
-// ======================================
+
+function closeGallery(){
+
+galleryLightbox.classList.remove("show");
+
+galleryLightboxImage.src="";
+
+document.body.style.overflow="";
+
+}
+
+galleryLightboxClose.onclick=closeGallery;
+
+galleryNext.onclick=nextPhoto;
+
+galleryPrev.onclick=prevPhoto;
 
 document.addEventListener("keydown",(e)=>{
 
-if(!document
-.getElementById("galleryLightbox")
-.classList.contains("show")) return;
+if(!galleryLightbox.classList.contains("show"))
 
-if(e.key==="ArrowRight") nextPhoto();
+return;
 
-if(e.key==="ArrowLeft") prevPhoto();
+if(e.key==="ArrowRight")nextPhoto();
 
-if(e.key==="Escape") closeGallery();
+if(e.key==="ArrowLeft")prevPhoto();
+
+if(e.key==="Escape")closeGallery();
 
 });
 
-document
-.getElementById("galleryNext")
-.addEventListener("click",nextPhoto);
-
-document
-.getElementById("galleryPrev")
-.addEventListener("click",prevPhoto);
-
-
 // ======================================
-// LOAD GALLERY
+// GALLERY V2
+// PART 3
 // ======================================
 
 onSnapshot(galleryGroupsQuery,(snapshot)=>{
 
 publicGalleryGroups.innerHTML="";
 
-snapshot.forEach((doc)=>{
+snapshot.forEach((item)=>{
 
-const data=doc.data();
+const data=item.data();
 
-galleryPhotos=(data.photos||[]).map(p=>
+const photos=
+Array.isArray(data.photos)
+?data.photos
+:[];
 
-typeof p==="string"
+currentPhotos=photos.map(photo=>
 
-?p
-
-:p.url
+typeof photo==="string"
+?photo
+:photo.url||""
 
 );
 
-const html=`
+const section=document.createElement("section");
 
-<section class="public-gallery-group">
+section.className="public-gallery-group";
+
+section.innerHTML=`
 
 <div class="gallery-group-header">
 
-<h2>${data.heading}</h2>
+<h2>
 
-<p>${data.caption||""}</p>
+${escapeHTML(data.heading||"")}
+
+</h2>
+
+${
+data.caption
+?
+
+`<p>
+
+${escapeHTML(data.caption)}
+
+</p>`
+
+:""
+
+}
 
 </div>
 
 <div class="gallery-grid">
 
-${createGalleryPreview(galleryPhotos)}
+${renderPreview(currentPhotos)}
 
 </div>
 
-</section>
-
 `;
 
-publicGalleryGroups.insertAdjacentHTML(
+publicGalleryGroups.appendChild(section);
 
-"beforeend",
+section.querySelectorAll(".gallery-item")
 
-html
+.forEach(card=>{
+
+card.onclick=()=>{
+
+currentPhotos=photos.map(photo=>
+
+typeof photo==="string"
+
+?photo
+
+:photo.url||""
 
 );
 
+openGallery(
+
+Number(card.dataset.index)
+
+);
+
+};
+
 });
 
 });
+
+});
+
 // ======================================
 // GALLERY V2
 // PART 4
 // ======================================
 
-let touchStartX=0;
-let touchEndX=0;
+// Touch Swipe
 
-const lightbox=
-document.getElementById("galleryLightbox");
+let touchStartX = 0;
+let touchEndX = 0;
 
-lightbox.addEventListener("touchstart",(e)=>{
+galleryLightbox.addEventListener("touchstart",(e)=>{
 
 touchStartX=e.changedTouches[0].screenX;
 
 });
 
-lightbox.addEventListener("touchend",(e)=>{
+galleryLightbox.addEventListener("touchend",(e)=>{
 
 touchEndX=e.changedTouches[0].screenX;
-
-handleSwipe();
-
-});
-
-function handleSwipe(){
 
 const diff=touchStartX-touchEndX;
 
@@ -261,16 +333,36 @@ prevPhoto();
 
 }
 
+});
+
+
+// Click Outside Close
+
+galleryLightbox.addEventListener("click",(e)=>{
+
+if(e.target===galleryLightbox){
+
+closeGallery();
+
 }
 
+});
 
-// ===============================
-// PRELOAD IMAGE
-// ===============================
 
-function preload(){
+// Image Zoom
 
-galleryPhotos.forEach(src=>{
+galleryLightboxImage.addEventListener("click",()=>{
+
+galleryLightboxImage.classList.toggle("zoom");
+
+});
+
+
+// Preload Images
+
+function preloadImages(images){
+
+images.forEach(src=>{
 
 const img=new Image();
 
@@ -281,159 +373,140 @@ img.src=src;
 }
 
 
-// ===============================
-// ZOOM EFFECT
-// ===============================
+// Auto Preload
 
-galleryLightboxImage.addEventListener(
+window.addEventListener("load",()=>{
+
+preloadImages(currentPhotos);
+
+});
+
+
+// END OF PART 4
+// ======================================
+// GALLERY V2
+// PART 5 (FINAL)
+// ======================================
+
+function safe(text=""){
+
+return String(text)
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#039;");
+
+}
+
+function safeAttr(text=""){
+
+return safe(text);
+
+}
+
+
+// Close Button
+
+galleryLightboxClose?.addEventListener(
 
 "click",
 
-()=>{
-
-galleryLightboxImage.classList.toggle(
-
-"zoom"
+closeGallery
 
 );
-
-}
-
-);
-
-
-// ===============================
-// AUTO PRELOAD
-// ===============================
-
-window.addEventListener(
-
-"load",
-
-()=>{
-
-preload();
-
-}
-
-);
-// ======================================
-// GALLERY V2
-// PART 5
-// FINAL
-// ======================================
-
-// SHOW TOTAL PHOTO
-
-function updateCounter(){
-
-document.getElementById("galleryCounter").innerHTML=
-
-`${currentPhoto+1} / ${galleryPhotos.length}`;
-
-}
-
-
-// NEXT
-
-function nextPhoto(){
-
-currentPhoto++;
-
-if(currentPhoto>=galleryPhotos.length){
-
-currentPhoto=0;
-
-}
-
-galleryLightboxImage.src=
-
-galleryPhotos[currentPhoto];
-
-updateCounter();
-
-}
-
-
-// PREVIOUS
-
-function prevPhoto(){
-
-currentPhoto--;
-
-if(currentPhoto<0){
-
-currentPhoto=
-
-galleryPhotos.length-1;
-
-}
-
-galleryLightboxImage.src=
-
-galleryPhotos[currentPhoto];
-
-updateCounter();
-
-}
-
-
-// CLOSE
-
-function closeGallery(){
-
-galleryLightbox.classList.remove("show");
-
-galleryLightboxImage.src="";
-
-document.body.style.overflow="";
-
-}
-
-
-// OPEN
-
-function openGallery(index){
-
-currentPhoto=index;
-
-galleryLightbox.classList.add("show");
-
-galleryLightboxImage.src=
-
-galleryPhotos[currentPhoto];
-
-updateCounter();
-
-document.body.style.overflow="hidden";
-
-}
-
-
-// BUTTON
-
-galleryLightboxClose.onclick=
-
-closeGallery;
-
-document.getElementById("galleryNext").onclick=
-
-nextPhoto;
-
-document.getElementById("galleryPrev").onclick=
-
-prevPhoto;
 
 
 // ESC
 
-document.addEventListener("keydown",(e)=>{
+document.addEventListener(
+
+"keydown",
+
+(e)=>{
 
 if(e.key==="Escape")
 
 closeGallery();
 
-});
+}
+
+);
 
 
-// END
+// Disable Scroll
+
+galleryLightbox?.addEventListener(
+
+"show",
+
+()=>{
+
+document.body.style.overflow="hidden";
+
+}
+
+);
+
+
+// Enable Scroll
+
+galleryLightbox?.addEventListener(
+
+"hide",
+
+()=>{
+
+document.body.style.overflow="";
+
+}
+
+);
+
+
+// Safety
+
+if(!publicGalleryGroups){
+
+console.error(
+
+"Gallery Container Not Found"
+
+);
+
+}
+
+if(!galleryLightbox){
+
+console.error(
+
+"Lightbox Not Found"
+
+);
+
+}
+
+if(!galleryLightboxImage){
+
+console.error(
+
+"Image Element Not Found"
+
+);
+
+}
+
+if(!galleryCounter){
+
+console.error(
+
+"Counter Not Found"
+
+);
+
+}
+
+
+// ======================================
+// GALLERY V2 READY
+// ======================================
