@@ -338,29 +338,37 @@ document.addEventListener("keydown", (e) => {
 console.log("Kanakpur Tarun Sangha Website v5.0 Loaded Successfully"); 
 
 
-window.addEventListener("load", function () {
+window.addEventListener("load", () => {
 
-   const loader = document.getElementById("loader");
+const loader = document.getElementById("loader");
 
-if (isAppMode) {
-    // Installed App হলে পুরনো Loader দেখাবে না
-    if (loader) {
-        loader.style.display = "none";
-    }
-} else {
-    // Browser হলে আগের Loader চলবে
-    window.addEventListener("load", () => {
-        setTimeout(() => {
-            if (loader) {
-                loader.style.opacity = "0";
+sessionStorage.setItem("siteLoaded","yes");
 
-                setTimeout(() => {
-                    loader.style.display = "none";
-                }, 500);
-            }
-        }, 2000);
-    });
+if(!loader) return;
+
+if(isAppMode){
+
+loader.style.display="none";
+
+return;
+
 }
+
+setTimeout(()=>{
+
+loader.style.opacity="0";
+
+loader.style.visibility="hidden";
+
+setTimeout(()=>{
+
+loader.remove();
+
+},500);
+
+},2000);
+
+});
 
   sessionStorage.setItem("siteLoaded", "yes");
 
@@ -381,3 +389,4 @@ loader.remove();
 },2200);
 
 }
+});
