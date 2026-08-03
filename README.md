@@ -4,4 +4,4 @@ Official Website of Kanakpur Tarun Sangha
 
 Developed by Tanmoy Adak
 
-Version 3.0
+Stable Release v3.0 - Website Ready
