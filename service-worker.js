@@ -1,22 +1,19 @@
-const CACHE_NAME = "kts-v3";
+const CACHE_NAME = "kts-v4";
 
 const urlsToCache = [
- "/",
-"/index.html",
-"/style.css",
-"/dashboard.html"
+  "/",
+  "/index.html",
+  "/about.html",
+  "/members.html",
+  "/events.html",
+  "/gallery.html",
+  "/contact.html",
+  "/notices.html",
+
+  "/style.css",
+  "/script.js",
+  "/gallery.js",
+  "/firebase.js",
+
+  "/123.png.png"
 ];
-
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
-  );
-});
-
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
-  );
-});
