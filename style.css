@@ -6123,3 +6123,28 @@ font-size:38px;
 font-weight:700;
 color:#fff;
 }
+
+
+
+
+/* HERO VIDEO */
+.hero-video{
+    width:100%;
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.hero-video video{
+    width:100%;
+    height:auto;
+    display:block;
+    object-fit:cover;
+    aspect-ratio:16/9;
+}
+
+@media (max-width:768px){
+    .hero-video video{
+        aspect-ratio:16/9;
+        object-fit:cover;
+    }
+}
